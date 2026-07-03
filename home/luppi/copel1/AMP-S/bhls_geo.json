@@ -1,0 +1,1432 @@
+{
+    "type": "FeatureCollection",
+    "name": "bhlinks_geo",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-002:AMP-S-GE-017",
+                "src": "AMP-S-GE-002",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -51.1,
+                "Down Stream Avg SNR": 54.1,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -51.1,
+                "Parent Node Avg Snr": 54.1,
+                "Name": "AMP-S-GE-002",
+                "Hops": 1.0,
+                "Route": "402, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 810.8,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.491775",
+                        "-25.93285"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-005:AMP-S-GE-026",
+                "src": "AMP-S-GE-005",
+                "dst": "AMP-S-GE-026",
+                "Etx": 0,
+                "Down Stream Avg LQI": 8.1,
+                "Down Stream Avg RSSI": -51.0,
+                "Down Stream Avg SNR": 55.1,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "426",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 8.1,
+                "Parent Node Avg Rssi": -51.0,
+                "Parent Node Avg Snr": 55.1,
+                "Name": "AMP-S-GE-005",
+                "Hops": 2.0,
+                "Route": "405, 426, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 651.6,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.4,
+                "Packet Loss Rate": 4.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.4743118",
+                        "-25.92105615"
+                    ],
+                    [
+                        "-53.470865",
+                        "-25.92422"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-006:AMP-S-GE-026",
+                "src": "AMP-S-GE-006",
+                "dst": "AMP-S-GE-026",
+                "Etx": 0,
+                "Down Stream Avg LQI": 11.0,
+                "Down Stream Avg RSSI": -52.4,
+                "Down Stream Avg SNR": 35.5,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "426",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 11.0,
+                "Parent Node Avg Rssi": -52.4,
+                "Parent Node Avg Snr": 35.5,
+                "Name": "AMP-S-GE-006",
+                "Hops": 2.0,
+                "Route": "406, 426, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 592.1,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.5,
+                "Packet Loss Rate": 5.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ],
+                    [
+                        "-53.470865",
+                        "-25.92422"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-007:AMP-S-GE-017",
+                "src": "AMP-S-GE-007",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -58.2,
+                "Down Stream Avg SNR": 39.9,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-immunity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -58.2,
+                "Parent Node Avg Snr": 39.9,
+                "Name": "AMP-S-GE-007",
+                "Hops": 1.0,
+                "Route": "407, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 1027.2,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.4,
+                "Packet Loss Rate": 4.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.497421",
+                        "-25.932707"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-008:AMP-S-GE-017",
+                "src": "AMP-S-GE-008",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -52.0,
+                "Down Stream Avg SNR": 56.2,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -52.0,
+                "Parent Node Avg Snr": 56.2,
+                "Name": "AMP-S-GE-008",
+                "Hops": 1.0,
+                "Route": "408, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 838.1,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.48779575",
+                        "-25.92426603"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-009:AMP-S-GE-007",
+                "src": "AMP-S-GE-009",
+                "dst": "AMP-S-GE-007",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.3,
+                "Down Stream Avg RSSI": -77.9,
+                "Down Stream Avg SNR": 33.3,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "407",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.3,
+                "Parent Node Avg Rssi": -77.9,
+                "Parent Node Avg Snr": 33.3,
+                "Name": "AMP-S-GE-009",
+                "Hops": 2.0,
+                "Route": "409, 407, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 753.2,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.0,
+                "Packet Loss Rate": 0.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.512931",
+                        "-25.955433"
+                    ],
+                    [
+                        "-53.497421",
+                        "-25.932707"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-012:AMP-S-GE-001",
+                "src": "AMP-S-GE-012",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 9.4,
+                "Down Stream Avg RSSI": -53.0,
+                "Down Stream Avg SNR": 39.0,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 9.4,
+                "Parent Node Avg Rssi": -53.0,
+                "Parent Node Avg Snr": 39.0,
+                "Name": "AMP-S-GE-012",
+                "Hops": 1.0,
+                "Route": "412, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 712.7,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.4,
+                "Packet Loss Rate": 4.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.45947",
+                        "-25.91205"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-016:AMP-S-GE-001",
+                "src": "AMP-S-GE-016",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 11.1,
+                "Down Stream Avg RSSI": -65.9,
+                "Down Stream Avg SNR": 30.7,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-immunity",
+                "Parent Node Avg Lqi": 11.1,
+                "Parent Node Avg Rssi": -65.9,
+                "Parent Node Avg Snr": 30.7,
+                "Name": "AMP-S-GE-016",
+                "Hops": 1.0,
+                "Route": "416, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 656.8,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.0,
+                "Packet Loss Rate": 0.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-025:AMP-S-GE-026",
+                "src": "AMP-S-GE-025",
+                "dst": "AMP-S-GE-026",
+                "Etx": 0,
+                "Down Stream Avg LQI": 9.2,
+                "Down Stream Avg RSSI": -50.5,
+                "Down Stream Avg SNR": 53.3,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "426",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 9.2,
+                "Parent Node Avg Rssi": -50.5,
+                "Parent Node Avg Snr": 53.3,
+                "Name": "AMP-S-GE-025",
+                "Hops": 2.0,
+                "Route": "425, 426, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 620.3,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.4,
+                "Packet Loss Rate": 4.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.47023",
+                        "-25.92079"
+                    ],
+                    [
+                        "-53.470865",
+                        "-25.92422"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-026:AMP-S-GE-001",
+                "src": "AMP-S-GE-026",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 12.6,
+                "Down Stream Avg RSSI": -63.9,
+                "Down Stream Avg SNR": 29.0,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-immunity",
+                "Parent Node Avg Lqi": 12.6,
+                "Parent Node Avg Rssi": -63.9,
+                "Parent Node Avg Snr": 29.0,
+                "Name": "AMP-S-GE-026",
+                "Hops": 1.0,
+                "Route": "426, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 837.7,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.9,
+                "Packet Loss Rate": 9.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.470865",
+                        "-25.92422"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-027:AMP-S-GE-017",
+                "src": "AMP-S-GE-027",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -56.8,
+                "Down Stream Avg SNR": 54.0,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -56.8,
+                "Parent Node Avg Snr": 54.0,
+                "Name": "AMP-S-GE-027",
+                "Hops": 1.0,
+                "Route": "427, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 852.5,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.2,
+                "Packet Loss Rate": 2.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.477851",
+                        "-25.920685"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-028:AMP-S-GE-002",
+                "src": "AMP-S-GE-028",
+                "dst": "AMP-S-GE-002",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -60.2,
+                "Down Stream Avg SNR": 46.6,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "402",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -60.2,
+                "Parent Node Avg Snr": 46.6,
+                "Name": "AMP-S-GE-028",
+                "Hops": 2.0,
+                "Route": "428, 402, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 823.9,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.47131",
+                        "-25.92938"
+                    ],
+                    [
+                        "-53.491775",
+                        "-25.93285"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-029:AMP-S-GE-017",
+                "src": "AMP-S-GE-029",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.7,
+                "Down Stream Avg RSSI": -60.4,
+                "Down Stream Avg SNR": 48.0,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.7,
+                "Parent Node Avg Rssi": -60.4,
+                "Parent Node Avg Snr": 48.0,
+                "Name": "AMP-S-GE-029",
+                "Hops": 1.0,
+                "Route": "429, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 854.5,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.48521",
+                        "-25.92561"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-030:AMP-S-GE-002",
+                "src": "AMP-S-GE-030",
+                "dst": "AMP-S-GE-002",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.3,
+                "Down Stream Avg RSSI": -52.1,
+                "Down Stream Avg SNR": 55.7,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "402",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.3,
+                "Parent Node Avg Rssi": -52.1,
+                "Parent Node Avg Snr": 55.7,
+                "Name": "AMP-S-GE-030",
+                "Hops": 2.0,
+                "Route": "430, 402, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 779.8,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.47350408",
+                        "-25.93571951"
+                    ],
+                    [
+                        "-53.491775",
+                        "-25.93285"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-031:AMP-S-GE-002",
+                "src": "AMP-S-GE-031",
+                "dst": "AMP-S-GE-002",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.9,
+                "Down Stream Avg RSSI": -71.9,
+                "Down Stream Avg SNR": 39.9,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "402",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.9,
+                "Parent Node Avg Rssi": -71.9,
+                "Parent Node Avg Snr": 39.9,
+                "Name": "AMP-S-GE-031",
+                "Hops": 2.0,
+                "Route": "431, 402, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 842.6,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.484636",
+                        "-25.934911"
+                    ],
+                    [
+                        "-53.491775",
+                        "-25.93285"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-032:AMP-S-GE-052",
+                "src": "AMP-S-GE-032",
+                "dst": "AMP-S-GE-052",
+                "Etx": 0,
+                "Down Stream Avg LQI": 10.7,
+                "Down Stream Avg RSSI": -61.9,
+                "Down Stream Avg SNR": 45.6,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "452",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 10.7,
+                "Parent Node Avg Rssi": -61.9,
+                "Parent Node Avg Snr": 45.6,
+                "Name": "AMP-S-GE-032",
+                "Hops": 3.0,
+                "Route": "432, 452, 412, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 686.3,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.0,
+                "Packet Loss Rate": 0.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.51605943",
+                        "-25.88433145"
+                    ],
+                    [
+                        "-53.47583",
+                        "-25.88049"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-033:AMP-S-GE-001",
+                "src": "AMP-S-GE-033",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -59.0,
+                "Down Stream Avg SNR": 46.3,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -59.0,
+                "Parent Node Avg Snr": 46.3,
+                "Name": "AMP-S-GE-033",
+                "Hops": 1.0,
+                "Route": "433, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 1155.0,
+                "GE Network Name": "COPEL-AMP-S-003",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.6,
+                "Packet Loss Rate": 6.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.396059",
+                        "-25.971307"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-036:AMP-S-GE-007",
+                "src": "AMP-S-GE-036",
+                "dst": "AMP-S-GE-007",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.8,
+                "Down Stream Avg RSSI": -58.0,
+                "Down Stream Avg SNR": 47.5,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "407",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.8,
+                "Parent Node Avg Rssi": -58.0,
+                "Parent Node Avg Snr": 47.5,
+                "Name": "AMP-S-GE-036",
+                "Hops": 2.0,
+                "Route": "436, 407, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 1502.2,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.0,
+                "Packet Loss Rate": 0.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.506787",
+                        "-25.927105"
+                    ],
+                    [
+                        "-53.497421",
+                        "-25.932707"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-038:AMP-S-GE-036",
+                "src": "AMP-S-GE-038",
+                "dst": "AMP-S-GE-036",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.7,
+                "Down Stream Avg RSSI": -83.5,
+                "Down Stream Avg SNR": 23.3,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "436",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.7,
+                "Parent Node Avg Rssi": -83.5,
+                "Parent Node Avg Snr": 23.3,
+                "Name": "AMP-S-GE-038",
+                "Hops": 3.0,
+                "Route": "438, 436, 407, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 749.4,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.536633",
+                        "-25.947078"
+                    ],
+                    [
+                        "-53.506787",
+                        "-25.927105"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-040:AMP-S-GE-017",
+                "src": "AMP-S-GE-040",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 17.1,
+                "Down Stream Avg RSSI": -81.2,
+                "Down Stream Avg SNR": 28.2,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 17.1,
+                "Parent Node Avg Rssi": -81.2,
+                "Parent Node Avg Snr": 28.2,
+                "Name": "AMP-S-GE-040",
+                "Hops": 1.0,
+                "Route": "440, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 862.7,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.2,
+                "Packet Loss Rate": 2.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.481105",
+                        "-25.929531"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-041:AMP-S-GE-001",
+                "src": "AMP-S-GE-041",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 7.5,
+                "Down Stream Avg RSSI": -53.0,
+                "Down Stream Avg SNR": 52.6,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 7.5,
+                "Parent Node Avg Rssi": -53.0,
+                "Parent Node Avg Snr": 52.6,
+                "Name": "AMP-S-GE-041",
+                "Hops": 1.0,
+                "Route": "441, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 676.4,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.4,
+                "Packet Loss Rate": 4.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.48541",
+                        "-25.91665"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-042:AMP-S-GE-001",
+                "src": "AMP-S-GE-042",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 8.8,
+                "Down Stream Avg RSSI": -46.9,
+                "Down Stream Avg SNR": 58.1,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 8.8,
+                "Parent Node Avg Rssi": -46.9,
+                "Parent Node Avg Snr": 58.1,
+                "Name": "AMP-S-GE-042",
+                "Hops": 1.0,
+                "Route": "442, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 688.9,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.5,
+                "Packet Loss Rate": 5.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.471542",
+                        "-25.909804"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-043:AMP-S-GE-001",
+                "src": "AMP-S-GE-043",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 10.3,
+                "Down Stream Avg RSSI": -66.1,
+                "Down Stream Avg SNR": 38.8,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 10.3,
+                "Parent Node Avg Rssi": -66.1,
+                "Parent Node Avg Snr": 38.8,
+                "Name": "AMP-S-GE-043",
+                "Hops": 1.0,
+                "Route": "443, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 831.1,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.9,
+                "Packet Loss Rate": 9.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.471534",
+                        "-25.921826"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-050:AMP-S-GE-051",
+                "src": "AMP-S-GE-050",
+                "dst": "AMP-S-GE-051",
+                "Etx": 0,
+                "Down Stream Avg LQI": 17.1,
+                "Down Stream Avg RSSI": -82.3,
+                "Down Stream Avg SNR": 25.3,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "451",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 17.1,
+                "Parent Node Avg Rssi": -82.3,
+                "Parent Node Avg Snr": 25.3,
+                "Name": "AMP-S-GE-050",
+                "Hops": 5.0,
+                "Route": "450, 451, 438, 436, 407, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 397.2,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.600375",
+                        "-25.934394"
+                    ],
+                    [
+                        "-53.53742",
+                        "-25.91712"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-051:AMP-S-GE-038",
+                "src": "AMP-S-GE-051",
+                "dst": "AMP-S-GE-038",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -75.9,
+                "Down Stream Avg SNR": 23.8,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "438",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -75.9,
+                "Parent Node Avg Snr": 23.8,
+                "Name": "AMP-S-GE-051",
+                "Hops": 4.0,
+                "Route": "451, 438, 436, 407, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 585.1,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.7,
+                "Packet Loss Rate": 7.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.53742",
+                        "-25.91712"
+                    ],
+                    [
+                        "-53.536633",
+                        "-25.947078"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-052:AMP-S-GE-012",
+                "src": "AMP-S-GE-052",
+                "dst": "AMP-S-GE-012",
+                "Etx": 0,
+                "Down Stream Avg LQI": 10.8,
+                "Down Stream Avg RSSI": -62.4,
+                "Down Stream Avg SNR": 33.6,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "412",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 10.8,
+                "Parent Node Avg Rssi": -62.4,
+                "Parent Node Avg Snr": 33.6,
+                "Name": "AMP-S-GE-052",
+                "Hops": 2.0,
+                "Route": "452, 412, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 938.6,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.1,
+                "Packet Loss Rate": 1.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.47583",
+                        "-25.88049"
+                    ],
+                    [
+                        "-53.45947",
+                        "-25.91205"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-054:AMP-S-GE-026",
+                "src": "AMP-S-GE-054",
+                "dst": "AMP-S-GE-026",
+                "Etx": 0,
+                "Down Stream Avg LQI": 10.1,
+                "Down Stream Avg RSSI": -63.1,
+                "Down Stream Avg SNR": 41.5,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "426",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 10.1,
+                "Parent Node Avg Rssi": -63.1,
+                "Parent Node Avg Snr": 41.5,
+                "Name": "AMP-S-GE-054",
+                "Hops": 2.0,
+                "Route": "454, 426, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 833.9,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.6,
+                "Packet Loss Rate": 6.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.47488276",
+                        "-25.92163305"
+                    ],
+                    [
+                        "-53.470865",
+                        "-25.92422"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-055:AMP-S-GE-017",
+                "src": "AMP-S-GE-055",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.6,
+                "Down Stream Avg RSSI": -54.3,
+                "Down Stream Avg SNR": 55.2,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.6,
+                "Parent Node Avg Rssi": -54.3,
+                "Parent Node Avg Snr": 55.2,
+                "Name": "AMP-S-GE-055",
+                "Hops": 1.0,
+                "Route": "455, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 894.4,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.4,
+                "Packet Loss Rate": 4.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.47595196",
+                        "-25.91836587"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-056:AMP-S-GE-017",
+                "src": "AMP-S-GE-056",
+                "dst": "AMP-S-GE-017",
+                "Etx": 0,
+                "Down Stream Avg LQI": 17.3,
+                "Down Stream Avg RSSI": -76.5,
+                "Down Stream Avg SNR": 33.9,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 17.3,
+                "Parent Node Avg Rssi": -76.5,
+                "Parent Node Avg Snr": 33.9,
+                "Name": "AMP-S-GE-056",
+                "Hops": 1.0,
+                "Route": "456, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 911.7,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.8,
+                "Packet Loss Rate": 8.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.48175336",
+                        "-25.92423189"
+                    ],
+                    [
+                        "-53.47477",
+                        "-25.91702"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-057:AMP-S-GE-002",
+                "src": "AMP-S-GE-057",
+                "dst": "AMP-S-GE-002",
+                "Etx": 0,
+                "Down Stream Avg LQI": 16.5,
+                "Down Stream Avg RSSI": -62.1,
+                "Down Stream Avg SNR": 49.3,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "402",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 16.5,
+                "Parent Node Avg Rssi": -62.1,
+                "Parent Node Avg Snr": 49.3,
+                "Name": "AMP-S-GE-057",
+                "Hops": 2.0,
+                "Route": "457, 402, 517",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 801.8,
+                "GE Network Name": "COPEL-AMP-S-002",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.3,
+                "Packet Loss Rate": 3.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.48158",
+                        "-25.92988"
+                    ],
+                    [
+                        "-53.491775",
+                        "-25.93285"
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "AMP-S-GE-058:AMP-S-GE-001",
+                "src": "AMP-S-GE-058",
+                "dst": "AMP-S-GE-001",
+                "Etx": 0,
+                "Down Stream Avg LQI": 8.8,
+                "Down Stream Avg RSSI": -58.3,
+                "Down Stream Avg SNR": 49.6,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 8.8,
+                "Parent Node Avg Rssi": -58.3,
+                "Parent Node Avg Snr": 49.6,
+                "Name": "AMP-S-GE-058",
+                "Hops": 1.0,
+                "Route": "458, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 923.6,
+                "GE Network Name": "COPEL-AMP-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 1.0,
+                "Packet Loss Rate": 10.0
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        "-53.46816048",
+                        "-25.91368857"
+                    ],
+                    [
+                        "-53.447936",
+                        "-25.912868"
+                    ]
+                ]
+            }
+        }
+    ]
+}

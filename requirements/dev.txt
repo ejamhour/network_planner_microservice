@@ -1,0 +1,8 @@
+-r base.txt
+
+# --- Dev & Testing ---
+pytest
+jupyterlab
+
+-e ./cisei_lib
+

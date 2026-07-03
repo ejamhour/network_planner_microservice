@@ -1,0 +1,7260 @@
+[
+  {
+    "rx": {
+      "name": "UVI-S-GE-092",
+      "pos": [
+        -26.2407,
+        -51.08624
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-P7-001",
+      "pos": [
+        -26.24453496,
+        -51.0907399
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 0.0,
+      "mode": "access-point",
+      "state": "high-immunity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 8.3,
+      "rssi": -56.7,
+      "snr": 48.0,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 92.12,
+      "dist_m": 618.59,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 25.88,
+        "boundary": 276.1
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 9.85,
+      "rx_near_terminal_clearance_m": 10.44
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-099",
+      "pos": [
+        -26.23378,
+        -51.08605
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-051",
+      "pos": [
+        -26.246222,
+        -51.078485
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 0.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 8.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 7.5,
+      "rssi": -57.4,
+      "snr": 46.7,
+      "loss_rate": 7.0
+    },
+    "features": {
+      "fspl": 98.32,
+      "dist_m": 1572.09,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 64.1,
+        "boundary": 124.22
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.08,
+      "tx_near_terminal_clearance_m": 12.7,
+      "rx_near_terminal_clearance_m": 10.24
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-005",
+      "pos": [
+        -26.241779,
+        -51.08104
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-051",
+      "pos": [
+        -26.246222,
+        -51.078485
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 0.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 8.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 8.1,
+      "rssi": -55.2,
+      "snr": 41.2,
+      "loss_rate": 12.0
+    },
+    "features": {
+      "fspl": 91.3,
+      "dist_m": 554.5,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 42.52,
+        "boundary": 42.52
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.14,
+      "tx_near_terminal_clearance_m": 9.28,
+      "rx_near_terminal_clearance_m": 14.12
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-110",
+      "pos": [
+        -26.178543,
+        -51.174
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-100",
+      "pos": [
+        -26.192804,
+        -51.170618
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 20.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 11.0,
+      "rssi": -76.6,
+      "snr": 32.9,
+      "loss_rate": 21.0
+    },
+    "features": {
+      "fspl": 98.47,
+      "dist_m": 1615.75,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 20,
+        "fresnel": 31.25,
+        "boundary": 67.5
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 28.75,
+        "boundary": 80.62
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.46,
+          "d_norm": 0.5
+        },
+        {
+          "v_v": 0.34,
+          "d_norm": 0.82
+        },
+        {
+          "v_v": 0.32,
+          "d_norm": 0.73
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 9.32,
+      "rx_near_terminal_clearance_m": 6.75
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-101",
+      "pos": [
+        -26.155791,
+        -51.171605
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-110",
+      "pos": [
+        -26.178543,
+        -51.174
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 21.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 12.6,
+      "rssi": -89.7,
+      "snr": 16.0,
+      "loss_rate": 38.0
+    },
+    "features": {
+      "fspl": 100.54,
+      "dist_m": 2532.05,
+      "delta_diffra": 17.24,
+      "terrain": {
+        "core": 80,
+        "fresnel": 167.5,
+        "boundary": 650
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 68.75,
+        "boundary": 35.62
+      },
+      "buildings": {
+        "core": 9.01,
+        "fresnel": 32.56,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 2.62,
+          "d_norm": 0.02
+        },
+        {
+          "v_v": 0.7,
+          "d_norm": 0.56
+        },
+        {
+          "v_v": 0.12,
+          "d_norm": 0.87
+        }
+      ],
+      "max_obstruction_angle_rad": 0.43,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": -6.79,
+      "rx_near_terminal_clearance_m": 7.16
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-102",
+      "pos": [
+        -26.191953,
+        -51.164732
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-100",
+      "pos": [
+        -26.192804,
+        -51.170618
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 20.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 9.7,
+      "rssi": -63.8,
+      "snr": 43.5,
+      "loss_rate": 30.0
+    },
+    "features": {
+      "fspl": 91.84,
+      "dist_m": 595.84,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 15,
+        "boundary": 122.5
+      },
+      "vegetation": {
+        "core": 70,
+        "fresnel": 76.25,
+        "boundary": 38.75
+      },
+      "buildings": {
+        "core": 5.68,
+        "fresnel": 9.95,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.45,
+          "d_norm": 0.27
+        },
+        {
+          "v_v": 0.38,
+          "d_norm": 0.77
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 6.4,
+      "rx_near_terminal_clearance_m": 7.49
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-104",
+      "pos": [
+        -26.144448,
+        -51.187465
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-108",
+      "pos": [
+        -26.140788,
+        -51.184341
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 29.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.7,
+      "rssi": -46.2,
+      "snr": 62.0,
+      "loss_rate": 35.0
+    },
+    "features": {
+      "fspl": 90.69,
+      "dist_m": 511.87,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 7.5,
+        "boundary": 26.25
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.02,
+      "tx_near_terminal_clearance_m": 8.8,
+      "rx_near_terminal_clearance_m": 9.17
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-105",
+      "pos": [
+        -26.1053,
+        -51.12095
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-109",
+      "pos": [
+        -26.160351,
+        -51.125628
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 27.0,
+      "retry": 20.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 8.3,
+      "rssi": -75.1,
+      "snr": 34.7,
+      "loss_rate": 20.0
+    },
+    "features": {
+      "fspl": 107.26,
+      "dist_m": 6117.02,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 5,
+        "boundary": 7.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.02,
+      "tx_near_terminal_clearance_m": 11.45,
+      "rx_near_terminal_clearance_m": 11.07
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-106",
+      "pos": [
+        -26.177859,
+        -51.147169
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-100",
+      "pos": [
+        -26.192804,
+        -51.170618
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 20.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 8.2,
+      "rssi": -77.2,
+      "snr": 32.1,
+      "loss_rate": 20.0
+    },
+    "features": {
+      "fspl": 100.95,
+      "dist_m": 2869.8,
+      "delta_diffra": 11.93,
+      "terrain": {
+        "core": 0,
+        "fresnel": 37.5,
+        "boundary": 51.88
+      },
+      "vegetation": {
+        "core": 120,
+        "fresnel": 91.25,
+        "boundary": 92.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 55.31
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.83,
+          "d_norm": 0.93
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 8.68,
+      "rx_near_terminal_clearance_m": 10.63
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-108",
+      "pos": [
+        -26.140788,
+        -51.184341
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-107",
+      "pos": [
+        -26.155791,
+        -51.171605
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 27.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -75.5,
+      "snr": 38.2,
+      "loss_rate": 29.0
+    },
+    "features": {
+      "fspl": 99.76,
+      "dist_m": 2093.96,
+      "delta_diffra": 3.0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 26.25,
+        "boundary": 370
+      },
+      "vegetation": {
+        "core": 60,
+        "fresnel": 410,
+        "boundary": 210
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.53,
+          "d_norm": 0.82
+        },
+        {
+          "v_v": 0.1,
+          "d_norm": 0.32
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 7.15,
+      "rx_near_terminal_clearance_m": 8.47
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-109",
+      "pos": [
+        -26.160351,
+        -51.125628
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-110",
+      "pos": [
+        -26.178543,
+        -51.174
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 21.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 8.8,
+      "rssi": -79.7,
+      "snr": 30.9,
+      "loss_rate": 20.0
+    },
+    "features": {
+      "fspl": 105.92,
+      "dist_m": 5239.12,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 13.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 3.75,
+        "boundary": 181.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.04,
+          "d_norm": 0.26
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 17.25,
+      "rx_near_terminal_clearance_m": 12.45
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-025",
+      "pos": [
+        -26.254009,
+        -51.087293
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-P7-001",
+      "pos": [
+        -26.24453496,
+        -51.0907399
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 0.0,
+      "mode": "access-point",
+      "state": "high-immunity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 8.7,
+      "rssi": -49.0,
+      "snr": 55.4,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 96.19,
+      "dist_m": 1104.69,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 90.89,
+        "boundary": 137.22
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 10.48,
+      "rx_near_terminal_clearance_m": 8.98
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-113",
+      "pos": [
+        -26.24432,
+        -51.124414
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 0.0,
+      "mode": "remote",
+      "state": "high-immunity",
+      "rate": "500kbps",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-111",
+      "pos": [
+        -26.241458,
+        -51.1237
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-immunity",
+      "rate": "500kbps",
+      "pw": 24.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 8.7,
+      "rssi": -53.1,
+      "snr": 44.3,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 86.77,
+      "dist_m": 325.01,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.03,
+      "tx_near_terminal_clearance_m": 9.03,
+      "rx_near_terminal_clearance_m": 15.4
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-114",
+      "pos": [
+        -26.203093,
+        -51.133008
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-122",
+      "pos": [
+        -26.197185,
+        -51.114654
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 25.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 17.0,
+      "rssi": -85.3,
+      "snr": 25.9,
+      "loss_rate": 27.0
+    },
+    "features": {
+      "fspl": 99.43,
+      "dist_m": 1947.72,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 9.78,
+      "rx_near_terminal_clearance_m": 10.0
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-115",
+      "pos": [
+        -26.2474,
+        -51.095666
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-123",
+      "pos": [
+        -26.24354,
+        -51.11948
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 27.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 8.4,
+      "rssi": -60.1,
+      "snr": 40.3,
+      "loss_rate": 26.0
+    },
+    "features": {
+      "fspl": 100.36,
+      "dist_m": 2417.36,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 213.7
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 16.68,
+      "rx_near_terminal_clearance_m": 7.96
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-116",
+      "pos": [
+        -26.173629,
+        -51.099961
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-122",
+      "pos": [
+        -26.197185,
+        -51.114654
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 25.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 20.8,
+      "rssi": -85.6,
+      "snr": 27.1,
+      "loss_rate": 33.0
+    },
+    "features": {
+      "fspl": 101.07,
+      "dist_m": 2994.68,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 10,
+        "fresnel": 6.25,
+        "boundary": 5.62
+      },
+      "vegetation": {
+        "core": 30,
+        "fresnel": 22.5,
+        "boundary": 50
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 1.62,
+          "d_norm": 0.99
+        }
+      ],
+      "max_obstruction_angle_rad": 0.07,
+      "tx_rx_elevation_angle_rad": 0.03,
+      "tx_near_terminal_clearance_m": 9.41,
+      "rx_near_terminal_clearance_m": -1.84
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-120",
+      "pos": [
+        -26.231521,
+        -51.107069
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-123",
+      "pos": [
+        -26.24354,
+        -51.11948
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 27.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 9.6,
+      "rssi": -64.6,
+      "snr": 35.2,
+      "loss_rate": 31.0
+    },
+    "features": {
+      "fspl": 99.09,
+      "dist_m": 1819.59,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 19.8,
+        "boundary": 47.98
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.02,
+      "tx_near_terminal_clearance_m": 9.1,
+      "rx_near_terminal_clearance_m": 6.08
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-117",
+      "pos": [
+        -26.194928,
+        -51.113581
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 0
+    },
+    "tx": {
+      "name": "UVI-S-GE-122",
+      "pos": [
+        -26.197185,
+        -51.114654
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 25.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 0,
+      "rssi": 0,
+      "snr": 0,
+      "loss_rate": 0
+    },
+    "features": {
+      "fspl": 85.23,
+      "dist_m": 272.08,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 15.52
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 7.74,
+      "rx_near_terminal_clearance_m": 10.33
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-118",
+      "pos": [
+        -26.233022,
+        -51.126724
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-111",
+      "pos": [
+        -26.241458,
+        -51.1237
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-immunity",
+      "rate": "500kbps",
+      "pw": 24.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 8.0,
+      "rssi": -64.8,
+      "snr": 42.1,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 95.41,
+      "dist_m": 982.26,
+      "delta_diffra": 10.38,
+      "terrain": {
+        "core": 0,
+        "fresnel": 73.75,
+        "boundary": 184.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.9,
+          "d_norm": 0.44
+        },
+        {
+          "v_v": 0.45,
+          "d_norm": 0.9
+        },
+        {
+          "v_v": 0.23,
+          "d_norm": 0.19
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 8.57,
+      "rx_near_terminal_clearance_m": 6.98
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-119",
+      "pos": [
+        -26.24543361,
+        -51.09732936
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-123",
+      "pos": [
+        -26.24354,
+        -51.11948
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 27.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 15.9,
+      "rssi": -80.8,
+      "snr": 23.0,
+      "loss_rate": 20.0
+    },
+    "features": {
+      "fspl": 100.03,
+      "dist_m": 2222.98,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 1.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 39.16,
+        "boundary": 105.74
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.02,
+      "tx_near_terminal_clearance_m": 16.58,
+      "rx_near_terminal_clearance_m": 7.89
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-121",
+      "pos": [
+        -26.220401,
+        -51.127881
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-112",
+      "pos": [
+        -26.231521,
+        -51.107069
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 28.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 19.4,
+      "rssi": -77.5,
+      "snr": 35.9,
+      "loss_rate": 10.0
+    },
+    "features": {
+      "fspl": 100.36,
+      "dist_m": 2417.18,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 3.75,
+        "boundary": 235
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 22.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.43,
+          "d_norm": 0.19
+        },
+        {
+          "v_v": 0.28,
+          "d_norm": 0.12
+        },
+        {
+          "v_v": 0.18,
+          "d_norm": 0.08
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 4.81,
+      "rx_near_terminal_clearance_m": 8.7
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-123",
+      "pos": [
+        -26.24354,
+        -51.11948
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-111",
+      "pos": [
+        -26.241458,
+        -51.1237
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-immunity",
+      "rate": "500kbps",
+      "pw": 24.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 12.0,
+      "rssi": -64.2,
+      "snr": 33.9,
+      "loss_rate": 27.0
+    },
+    "features": {
+      "fspl": 90.17,
+      "dist_m": 480.6,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 1.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 41.12,
+        "fresnel": 184.44,
+        "boundary": 521.28
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.06,
+      "tx_near_terminal_clearance_m": 9.4,
+      "rx_near_terminal_clearance_m": 3.72
+    }
+  },
+  {
+    "rx": {
+      "name": "UVI-S-GE-122",
+      "pos": [
+        -26.197185,
+        -51.114654
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "UVI-S-GE-121",
+      "pos": [
+        -26.220401,
+        -51.127881
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 18.9,
+      "rssi": -90.1,
+      "snr": 23.6,
+      "loss_rate": 25.0
+    },
+    "features": {
+      "fspl": 100.97,
+      "dist_m": 2891.93,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 7.5,
+        "boundary": 193.75
+      },
+      "vegetation": {
+        "core": 20,
+        "fresnel": 203.75,
+        "boundary": 301.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 19.17,
+        "boundary": 37.39
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.45,
+          "d_norm": 0.82
+        },
+        {
+          "v_v": 0.4,
+          "d_norm": 0.68
+        },
+        {
+          "v_v": 0.23,
+          "d_norm": 0.62
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 8.66,
+      "rx_near_terminal_clearance_m": 5.09
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-001",
+      "pos": [
+        -25.32846,
+        -51.5001
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VCA-S-GE-005",
+      "pos": [
+        -25.31788,
+        -51.514294
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -50.6,
+      "snr": 60.8,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 99.17,
+      "dist_m": 1848.25,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 31.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.06,
+          "d_norm": 0.13
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.02,
+      "tx_near_terminal_clearance_m": 6.65,
+      "rx_near_terminal_clearance_m": 9.15
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-002",
+      "pos": [
+        -25.358887,
+        -51.445224
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VCA-S-GE-003",
+      "pos": [
+        -25.3636135,
+        -51.4391339
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.7,
+      "rssi": -44.0,
+      "snr": 62.0,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 94.05,
+      "dist_m": 806.17,
+      "delta_diffra": 1.29,
+      "terrain": {
+        "core": 0,
+        "fresnel": 63.75,
+        "boundary": 119.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.68,
+          "d_norm": 0.34
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.04,
+      "tx_near_terminal_clearance_m": 7.19,
+      "rx_near_terminal_clearance_m": 10.76
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-003",
+      "pos": [
+        -25.3636135,
+        -51.4391339
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VCA-S-P7-001",
+      "pos": [
+        -25.36738461,
+        -51.49594637
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 0.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 17.0,
+      "rssi": -65.0,
+      "snr": 43.8,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 106.7,
+      "dist_m": 5733.38,
+      "delta_diffra": 6.07,
+      "terrain": {
+        "core": 0,
+        "fresnel": 192.5,
+        "boundary": 678.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 241.32,
+        "fresnel": 2519.34,
+        "boundary": 2849.59
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.76,
+          "d_norm": 0.68
+        },
+        {
+          "v_v": 0.52,
+          "d_norm": 0.96
+        },
+        {
+          "v_v": 0.35,
+          "d_norm": 0.43
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 8.01,
+      "rx_near_terminal_clearance_m": 3.13
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-004",
+      "pos": [
+        -25.33965,
+        -51.4929
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VCA-S-GE-005",
+      "pos": [
+        -25.31788,
+        -51.514294
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 17.9,
+      "rssi": -81.0,
+      "snr": 30.6,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 101.73,
+      "dist_m": 3233.49,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 8.2,
+      "rx_near_terminal_clearance_m": 6.35
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-005",
+      "pos": [
+        -25.31788,
+        -51.514294
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VCA-S-GE-003",
+      "pos": [
+        -25.3636135,
+        -51.4391339
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.1,
+      "rssi": -70.0,
+      "snr": 39.8,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 110.72,
+      "dist_m": 9105.87,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 253.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 30.62
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 430.4,
+        "boundary": 598.3
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.2,
+          "d_norm": 0.15
+        },
+        {
+          "v_v": 0.19,
+          "d_norm": 0.55
+        },
+        {
+          "v_v": 0.17,
+          "d_norm": 0.02
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 6.34,
+      "rx_near_terminal_clearance_m": 8.02
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-006",
+      "pos": [
+        -25.317545,
+        -51.537333
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VCA-S-GE-005",
+      "pos": [
+        -25.31788,
+        -51.514294
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -58.5,
+      "snr": 51.9,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 100.2,
+      "dist_m": 2320.07,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 17.5
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.04,
+          "d_norm": 0.05
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 5.55,
+      "rx_near_terminal_clearance_m": 7.47
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-007",
+      "pos": [
+        -25.316524,
+        -51.551073
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VCA-S-GE-006",
+      "pos": [
+        -25.317545,
+        -51.537333
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 17.0,
+      "rssi": -61.0,
+      "snr": 51.7,
+      "loss_rate": 22.0
+    },
+    "features": {
+      "fspl": 97.6,
+      "dist_m": 1388.09,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 9.04,
+      "rx_near_terminal_clearance_m": 8.14
+    }
+  },
+  {
+    "rx": {
+      "name": "VCA-S-GE-008",
+      "pos": [
+        -25.305232,
+        -51.608231
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VCA-S-GE-006",
+      "pos": [
+        -25.317545,
+        -51.537333
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 16.7,
+      "rssi": -72.8,
+      "snr": 39.4,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 108.76,
+      "dist_m": 7268.15,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 55.62
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 9.98,
+        "boundary": 37.13
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.25,
+          "d_norm": 0.19
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 9.25,
+      "rx_near_terminal_clearance_m": 7.02
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-003",
+      "pos": [
+        -25.367938,
+        -52.229555
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VIR-P-P7-001",
+      "pos": [
+        -25.38811,
+        -52.21484
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 7.1,
+      "rssi": -52.2,
+      "snr": 52.7,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 100.74,
+      "dist_m": 2680.79,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 1.25
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 1.25
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 13.53,
+      "rx_near_terminal_clearance_m": 7.13
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-009",
+      "pos": [
+        -25.242392,
+        -52.310364
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 0.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 5.0
+    },
+    "tx": {
+      "name": "VIR-P-GE-008",
+      "pos": [
+        -25.261539,
+        -52.286271
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 4.0
+    },
+    "measures": {
+      "lqi": 16.3,
+      "rssi": -58.7,
+      "snr": 55.2,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 101.7,
+      "dist_m": 3223.38,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 3.75,
+        "boundary": 56.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.28,
+          "d_norm": 0.61
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.02,
+      "tx_near_terminal_clearance_m": 14.85,
+      "rx_near_terminal_clearance_m": 9.95
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-001",
+      "pos": [
+        -25.377728,
+        -52.198478
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VIR-P-P7-001",
+      "pos": [
+        -25.38811,
+        -52.21484
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 7.4,
+      "rssi": -71.7,
+      "snr": 39.2,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 99.57,
+      "dist_m": 2008.48,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 13.78,
+        "boundary": 143.45
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.06,
+      "tx_near_terminal_clearance_m": 7.96,
+      "rx_near_terminal_clearance_m": 9.92
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-002",
+      "pos": [
+        -25.37586,
+        -52.20299
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VIR-P-P7-001",
+      "pos": [
+        -25.38811,
+        -52.21484
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 5.5,
+      "rssi": -69.0,
+      "snr": 39.9,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 99.06,
+      "dist_m": 1806.57,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 43.75,
+        "boundary": 60
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 10.06,
+        "boundary": 34.1
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.07,
+      "tx_near_terminal_clearance_m": 7.64,
+      "rx_near_terminal_clearance_m": 9.25
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-005",
+      "pos": [
+        -25.34847,
+        -52.25592
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VIR-P-GE-004",
+      "pos": [
+        -25.367938,
+        -52.229555
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -79.5,
+      "snr": 31.5,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 102.21,
+      "dist_m": 3419.59,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 118.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 11.94,
+        "boundary": 11.94
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.29,
+          "d_norm": 0.59
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 9.79,
+      "rx_near_terminal_clearance_m": 12.51
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-006",
+      "pos": [
+        -25.318803,
+        -52.301478
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIR-P-GE-005",
+      "pos": [
+        -25.34847,
+        -52.25592
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 3.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.6,
+      "rssi": -74.0,
+      "snr": 37.2,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 106.56,
+      "dist_m": 5642.47,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 3.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 6.93,
+      "rx_near_terminal_clearance_m": 9.81
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-007",
+      "pos": [
+        -25.267501,
+        -52.290098
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIR-P-GE-006",
+      "pos": [
+        -25.318803,
+        -52.301478
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 17.1,
+      "rssi": -84.5,
+      "snr": 25.5,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 106.8,
+      "dist_m": 5797.5,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.02,
+      "tx_near_terminal_clearance_m": 5.8,
+      "rx_near_terminal_clearance_m": 15.86
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-008",
+      "pos": [
+        -25.261539,
+        -52.286271
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VIR-P-GE-007",
+      "pos": [
+        -25.267501,
+        -52.290098
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -54.6,
+      "snr": 48.3,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 93.67,
+      "dist_m": 764.73,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.02,
+      "tx_near_terminal_clearance_m": 6.75,
+      "rx_near_terminal_clearance_m": 13.6
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-010",
+      "pos": [
+        -25.257536,
+        -52.284512
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VIR-P-GE-007",
+      "pos": [
+        -25.267501,
+        -52.290098
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -61.5,
+      "snr": 42.7,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 96.92,
+      "dist_m": 1239.04,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 7.5,
+        "boundary": 21.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 1.25,
+        "boundary": 8.12
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 12.6,
+        "boundary": 12.6
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.94,
+          "d_norm": 0.96
+        },
+        {
+          "v_v": 0.77,
+          "d_norm": 0.92
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 7.44,
+      "rx_near_terminal_clearance_m": 0.19
+    }
+  },
+  {
+    "rx": {
+      "name": "VIR-P-GE-011",
+      "pos": [
+        -25.209745,
+        -52.277211
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 5.0
+    },
+    "tx": {
+      "name": "VIR-P-GE-010",
+      "pos": [
+        -25.257536,
+        -52.284512
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 4.0
+    },
+    "measures": {
+      "lqi": 16.2,
+      "rssi": -79.4,
+      "snr": 32.2,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 106.09,
+      "dist_m": 5344.98,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 160.62
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 3.75,
+        "boundary": 28.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.36,
+          "d_norm": 0.34
+        },
+        {
+          "v_v": 0.35,
+          "d_norm": 0.02
+        },
+        {
+          "v_v": 0.29,
+          "d_norm": 0.29
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.02,
+      "tx_near_terminal_clearance_m": 5.98,
+      "rx_near_terminal_clearance_m": 13.31
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-006",
+      "pos": [
+        -26.26041,
+        -52.76453
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-004",
+      "pos": [
+        -26.250545,
+        -52.78058
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 11.0,
+      "rssi": -58.0,
+      "snr": 41.8,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 99.41,
+      "dist_m": 1940.48,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 13.42,
+      "rx_near_terminal_clearance_m": 7.95
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-004",
+      "pos": [
+        -26.250545,
+        -52.78058
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-002",
+      "pos": [
+        -26.26962,
+        -52.77431
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 3.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 10.0,
+      "rssi": -60.0,
+      "snr": 39.0,
+      "loss_rate": 5.0
+    },
+    "features": {
+      "fspl": 99.99,
+      "dist_m": 2204.22,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 30,
+        "fresnel": 30,
+        "boundary": 47.5
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 11.52,
+        "fresnel": 165.24,
+        "boundary": 476.35
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 1.16,
+          "d_norm": 0.02
+        },
+        {
+          "v_v": 0.77,
+          "d_norm": 0.06
+        }
+      ],
+      "max_obstruction_angle_rad": 0.01,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": -0.67,
+      "rx_near_terminal_clearance_m": 9.3
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-005",
+      "pos": [
+        -26.2539117,
+        -52.783524
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-004",
+      "pos": [
+        -26.250545,
+        -52.78058
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 11.1,
+      "rssi": -45.0,
+      "snr": 61.6,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 90.07,
+      "dist_m": 475.01,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 7.5,
+        "boundary": 24.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.19,
+          "d_norm": 0.17
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.05,
+      "tx_near_terminal_clearance_m": 4.73,
+      "rx_near_terminal_clearance_m": 8.55
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-007",
+      "pos": [
+        -26.256869,
+        -52.771348
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-006",
+      "pos": [
+        -26.26041,
+        -52.76453
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 3.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 8.1,
+      "rssi": -61.1,
+      "snr": 49.3,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 93.87,
+      "dist_m": 786.01,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 6.98,
+        "fresnel": 77.48,
+        "boundary": 166.59
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.05,
+      "tx_near_terminal_clearance_m": 7.01,
+      "rx_near_terminal_clearance_m": 7.9
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-009",
+      "pos": [
+        -26.250714,
+        -52.765645
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-008",
+      "pos": [
+        -26.250432,
+        -52.767124
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 8.8,
+      "rssi": -45.3,
+      "snr": 61.7,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 80.11,
+      "dist_m": 151.03,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.04,
+      "tx_near_terminal_clearance_m": 6.59,
+      "rx_near_terminal_clearance_m": 6.8
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-010",
+      "pos": [
+        -26.250883,
+        -52.764486
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-008",
+      "pos": [
+        -26.250432,
+        -52.767124
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 8.7,
+      "rssi": -63.2,
+      "snr": 46.5,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 85.1,
+      "dist_m": 268.24,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.03,
+      "tx_near_terminal_clearance_m": 9.19,
+      "rx_near_terminal_clearance_m": 9.28
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-011",
+      "pos": [
+        -26.237669,
+        -52.742657
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-008",
+      "pos": [
+        -26.250432,
+        -52.767124
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 8.9,
+      "rssi": -69.9,
+      "snr": 38.8,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 100.9,
+      "dist_m": 2824.01,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.02,
+      "tx_near_terminal_clearance_m": 10.89,
+      "rx_near_terminal_clearance_m": 8.92
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-001",
+      "pos": [
+        -26.268826,
+        -52.784854
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-002",
+      "pos": [
+        -26.26962,
+        -52.77431
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 3.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 10.0,
+      "rssi": -55.0,
+      "snr": 55.8,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 95.9,
+      "dist_m": 1056.89,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 7.47
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 10.15,
+      "rx_near_terminal_clearance_m": 8.02
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-003",
+      "pos": [
+        -26.268777,
+        -52.790514
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-001",
+      "pos": [
+        -26.268826,
+        -52.784854
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 10.4,
+      "rssi": -50.3,
+      "snr": 60.6,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 91.45,
+      "dist_m": 565.4,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 1.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 52.64,
+        "boundary": 81.83
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 5.28,
+      "rx_near_terminal_clearance_m": 8.94
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-012",
+      "pos": [
+        -26.279675,
+        -52.812088
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-immunity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-001",
+      "pos": [
+        -26.268826,
+        -52.784854
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 17.6,
+      "rssi": -76.1,
+      "snr": 21.3,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 101.05,
+      "dist_m": 2973.97,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 15,
+        "boundary": 89.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 74.45,
+        "boundary": 121.53
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.46,
+          "d_norm": 0.28
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.04,
+      "tx_near_terminal_clearance_m": 6.64,
+      "rx_near_terminal_clearance_m": 7.36
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-014",
+      "pos": [
+        -26.287626,
+        -52.846394
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-013",
+      "pos": [
+        -26.279675,
+        -52.812088
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.8,
+      "rssi": -81.0,
+      "snr": 28.1,
+      "loss_rate": 5.0
+    },
+    "features": {
+      "fspl": 102.51,
+      "dist_m": 3537.78,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 3.75,
+        "boundary": 51.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 6.25,
+        "boundary": 6.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.34,
+          "d_norm": 0.04
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 3.73,
+      "rx_near_terminal_clearance_m": 7.4
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-015",
+      "pos": [
+        -26.240703,
+        -52.82658
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-014",
+      "pos": [
+        -26.287626,
+        -52.846394
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 18.4,
+      "rssi": -89.7,
+      "snr": 15.9,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 106.44,
+      "dist_m": 5562.73,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 22.5,
+        "boundary": 138.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 20
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.43,
+          "d_norm": 0.5
+        },
+        {
+          "v_v": 0.33,
+          "d_norm": 0.77
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 7.12,
+      "rx_near_terminal_clearance_m": 7.57
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-017",
+      "pos": [
+        -26.248214,
+        -52.855278
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-016",
+      "pos": [
+        -26.240703,
+        -52.82658
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -60.3,
+      "snr": 45.9,
+      "loss_rate": 14.0
+    },
+    "features": {
+      "fspl": 101.06,
+      "dist_m": 2985.52,
+      "delta_diffra": 4.95,
+      "terrain": {
+        "core": 0,
+        "fresnel": 56.25,
+        "boundary": 113.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.93,
+          "d_norm": 0.96
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 7.46,
+      "rx_near_terminal_clearance_m": 5.68
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-018",
+      "pos": [
+        -26.220959,
+        -52.829828
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-017",
+      "pos": [
+        -26.248214,
+        -52.855278
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 14.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.9,
+      "rssi": -75.3,
+      "snr": 37.9,
+      "loss_rate": 9.0
+    },
+    "features": {
+      "fspl": 103.46,
+      "dist_m": 3947.73,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 6.25
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 14.02,
+      "rx_near_terminal_clearance_m": 6.54
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-019",
+      "pos": [
+        -26.29862352,
+        -52.819299
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-023",
+      "pos": [
+        -26.290427,
+        -52.817148
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 6.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -87.0,
+      "snr": 15.9,
+      "loss_rate": 11.0
+    },
+    "features": {
+      "fspl": 95.07,
+      "dist_m": 933.17,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 18.75,
+        "boundary": 56.25
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 8.9,
+      "rx_near_terminal_clearance_m": 9.08
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-020",
+      "pos": [
+        -26.345227,
+        -52.84343
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-014",
+      "pos": [
+        -26.287626,
+        -52.846394
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 17.9,
+      "rssi": -82.1,
+      "snr": 21.7,
+      "loss_rate": 6.0
+    },
+    "features": {
+      "fspl": 107.64,
+      "dist_m": 6388.64,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 15
+      },
+      "vegetation": {
+        "core": 10,
+        "fresnel": 16.25,
+        "boundary": 28.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 10.48
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.05,
+          "d_norm": 0.22
+        },
+        {
+          "v_v": 0.02,
+          "d_norm": 0.02
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 6.75,
+      "rx_near_terminal_clearance_m": 11.7
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-021",
+      "pos": [
+        -26.331005,
+        -52.785785
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-020",
+      "pos": [
+        -26.345227,
+        -52.84343
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 6.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 16.9,
+      "rssi": -80.8,
+      "snr": 25.9,
+      "loss_rate": 15.0
+    },
+    "features": {
+      "fspl": 107.05,
+      "dist_m": 5966.49,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 1.25,
+        "boundary": 5.62
+      },
+      "vegetation": {
+        "core": 40,
+        "fresnel": 40,
+        "boundary": 43.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 35.26
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 4.62,
+      "rx_near_terminal_clearance_m": 7.83
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-022",
+      "pos": [
+        -26.350633,
+        -52.860899
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-014",
+      "pos": [
+        -26.287626,
+        -52.846394
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 18.0,
+      "rssi": -73.0,
+      "snr": 33.0,
+      "loss_rate": 11.0
+    },
+    "features": {
+      "fspl": 108.59,
+      "dist_m": 7129.38,
+      "delta_diffra": 0.33,
+      "terrain": {
+        "core": 0,
+        "fresnel": 2.5,
+        "boundary": 46.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 2.5,
+        "boundary": 14.38
+      },
+      "buildings": {
+        "core": 16.35,
+        "fresnel": 47.75,
+        "boundary": 121.32
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.45,
+          "d_norm": 0.72
+        },
+        {
+          "v_v": 0.11,
+          "d_norm": 0.98
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 6.8,
+      "rx_near_terminal_clearance_m": 4.73
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-008",
+      "pos": [
+        -26.250432,
+        -52.767124
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-004",
+      "pos": [
+        -26.250545,
+        -52.78058
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-immunity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 11.6,
+      "rssi": -58.0,
+      "snr": 52.0,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 97.41,
+      "dist_m": 1344.37,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 10.39,
+      "rx_near_terminal_clearance_m": 8.87
+    }
+  },
+  {
+    "rx": {
+      "name": "VIT-P-GE-023",
+      "pos": [
+        -26.290427,
+        -52.817148
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VIT-P-GE-014",
+      "pos": [
+        -26.287626,
+        -52.846394
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 20.9,
+      "rssi": -101.6,
+      "snr": 10.0,
+      "loss_rate": 6.0
+    },
+    "features": {
+      "fspl": 101.02,
+      "dist_m": 2937.28,
+      "delta_diffra": 11.63,
+      "terrain": {
+        "core": 0,
+        "fresnel": 100,
+        "boundary": 190.62
+      },
+      "vegetation": {
+        "core": 120,
+        "fresnel": 72.5,
+        "boundary": 31.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.96,
+          "d_norm": 0.89
+        },
+        {
+          "v_v": 0.38,
+          "d_norm": 0.8
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 8.86,
+      "rx_near_terminal_clearance_m": 4.64
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-001",
+      "pos": [
+        -25.87857,
+        -52.90906
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-P7-001",
+      "pos": [
+        -25.88422302,
+        -52.90507905
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 8.4,
+      "rssi": -46.0,
+      "snr": 60.8,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 93.46,
+      "dist_m": 742.56,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 4.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 8.46,
+        "fresnel": 157.25,
+        "boundary": 365.31
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 6.79,
+      "rx_near_terminal_clearance_m": 5.99
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-003",
+      "pos": [
+        -25.875634,
+        -52.909521
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-P7-001",
+      "pos": [
+        -25.88422302,
+        -52.90507905
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 13.9,
+      "rssi": -63.9,
+      "snr": 43.7,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 95.86,
+      "dist_m": 1050.53,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 20.62
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 25.47,
+        "fresnel": 87.22,
+        "boundary": 104.74
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.1,
+          "d_norm": 0.87
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 7.64,
+      "rx_near_terminal_clearance_m": 4.05
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-005",
+      "pos": [
+        -25.812194,
+        -52.91693
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-017",
+      "pos": [
+        -25.869248,
+        -52.931267
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 6.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.6,
+      "rssi": -73.7,
+      "snr": 36.1,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 107.77,
+      "dist_m": 6482.12,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.02,
+      "tx_near_terminal_clearance_m": 8.91,
+      "rx_near_terminal_clearance_m": 8.18
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-006",
+      "pos": [
+        -25.895278,
+        -52.929897
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-010",
+      "pos": [
+        -25.869118,
+        -52.927845
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 11.0,
+      "rssi": -65.1,
+      "snr": 42.7,
+      "loss_rate": 10.0
+    },
+    "features": {
+      "fspl": 100.99,
+      "dist_m": 2905.45,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 9.72,
+      "rx_near_terminal_clearance_m": 8.55
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-007",
+      "pos": [
+        -25.81467222,
+        -52.91921111
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-027",
+      "pos": [
+        -25.81227,
+        -52.91693
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 7.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -76.7,
+      "snr": 37.0,
+      "loss_rate": 8.0
+    },
+    "features": {
+      "fspl": 87.44,
+      "dist_m": 350.92,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 17.5
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.25,
+          "d_norm": 0.31
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 6.37,
+      "rx_near_terminal_clearance_m": 5.17
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-010",
+      "pos": [
+        -25.869118,
+        -52.927845
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-P7-001",
+      "pos": [
+        -25.88422302,
+        -52.90507905
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 10.7,
+      "rssi": -63.0,
+      "snr": 40.1,
+      "loss_rate": 10.0
+    },
+    "features": {
+      "fspl": 100.91,
+      "dist_m": 2829.54,
+      "delta_diffra": 7.04,
+      "terrain": {
+        "core": 0,
+        "fresnel": 43.75,
+        "boundary": 73.75
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 10.46,
+        "fresnel": 17.85,
+        "boundary": 58.88
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.9,
+          "d_norm": 0.27
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.03,
+      "tx_near_terminal_clearance_m": 9.17,
+      "rx_near_terminal_clearance_m": 7.44
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-011",
+      "pos": [
+        -25.935405,
+        -53.026806
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-021",
+      "pos": [
+        -25.91686,
+        -52.978159
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 15.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 12.5,
+      "rssi": -82.9,
+      "snr": 16.0,
+      "loss_rate": 32.0
+    },
+    "features": {
+      "fspl": 106.0,
+      "dist_m": 5288.84,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.03,
+      "tx_near_terminal_clearance_m": 11.64,
+      "rx_near_terminal_clearance_m": 5.99
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-014",
+      "pos": [
+        -25.907676,
+        -53.032692
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 5.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-011",
+      "pos": [
+        -25.935405,
+        -53.026806
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 32.0,
+      "hops": 4.0
+    },
+    "measures": {
+      "lqi": 10.8,
+      "rssi": -79.5,
+      "snr": 29.8,
+      "loss_rate": 35.0
+    },
+    "features": {
+      "fspl": 101.44,
+      "dist_m": 3128.09,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 7.5,
+        "boundary": 151.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 31.25,
+        "boundary": 54.38
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.44,
+          "d_norm": 0.93
+        },
+        {
+          "v_v": 0.21,
+          "d_norm": 0.26
+        },
+        {
+          "v_v": 0.08,
+          "d_norm": 0.22
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.06,
+      "tx_near_terminal_clearance_m": 11.34,
+      "rx_near_terminal_clearance_m": 6.93
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-016",
+      "pos": [
+        -25.869248,
+        -52.931267
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-010",
+      "pos": [
+        -25.869118,
+        -52.927845
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 10.7,
+      "rssi": -60.0,
+      "snr": 40.7,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 87.25,
+      "dist_m": 343.28,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.06,
+      "tx_near_terminal_clearance_m": 9.37,
+      "rx_near_terminal_clearance_m": 5.08
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-018",
+      "pos": [
+        -25.897783,
+        -52.941775
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-006",
+      "pos": [
+        -25.895278,
+        -52.929897
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 10.3,
+      "rssi": -53.9,
+      "snr": 54.5,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 96.83,
+      "dist_m": 1222.16,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 22.5,
+        "boundary": 68.75
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.91,
+          "d_norm": 0.57
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.07,
+      "tx_near_terminal_clearance_m": 10.71,
+      "rx_near_terminal_clearance_m": 7.29
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-019",
+      "pos": [
+        -25.879313,
+        -52.901738
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-003",
+      "pos": [
+        -25.875634,
+        -52.909521
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 12.7,
+      "rssi": -60.7,
+      "snr": 40.8,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 94.66,
+      "dist_m": 880.09,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 14.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 11.61,
+        "boundary": 106.72
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.01,
+          "d_norm": 0.86
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 7.12,
+      "rx_near_terminal_clearance_m": 7.59
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-022",
+      "pos": [
+        -25.891682,
+        -52.917179
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-010",
+      "pos": [
+        -25.869118,
+        -52.927845
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 8.4,
+      "rssi": -62.1,
+      "snr": 43.6,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 100.78,
+      "dist_m": 2718.73,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 7.77,
+      "rx_near_terminal_clearance_m": 8.34
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-024",
+      "pos": [
+        -25.88596,
+        -52.9139
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-P7-001",
+      "pos": [
+        -25.88422302,
+        -52.90507905
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 12.4,
+      "rssi": -52.2,
+      "snr": 54.1,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 94.85,
+      "dist_m": 904.69,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 22.5,
+        "boundary": 43.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 9.23,
+        "fresnel": 19.51,
+        "boundary": 23.28
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.88,
+          "d_norm": 0.09
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.08,
+      "tx_near_terminal_clearance_m": 3.56,
+      "rx_near_terminal_clearance_m": 8.28
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-030",
+      "pos": [
+        -25.777,
+        -52.8736
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-027",
+      "pos": [
+        -25.81227,
+        -52.91693
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 7.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -75.6,
+      "snr": 36.7,
+      "loss_rate": 16.0
+    },
+    "features": {
+      "fspl": 106.87,
+      "dist_m": 5843.97,
+      "delta_diffra": 4.8,
+      "terrain": {
+        "core": 0,
+        "fresnel": 15,
+        "boundary": 88.75
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 8.32
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.45,
+          "d_norm": 0.03
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 5.91,
+      "rx_near_terminal_clearance_m": 6.18
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-032",
+      "pos": [
+        -25.914291,
+        -52.964371
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-010",
+      "pos": [
+        -25.869118,
+        -52.927845
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 9.8,
+      "rssi": -69.1,
+      "snr": 35.5,
+      "loss_rate": 8.0
+    },
+    "features": {
+      "fspl": 107.38,
+      "dist_m": 6200.24,
+      "delta_diffra": 0.04,
+      "terrain": {
+        "core": 0,
+        "fresnel": 72.5,
+        "boundary": 239.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 18.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.71,
+          "d_norm": 0.05
+        },
+        {
+          "v_v": 0.38,
+          "d_norm": 0.88
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 5.08,
+      "rx_near_terminal_clearance_m": 6.38
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-033",
+      "pos": [
+        -25.908027,
+        -52.986695
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-032",
+      "pos": [
+        -25.914291,
+        -52.964371
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 8.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 11.5,
+      "rssi": -65.1,
+      "snr": 39.7,
+      "loss_rate": 13.0
+    },
+    "features": {
+      "fspl": 100.24,
+      "dist_m": 2341.89,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 13.75
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.15,
+          "d_norm": 0.78
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 5.82,
+      "rx_near_terminal_clearance_m": 8.43
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-035",
+      "pos": [
+        -25.822525,
+        -52.91596
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-012",
+      "pos": [
+        -25.817801,
+        -52.918247
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -71.2,
+      "snr": 39.5,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 91.53,
+      "dist_m": 571.39,
+      "delta_diffra": 26.81,
+      "terrain": {
+        "core": 220,
+        "fresnel": 245,
+        "boundary": 236.25
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 107.49,
+        "boundary": 185.71
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 2.31,
+          "d_norm": 0.14
+        }
+      ],
+      "max_obstruction_angle_rad": 0.09,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": -4.1,
+      "rx_near_terminal_clearance_m": 6.88
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-036",
+      "pos": [
+        -25.893929,
+        -52.919194
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-010",
+      "pos": [
+        -25.869118,
+        -52.927845
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 13.6,
+      "rssi": -89.2,
+      "snr": 16.6,
+      "loss_rate": 32.0
+    },
+    "features": {
+      "fspl": 100.96,
+      "dist_m": 2882.2,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 27.5,
+        "boundary": 61.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 2.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 5.84,
+        "boundary": 5.84
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.53,
+          "d_norm": 0.97
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 8.92,
+      "rx_near_terminal_clearance_m": 2.56
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-037",
+      "pos": [
+        -25.883343,
+        -52.907104
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 0
+    },
+    "tx": {
+      "name": "VRE-S-P7-001",
+      "pos": [
+        -25.88422302,
+        -52.90507905
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 0,
+      "rssi": 0,
+      "snr": 0,
+      "loss_rate": 0
+    },
+    "features": {
+      "fspl": 83.58,
+      "dist_m": 225.14,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 5,
+        "boundary": 41.88
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 27.62,
+        "boundary": 49.82
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.5,
+          "d_norm": 0.48
+        },
+        {
+          "v_v": 0.01,
+          "d_norm": 0.84
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.06,
+      "tx_near_terminal_clearance_m": 4.35,
+      "rx_near_terminal_clearance_m": 2.78
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-039",
+      "pos": [
+        -25.87764,
+        -52.97488
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-006",
+      "pos": [
+        -25.895278,
+        -52.929897
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 11.8,
+      "rssi": -64.4,
+      "snr": 44.1,
+      "loss_rate": 9.0
+    },
+    "features": {
+      "fspl": 105.36,
+      "dist_m": 4913.21,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 14.6,
+      "rx_near_terminal_clearance_m": 11.2
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-041",
+      "pos": [
+        -25.90032654,
+        -52.95059784
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-006",
+      "pos": [
+        -25.895278,
+        -52.929897
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 10.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 13.0,
+      "rssi": -71.4,
+      "snr": 34.7,
+      "loss_rate": 6.0
+    },
+    "features": {
+      "fspl": 99.88,
+      "dist_m": 2148.39,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 6.25,
+        "boundary": 78.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.42,
+          "d_norm": 0.77
+        },
+        {
+          "v_v": 0.31,
+          "d_norm": 0.82
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.03,
+      "tx_near_terminal_clearance_m": 12.82,
+      "rx_near_terminal_clearance_m": 10.93
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-021",
+      "pos": [
+        -25.91686,
+        -52.978159
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-032",
+      "pos": [
+        -25.914291,
+        -52.964371
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 8.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -67.4,
+      "snr": 39.6,
+      "loss_rate": 15.0
+    },
+    "features": {
+      "fspl": 97.7,
+      "dist_m": 1410.42,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 15,
+        "boundary": 129.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.42,
+          "d_norm": 0.48
+        },
+        {
+          "v_v": 0.22,
+          "d_norm": 0.11
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 5.42,
+      "rx_near_terminal_clearance_m": 7.68
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-012",
+      "pos": [
+        -25.817801,
+        -52.918247
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "VRE-S-GE-027",
+      "pos": [
+        -25.81227,
+        -52.91693
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 7.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 17.2,
+      "rssi": -90.4,
+      "snr": 23.0,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 92.22,
+      "dist_m": 626.82,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 17.32
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.03,
+      "tx_near_terminal_clearance_m": 5.66,
+      "rx_near_terminal_clearance_m": 10.24
+    }
+  },
+  {
+    "rx": {
+      "name": "VRE-S-GE-034",
+      "pos": [
+        -25.8507,
+        -52.9024546
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 0
+    },
+    "tx": {
+      "name": "VRE-S-GE-003",
+      "pos": [
+        -25.875634,
+        -52.909521
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 0,
+      "rssi": 0,
+      "snr": 0,
+      "loss_rate": 0
+    },
+    "features": {
+      "fspl": 100.93,
+      "dist_m": 2851.7,
+      "delta_diffra": 10.54,
+      "terrain": {
+        "core": 20,
+        "fresnel": 241.25,
+        "boundary": 455
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 25,
+        "boundary": 18.12
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 39.16,
+        "boundary": 124.38
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 1.07,
+          "d_norm": 0.81
+        },
+        {
+          "v_v": 0.66,
+          "d_norm": 0.49
+        },
+        {
+          "v_v": 0.52,
+          "d_norm": 0.11
+        }
+      ],
+      "max_obstruction_angle_rad": 0.0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 8.05,
+      "rx_near_terminal_clearance_m": 8.26
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-009",
+      "pos": [
+        -25.838531,
+        -51.171982
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-015",
+      "pos": [
+        -25.83756,
+        -51.169891
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -52.4,
+      "snr": 60.2,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 83.98,
+      "dist_m": 235.62,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 10,
+        "fresnel": 55,
+        "boundary": 87.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.03,
+      "tx_near_terminal_clearance_m": 6.29,
+      "rx_near_terminal_clearance_m": 6.81
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-006",
+      "pos": [
+        -25.853661,
+        -51.245933
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-003",
+      "pos": [
+        -25.851406,
+        -51.238813
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -63.7,
+      "snr": 45.4,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 93.59,
+      "dist_m": 756.18,
+      "delta_diffra": 1.77,
+      "terrain": {
+        "core": 0,
+        "fresnel": 26.25,
+        "boundary": 73.12
+      },
+      "vegetation": {
+        "core": 80,
+        "fresnel": 75,
+        "boundary": 70.62
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.55,
+          "d_norm": 0.79
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 5.89,
+      "rx_near_terminal_clearance_m": 6.52
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-012",
+      "pos": [
+        -25.79997,
+        -51.06666
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-016",
+      "pos": [
+        -25.84115,
+        -51.124828
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 3.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 18.2,
+      "rssi": -95.5,
+      "snr": 18.9,
+      "loss_rate": 5.0
+    },
+    "features": {
+      "fspl": 108.92,
+      "dist_m": 7404.78,
+      "delta_diffra": 2.77,
+      "terrain": {
+        "core": 0,
+        "fresnel": 103.75,
+        "boundary": 373.12
+      },
+      "vegetation": {
+        "core": 80,
+        "fresnel": 85,
+        "boundary": 85.62
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.64,
+          "d_norm": 0.52
+        },
+        {
+          "v_v": 0.57,
+          "d_norm": 0.47
+        },
+        {
+          "v_v": 0.4,
+          "d_norm": 0.34
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 13.88,
+      "rx_near_terminal_clearance_m": 11.48
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-014",
+      "pos": [
+        -25.822438,
+        -51.146491
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-015",
+      "pos": [
+        -25.83756,
+        -51.169891
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 19.2,
+      "rssi": -99.6,
+      "snr": 13.0,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 100.96,
+      "dist_m": 2882.86,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 200,
+        "fresnel": 173.75,
+        "boundary": 198.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 12.96,
+      "rx_near_terminal_clearance_m": 7.74
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-015",
+      "pos": [
+        -25.83756,
+        -51.169891
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-007",
+      "pos": [
+        -25.866149,
+        -51.233736
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.3,
+      "rssi": -86.3,
+      "snr": 27.3,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 108.61,
+      "dist_m": 7140.84,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 58.12
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 55,
+        "boundary": 200.62
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 28.63,
+        "boundary": 28.63
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.28,
+          "d_norm": 0.19
+        },
+        {
+          "v_v": 0.12,
+          "d_norm": 0.94
+        },
+        {
+          "v_v": 0.05,
+          "d_norm": 0.93
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.02,
+      "tx_near_terminal_clearance_m": 11.73,
+      "rx_near_terminal_clearance_m": 7.32
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-017",
+      "pos": [
+        -25.84115,
+        -51.124828
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-015",
+      "pos": [
+        -25.83756,
+        -51.169891
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 19.5,
+      "rssi": -99.7,
+      "snr": 13.2,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 104.66,
+      "dist_m": 4535.2,
+      "delta_diffra": 32.39,
+      "terrain": {
+        "core": 720,
+        "fresnel": 702.5,
+        "boundary": 603.12
+      },
+      "vegetation": {
+        "core": 270,
+        "fresnel": 288.75,
+        "boundary": 433.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 1.95,
+          "d_norm": 0.36
+        },
+        {
+          "v_v": 1.89,
+          "d_norm": 0.7
+        },
+        {
+          "v_v": 1.79,
+          "d_norm": 0.98
+        }
+      ],
+      "max_obstruction_angle_rad": 0.06,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 9.27,
+      "rx_near_terminal_clearance_m": -0.65
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-011",
+      "pos": [
+        -25.792495,
+        -51.0586
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-018",
+      "pos": [
+        -25.795572,
+        -51.063899
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 90.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 17.5,
+      "rssi": -94.0,
+      "snr": 3.9,
+      "loss_rate": 100.0
+    },
+    "features": {
+      "fspl": 92.28,
+      "dist_m": 631.38,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 120,
+        "fresnel": 223.75,
+        "boundary": 252.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 8.31,
+      "rx_near_terminal_clearance_m": 8.3
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-020",
+      "pos": [
+        -25.7927,
+        -51.04847
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 5.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-011",
+      "pos": [
+        -25.792495,
+        -51.0586
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 100.0,
+      "hops": 4.0
+    },
+    "measures": {
+      "lqi": 16.1,
+      "rssi": -85.2,
+      "snr": 8.4,
+      "loss_rate": 100.0
+    },
+    "features": {
+      "fspl": 95.64,
+      "dist_m": 1016.22,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 6.88
+      },
+      "vegetation": {
+        "core": 290,
+        "fresnel": 342.5,
+        "boundary": 391.25
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.06,
+          "d_norm": 0.77
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 9.48,
+      "rx_near_terminal_clearance_m": 6.47
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-018",
+      "pos": [
+        -25.795572,
+        -51.063899
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-019",
+      "pos": [
+        -25.800033,
+        -51.062324
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 49.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 18.1,
+      "rssi": -76.4,
+      "snr": 8.5,
+      "loss_rate": 90.0
+    },
+    "features": {
+      "fspl": 90.8,
+      "dist_m": 518.84,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 11.25,
+        "boundary": 21.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.07,
+      "tx_near_terminal_clearance_m": 10.21,
+      "rx_near_terminal_clearance_m": 7.55
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-013",
+      "pos": [
+        -25.815489,
+        -51.167178
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-015",
+      "pos": [
+        -25.83756,
+        -51.169891
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.9,
+      "rssi": -88.8,
+      "snr": 25.3,
+      "loss_rate": 5.0
+    },
+    "features": {
+      "fspl": 100.43,
+      "dist_m": 2460.23,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 20,
+        "boundary": 45.62
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.06,
+      "tx_near_terminal_clearance_m": 6.95,
+      "rx_near_terminal_clearance_m": 10.98
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-010",
+      "pos": [
+        -25.853434,
+        -51.160564
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-009",
+      "pos": [
+        -25.838531,
+        -51.171982
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 3.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 17.5,
+      "rssi": -96.7,
+      "snr": 17.1,
+      "loss_rate": 6.0
+    },
+    "features": {
+      "fspl": 99.57,
+      "dist_m": 2009.01,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 3.12
+      },
+      "vegetation": {
+        "core": 100,
+        "fresnel": 108.75,
+        "boundary": 168.12
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 8.36,
+        "boundary": 8.36
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.12,
+          "d_norm": 0.08
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 8.36,
+      "rx_near_terminal_clearance_m": 6.39
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-019",
+      "pos": [
+        -25.800033,
+        -51.062324
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-012",
+      "pos": [
+        -25.79997,
+        -51.06666
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 5.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.7,
+      "rssi": -53.6,
+      "snr": 16.6,
+      "loss_rate": 49.0
+    },
+    "features": {
+      "fspl": 89.3,
+      "dist_m": 434.9,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 80,
+        "fresnel": 71.25,
+        "boundary": 56.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 7.97,
+      "rx_near_terminal_clearance_m": 8.91
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-021",
+      "pos": [
+        -25.770825,
+        -51.052126
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 6.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-020",
+      "pos": [
+        -25.7927,
+        -51.04847
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 100.0,
+      "hops": 5.0
+    },
+    "measures": {
+      "lqi": 20.8,
+      "rssi": -101.9,
+      "snr": 3.4,
+      "loss_rate": 100.0
+    },
+    "features": {
+      "fspl": 100.42,
+      "dist_m": 2451.0,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 69.38
+      },
+      "vegetation": {
+        "core": 330,
+        "fresnel": 418.75,
+        "boundary": 392.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.37,
+          "d_norm": 0.24
+        },
+        {
+          "v_v": 0.26,
+          "d_norm": 0.97
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 6.28,
+      "rx_near_terminal_clearance_m": 5.52
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-002",
+      "pos": [
+        -25.787711,
+        -51.355197
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "ZAT-R-P7-001",
+      "pos": [
+        -25.70907973,
+        -51.35884876
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 7.5,
+      "rssi": -75.4,
+      "snr": 34.4,
+      "loss_rate": 0.0
+    },
+    "features": {
+      "fspl": 110.34,
+      "dist_m": 8718.8,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 2.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.03,
+      "tx_near_terminal_clearance_m": 17.45,
+      "rx_near_terminal_clearance_m": 9.72
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-003",
+      "pos": [
+        -25.851406,
+        -51.238813
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 2.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-022",
+      "pos": [
+        -25.79707,
+        -51.34127
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 1.0
+    },
+    "measures": {
+      "lqi": 16.5,
+      "rssi": -70.0,
+      "snr": 41.3,
+      "loss_rate": 4.0
+    },
+    "features": {
+      "fspl": 113.05,
+      "dist_m": 11906.72,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 28.75
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 3.75,
+        "boundary": 148.12
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.05,
+          "d_norm": 0.17
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 8.0,
+      "rx_near_terminal_clearance_m": 7.41
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-004",
+      "pos": [
+        -25.830552,
+        -51.26201
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 3.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-003",
+      "pos": [
+        -25.851406,
+        -51.238813
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 4.0,
+      "hops": 2.0
+    },
+    "measures": {
+      "lqi": 16.3,
+      "rssi": -81.3,
+      "snr": 29.7,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 101.85,
+      "dist_m": 3278.07,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 25,
+        "boundary": 76.88
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.04,
+      "tx_near_terminal_clearance_m": 9.69,
+      "rx_near_terminal_clearance_m": 9.72
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-005",
+      "pos": [
+        -25.845362,
+        -51.259138
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7.0,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 5.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-023",
+      "pos": [
+        -25.844325,
+        -51.258177
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 4.0
+    },
+    "measures": {
+      "lqi": 16.3,
+      "rssi": -51.3,
+      "snr": 59.1,
+      "loss_rate": 2.0
+    },
+    "features": {
+      "fspl": 80.05,
+      "dist_m": 149.93,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 6.25
+      },
+      "vegetation": {
+        "core": 40,
+        "fresnel": 47.5,
+        "boundary": 36.25
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.41,
+          "d_norm": 0.54
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.01,
+      "tx_near_terminal_clearance_m": 5.88,
+      "rx_near_terminal_clearance_m": 3.5
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-008",
+      "pos": [
+        -25.866149,
+        -51.233736
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7,
+      "mode": "remote",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-006",
+      "pos": [
+        -25.853661,
+        -51.245933
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -62.7,
+      "snr": 48.4,
+      "loss_rate": 3.0
+    },
+    "features": {
+      "fspl": 99.17,
+      "dist_m": 1846.28,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.0,
+      "tx_near_terminal_clearance_m": 16.01,
+      "rx_near_terminal_clearance_m": 8.67
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-022",
+      "pos": [
+        -25.79707,
+        -51.34127
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 1.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-001",
+      "pos": [
+        -25.787711,
+        -51.355197
+      ],
+      "ant_type": "YAGI",
+      "ant_gain": 14.0,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "250kbps",
+      "pw": 30.0,
+      "retry": 1.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 16.6,
+      "rssi": -71.8,
+      "snr": 41.6,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 98.86,
+      "dist_m": 1739.55,
+      "delta_diffra": 6.99,
+      "terrain": {
+        "core": 0,
+        "fresnel": 48.75,
+        "boundary": 75
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 22.5
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.7,
+          "d_norm": 0.89
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.0,
+      "tx_near_terminal_clearance_m": 6.63,
+      "rx_near_terminal_clearance_m": 6.54
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-023",
+      "pos": [
+        -25.844325,
+        -51.258177
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "hops": 4.0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-004",
+      "pos": [
+        -25.830552,
+        -51.26201
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "store-and-forward",
+      "state": "high-sensitivity",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 2.0,
+      "hops": 3.0
+    },
+    "measures": {
+      "lqi": 16.4,
+      "rssi": -73.0,
+      "snr": 39.6,
+      "loss_rate": 1.0
+    },
+    "features": {
+      "fspl": 98.32,
+      "dist_m": 1573.49,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 2.5,
+        "boundary": 29.38
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 6.25,
+        "boundary": 85
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.53,
+          "d_norm": 0.77
+        },
+        {
+          "v_v": 0.28,
+          "d_norm": 0.82
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": 0.04,
+      "tx_near_terminal_clearance_m": 10.58,
+      "rx_near_terminal_clearance_m": 6.63
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-024",
+      "pos": [
+        -25.739382,
+        -51.458093
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 2.5,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "500kbps",
+      "hops": 0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-025",
+      "pos": [
+        -25.740091,
+        -51.459382
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 100.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 0,
+      "rssi": 0,
+      "snr": 0,
+      "loss_rate": 100.0
+    },
+    "features": {
+      "fspl": 80.13,
+      "dist_m": 151.32,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 3.75,
+        "boundary": 10.62
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.08,
+      "tx_near_terminal_clearance_m": 8.93,
+      "rx_near_terminal_clearance_m": 7.99
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-025",
+      "pos": [
+        -25.740091,
+        -51.459382
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 0
+    },
+    "tx": {
+      "name": "ZAT-R-GE-026",
+      "pos": [
+        -25.749471,
+        -51.395763
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "pw": 30.0,
+      "retry": 100.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 0,
+      "rssi": 0,
+      "snr": 0,
+      "loss_rate": 100.0
+    },
+    "features": {
+      "fspl": 107.75,
+      "dist_m": 6467.12,
+      "delta_diffra": 7.2,
+      "terrain": {
+        "core": 0,
+        "fresnel": 106.25,
+        "boundary": 147.5
+      },
+      "vegetation": {
+        "core": 0,
+        "fresnel": 8.75,
+        "boundary": 103.75
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.74,
+          "d_norm": 0.49
+        }
+      ],
+      "max_obstruction_angle_rad": 0,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 5.69,
+      "rx_near_terminal_clearance_m": 10.87
+    }
+  },
+  {
+    "rx": {
+      "name": "ZAT-R-GE-026",
+      "pos": [
+        -25.749471,
+        -51.395763
+      ],
+      "ant_type": null,
+      "ant_gain": null,
+      "ant_height": 7,
+      "mode": "",
+      "state": "",
+      "rate": "auto",
+      "hops": 0
+    },
+    "tx": {
+      "name": "ZAT-R-P7-001",
+      "pos": [
+        -25.70907973,
+        -51.35884876
+      ],
+      "ant_type": "OMNI",
+      "ant_gain": 8.15,
+      "ant_height": 7.0,
+      "mode": "access-point",
+      "state": "high-sensitivity",
+      "rate": "500kbps",
+      "pw": 30.0,
+      "retry": 0.0,
+      "hops": 0
+    },
+    "measures": {
+      "lqi": 0,
+      "rssi": 0,
+      "snr": 0,
+      "loss_rate": 100.0
+    },
+    "features": {
+      "fspl": 106.81,
+      "dist_m": 5808.96,
+      "delta_diffra": 0,
+      "terrain": {
+        "core": 0,
+        "fresnel": 7.5,
+        "boundary": 25
+      },
+      "vegetation": {
+        "core": 60,
+        "fresnel": 62.5,
+        "boundary": 89.38
+      },
+      "buildings": {
+        "core": 0,
+        "fresnel": 0,
+        "boundary": 0
+      },
+      "terrain_peaks_vv": [
+        {
+          "v_v": 0.31,
+          "d_norm": 0.96
+        },
+        {
+          "v_v": 0.02,
+          "d_norm": 0.97
+        }
+      ],
+      "max_obstruction_angle_rad": 0.03,
+      "tx_rx_elevation_angle_rad": -0.01,
+      "tx_near_terminal_clearance_m": 12.33,
+      "rx_near_terminal_clearance_m": 6.05
+    }
+  }
+]

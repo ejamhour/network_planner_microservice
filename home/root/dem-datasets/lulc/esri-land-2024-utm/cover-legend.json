@@ -1,0 +1,11 @@
+{
+	"1": {"name": "water",	"color": [65, 155, 223]},
+	"2": {"name": "tree_cover",	"color":[57, 125, 73]},
+	"4": {"name": "wetland",	"color":[122, 135, 198]},
+	"5": {"name": "cropland",	"color":[228, 150, 53]},
+	"7": {"name": "built_up",	"color":[196, 40, 27]},
+	"8": {"name": "bare_ground",	"color":[165, 155, 143]},
+	"9": {"name": "snow_ice",	"color":[179, 159, 225]},
+	"10": {"name": "clouds",	"color":[255, 255, 255]},
+	"11": {"name": "rangeland",	"color":[227, 195, 90]}
+}

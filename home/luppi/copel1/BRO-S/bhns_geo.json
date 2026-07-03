@@ -1,0 +1,782 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.63843458,
+                    -26.24628645
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-P7-001",
+                "geometry": {
+                    "y": -26.24628645,
+                    "x": -53.63843458
+                },
+                "next_hop": "None",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "-",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "501",
+                "Route": "",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "access-point",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "None"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.633391,
+                    -26.254284
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-003",
+                "geometry": {
+                    "y": -26.254284,
+                    "x": -53.633391
+                },
+                "next_hop": "BRO-S-P7-001",
+                "id_ami": "BRO-S-A-003",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "630667243",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "403",
+                "Route": "403,510",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.630832,
+                    -26.240172
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-004",
+                "geometry": {
+                    "y": -26.240172,
+                    "x": -53.630832
+                },
+                "next_hop": "BRO-S-P7-001",
+                "id_ami": "BRO-S-A-002",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "583233702",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "404",
+                "Route": "404,510",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.50450788,
+                    -26.22885975
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-005",
+                "geometry": {
+                    "y": -26.22885975,
+                    "x": -53.50450788
+                },
+                "next_hop": "BRO-S-GE-007",
+                "id_ami": "-",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "551069210",
+                "id_da": "83240ALE24",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "405",
+                "Route": "405,407,424,510",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "407"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.454682,
+                    -26.232537
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-006",
+                "geometry": {
+                    "y": -26.232537,
+                    "x": -53.454682
+                },
+                "next_hop": "BRO-S-GE-012",
+                "id_ami": "BRO-S-A-012",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "578874260",
+                "id_da": "83240ANG07",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "406",
+                "Route": "406,412,410,407,424,510",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "412"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.527,
+                    -26.2224
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-007",
+                "geometry": {
+                    "y": -26.2224,
+                    "x": -53.527
+                },
+                "next_hop": "BRO-S-GE-024",
+                "id_ami": "BRO-S-A-010",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "551136484",
+                "id_da": "83240BR026",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "407",
+                "Route": "407,424,510",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "424"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.51989572,
+                    -26.22464685
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-008",
+                "geometry": {
+                    "y": -26.22464685,
+                    "x": -53.51989572
+                },
+                "next_hop": "BRO-S-GE-007",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 2.5,
+                "pole_id": "579683183",
+                "id_da": "83240CRI07",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "408",
+                "Route": "408,407,424,510",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "407"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.610667,
+                    -26.181362
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-009",
+                "geometry": {
+                    "y": -26.181362,
+                    "x": -53.610667
+                },
+                "next_hop": "BRO-S-GE-027",
+                "id_ami": "-",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "578246821",
+                "id_da": "83240PPT19",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "409",
+                "Route": "409,427,417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "427"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.485302,
+                    -26.241828
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-010",
+                "geometry": {
+                    "y": -26.241828,
+                    "x": -53.485302
+                },
+                "next_hop": "BRO-S-GE-007",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "581294511",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "410",
+                "Route": "410,407,424,510",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "407"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.489908,
+                    -26.243832
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-012",
+                "geometry": {
+                    "y": -26.243832,
+                    "x": -53.489908
+                },
+                "next_hop": "BRO-S-GE-010",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "771325132",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "412",
+                "Route": "412,410,407,424,510",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "410"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.559785,
+                    -26.171511
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-013",
+                "geometry": {
+                    "y": -26.171511,
+                    "x": -53.559785
+                },
+                "next_hop": "BRO-S-GE-027",
+                "id_ami": "BRO-S-A-006",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "607295672",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "413",
+                "Route": "413,427,417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "427"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.625233,
+                    -26.255065
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-014",
+                "geometry": {
+                    "y": -26.255065,
+                    "x": -53.625233
+                },
+                "next_hop": "BRO-S-P7-001",
+                "id_ami": "BRO-S-A-007",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "630666329",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "414",
+                "Route": "414,510",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.65927,
+                    -26.185217
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-016",
+                "geometry": {
+                    "y": -26.185217,
+                    "x": -53.65927
+                },
+                "next_hop": "BRO-S-GE-017",
+                "id_ami": "BRO-S-A-008",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "583988656",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "416",
+                "Route": "416,417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "417"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.638672,
+                    -26.186788
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-017",
+                "geometry": {
+                    "y": -26.186788,
+                    "x": -53.638672
+                },
+                "next_hop": "BRO-S-GE-028",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "563757309",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "417",
+                "Route": "417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.5279,
+                    -26.28
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-019",
+                "geometry": {
+                    "y": -26.28,
+                    "x": -53.5279
+                },
+                "next_hop": "BRO-S-GE-020",
+                "id_ami": "BRO-S-A-009",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "888325223",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "419",
+                "Route": "419,420,510",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "420"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.565339,
+                    -26.242838
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-020",
+                "geometry": {
+                    "y": -26.242838,
+                    "x": -53.565339
+                },
+                "next_hop": "BRO-S-P7-001",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "573098640",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "420",
+                "Route": "420,510",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.5887649,
+                    -26.1821901
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-023",
+                "geometry": {
+                    "y": -26.1821901,
+                    "x": -53.5887649
+                },
+                "next_hop": "BRO-S-GE-013",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "605001005",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "423",
+                "Route": "423,413,427,417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "413"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.519369,
+                    -26.229448
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-024",
+                "geometry": {
+                    "y": -26.229448,
+                    "x": -53.519369
+                },
+                "next_hop": "BRO-S-GE-025",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "630669613",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "424",
+                "Route": "424,510",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.524226,
+                    -26.243549
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-025",
+                "geometry": {
+                    "y": -26.243549,
+                    "x": -53.524226
+                },
+                "next_hop": "BRO-S-GE-026",
+                "id_ami": "-",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "807712119",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "525",
+                "Route": "",
+                "link_mode": "b2b",
+                "GE Network Name": "COPEL-BRO-S-002",
+                "GE Device Mode": "access-point",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "None"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.524226,
+                    -26.243549
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-026",
+                "geometry": {
+                    "y": -26.243549,
+                    "x": -53.524226
+                },
+                "next_hop": "BRO-S-P7-001",
+                "id_ami": "-",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "807712119",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "426",
+                "Route": "426,510",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.628737,
+                    -26.178154
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-027",
+                "geometry": {
+                    "y": -26.178154,
+                    "x": -53.628737
+                },
+                "next_hop": "BRO-S-GE-017",
+                "id_ami": "-",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "607295672",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "427",
+                "Route": "427,417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "store-and-forward",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "417"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.639681,
+                    -26.212451
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-028",
+                "geometry": {
+                    "y": -26.212451,
+                    "x": -53.639681
+                },
+                "next_hop": "BRO-S-P7-001",
+                "id_ami": "-",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "552630360",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "528",
+                "Route": "",
+                "link_mode": "b2b",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "access-point",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "None"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.60244156,
+                    -26.19242073
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-029",
+                "geometry": {
+                    "y": -26.19242073,
+                    "x": -53.60244156
+                },
+                "next_hop": "BRO-S-GE-023",
+                "id_ami": "-",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "773355590",
+                "id_da": "8324003029",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "429",
+                "Route": "429,423,413,427,417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "423"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.60109048,
+                    -26.19462906
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-030",
+                "geometry": {
+                    "y": -26.19462906,
+                    "x": -53.60109048
+                },
+                "next_hop": "BRO-S-GE-023",
+                "id_ami": "BRO-S-A-011",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "951805033",
+                "id_da": "8324005361",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "430",
+                "Route": "430,423,413,427,417,510",
+                "GE Network Name": "COPEL-BRO-S-003",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "423"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -53.639681,
+                    -26.212451
+                ]
+            },
+            "properties": {
+                "name": "BRO-S-GE-001",
+                "geometry": {
+                    "y": -26.212451,
+                    "x": -53.639681
+                },
+                "next_hop": "BRO-S-P7-001",
+                "id_ami": "-",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "552630360",
+                "id_da": "-",
+                "network": "BRO-S",
+                "layer": "bhns",
+                "Nic ID": "401",
+                "Route": "401,510",
+                "GE Network Name": "COPEL-BRO-S-001",
+                "GE Device Mode": "remote",
+                "GE LNA State": "high-sensitivity",
+                "GE Gateway ID": "510"
+            }
+        }
+    ]
+}

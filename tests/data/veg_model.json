@@ -1,0 +1,38 @@
+{
+  "fixed_terms": {
+    "tx_power": "tx.pw",
+    "tx_gain": "tx.ant_gain",
+    "rx_gain": "rx.ant_gain",
+    "fspl": "-features.fspl",
+    "diff": "-features.delta_diffra"
+  },
+  "fixed_coeffs": {
+    "tx_power": 1.0,
+    "tx_gain": 1.0,
+    "rx_gain": 1.0,
+    "fspl": 1.114337839919779,
+    "diff": 1.0
+  },
+  "learned_terms": {
+    "veg_boundary": "-math.log10(1.0 + features.vegetation.boundary)",
+    "veg_fresnel": "-math.log10(1.0 + features.vegetation.fresnel)",
+    "veg_core": "-math.log10(1.0 + features.vegetation.core)"
+  },
+  "learned_coeffs": {
+    "veg_boundary": 4.481831565408429,
+    "veg_fresnel": 4.042311952468696,
+    "veg_core": 2.6839232468994347
+  },
+  "intercept": 0.0,
+  "y_expr": "measures.rssi",
+  "training_info": {
+    "n_training_records": 188,
+    "n_input_records": 188,
+    "tau": 0.25,
+    "fit_intercept": false,
+    "l2_to_prior": 0.0001,
+    "iterations": 5000,
+    "objective": 3.804856144020448,
+    "optimizer": "projected_subgradient"
+  }
+}

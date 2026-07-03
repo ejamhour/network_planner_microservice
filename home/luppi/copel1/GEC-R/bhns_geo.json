@@ -1,0 +1,52 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    "-51.326713",
+                    "-26.390032"
+                ]
+            },
+            "properties": {
+                "name": "GEC-R-P7-001",
+                "host_router": "None",
+                "ant_type": "OMNI",
+                "ant_dB": 2.5,
+                "pole_id": "-",
+                "network": "GEC-R",
+                "layer": "bhns",
+                "Nic ID": "501",
+                "Routes": "",
+                "Down Stream Avg LQI": 0,
+                "Down Stream Avg RSSI": 0,
+                "Down Stream Avg SNR": 0,
+                "Data Retries": 0,
+                "GE Device Mode": "",
+                "GE Gateway ID": "",
+                "GE LNA State": "",
+                "Parent Node Avg Lqi": 0,
+                "Parent Node Avg Rssi": 0,
+                "Parent Node Avg Snr": 0,
+                "Name": "",
+                "Hops": 0,
+                "Route": "501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 0,
+                "GE Network Name": "",
+                "GE RF Power": 0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0,
+                "Packet Loss Rate": 0,
+                "Etx Next": 0,
+                "Etx Total": 0
+            }
+        }
+    ]
+}

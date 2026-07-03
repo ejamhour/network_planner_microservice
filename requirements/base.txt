@@ -1,0 +1,32 @@
+# --- Framework & API ---
+fastapi
+uvicorn[standard]
+pydantic
+httpx
+
+# --- Core Data Science ---
+numpy
+pandas
+matplotlib
+
+# --- Vector Geospatial ---
+# Note: These depend on libgeos-dev and libproj-dev
+shapely
+geopandas
+geopy
+s2sphere
+
+# --- Raster & Satellite Data ---
+# Note: This depends on libgdal-dev
+rasterio
+rioxarray
+pystac
+pystac-client
+planetary-computer
+
+# --- Storage & Database ---
+duckdb
+minio>=7.2.7
+
+# --- Other ---
+tomlkit

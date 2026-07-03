@@ -1,0 +1,1760 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [
+        -52,
+        -27,
+        -51,
+        -26
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -52,
+              -27
+            ],
+            [
+              -51,
+              -27
+            ],
+            [
+              -51,
+              -26
+            ],
+            [
+              -52,
+              -26
+            ],
+            [
+              -52,
+              -27
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S27_W52.parquet",
+        "geo_west": -52.0,
+        "geo_south": -27.0,
+        "geo_east": -51.0,
+        "geo_north": -26.0,
+        "building_count": 180608,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -52,
+        -25,
+        -51,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -52,
+              -25
+            ],
+            [
+              -51,
+              -25
+            ],
+            [
+              -51,
+              -24
+            ],
+            [
+              -52,
+              -24
+            ],
+            [
+              -52,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W52.parquet",
+        "geo_west": -52.0,
+        "geo_south": -25.0,
+        "geo_east": -51.0,
+        "geo_north": -24.0,
+        "building_count": 186324,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -55,
+        -26,
+        -54,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -55,
+              -26
+            ],
+            [
+              -54,
+              -26
+            ],
+            [
+              -54,
+              -25
+            ],
+            [
+              -55,
+              -25
+            ],
+            [
+              -55,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W55.parquet",
+        "geo_west": -55.0,
+        "geo_south": -26.0,
+        "geo_east": -54.0,
+        "geo_north": -25.0,
+        "building_count": 569809,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -53,
+        -24,
+        -52,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -53,
+              -24
+            ],
+            [
+              -52,
+              -24
+            ],
+            [
+              -52,
+              -23
+            ],
+            [
+              -53,
+              -23
+            ],
+            [
+              -53,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W53.parquet",
+        "geo_west": -53.0,
+        "geo_south": -24.0,
+        "geo_east": -52.0,
+        "geo_north": -23.0,
+        "building_count": 446401,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -54,
+        -27,
+        -53,
+        -26
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -54,
+              -27
+            ],
+            [
+              -53,
+              -27
+            ],
+            [
+              -53,
+              -26
+            ],
+            [
+              -54,
+              -26
+            ],
+            [
+              -54,
+              -27
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S27_W54.parquet",
+        "geo_west": -54.0,
+        "geo_south": -27.0,
+        "geo_east": -53.0,
+        "geo_north": -26.0,
+        "building_count": 266590,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -55,
+        -23,
+        -54,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -55,
+              -23
+            ],
+            [
+              -54,
+              -23
+            ],
+            [
+              -54,
+              -22
+            ],
+            [
+              -55,
+              -22
+            ],
+            [
+              -55,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W55.parquet",
+        "geo_west": -55.0,
+        "geo_south": -23.0,
+        "geo_east": -54.0,
+        "geo_north": -22.0,
+        "building_count": 18839,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -54,
+        -25,
+        -53,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -54,
+              -25
+            ],
+            [
+              -53,
+              -25
+            ],
+            [
+              -53,
+              -24
+            ],
+            [
+              -54,
+              -24
+            ],
+            [
+              -54,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W54.parquet",
+        "geo_west": -54.0,
+        "geo_south": -25.0,
+        "geo_east": -53.0,
+        "geo_north": -24.0,
+        "building_count": 535730,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -54,
+        -26,
+        -53,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -54,
+              -26
+            ],
+            [
+              -53,
+              -26
+            ],
+            [
+              -53,
+              -25
+            ],
+            [
+              -54,
+              -25
+            ],
+            [
+              -54,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W54.parquet",
+        "geo_west": -54.0,
+        "geo_south": -26.0,
+        "geo_east": -53.0,
+        "geo_north": -25.0,
+        "building_count": 303459,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -49,
+        -25,
+        -48,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -49,
+              -25
+            ],
+            [
+              -48,
+              -25
+            ],
+            [
+              -48,
+              -24
+            ],
+            [
+              -49,
+              -24
+            ],
+            [
+              -49,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W49.parquet",
+        "geo_west": -49.0,
+        "geo_south": -25.0,
+        "geo_east": -48.0,
+        "geo_north": -24.0,
+        "building_count": 157208,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -51,
+        -27,
+        -50,
+        -26
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51,
+              -27
+            ],
+            [
+              -50,
+              -27
+            ],
+            [
+              -50,
+              -26
+            ],
+            [
+              -51,
+              -26
+            ],
+            [
+              -51,
+              -27
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S27_W51.parquet",
+        "geo_west": -51.0,
+        "geo_south": -27.0,
+        "geo_east": -50.0,
+        "geo_north": -26.0,
+        "building_count": 170175,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -50,
+        -24,
+        -49,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -50,
+              -24
+            ],
+            [
+              -49,
+              -24
+            ],
+            [
+              -49,
+              -23
+            ],
+            [
+              -50,
+              -23
+            ],
+            [
+              -50,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W50.parquet",
+        "geo_west": -50.0,
+        "geo_south": -24.0,
+        "geo_east": -49.0,
+        "geo_north": -23.0,
+        "building_count": 362939,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -49,
+        -23,
+        -48,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -49,
+              -23
+            ],
+            [
+              -48,
+              -23
+            ],
+            [
+              -48,
+              -22
+            ],
+            [
+              -49,
+              -22
+            ],
+            [
+              -49,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W49.parquet",
+        "geo_west": -49.0,
+        "geo_south": -23.0,
+        "geo_east": -48.0,
+        "geo_north": -22.0,
+        "building_count": 343182,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -53,
+        -23,
+        -52,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -53,
+              -23
+            ],
+            [
+              -52,
+              -23
+            ],
+            [
+              -52,
+              -22
+            ],
+            [
+              -53,
+              -22
+            ],
+            [
+              -53,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W53.parquet",
+        "geo_west": -53.0,
+        "geo_south": -23.0,
+        "geo_east": -52.0,
+        "geo_north": -22.0,
+        "building_count": 90759,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -55,
+        -27,
+        -54,
+        -26
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -55,
+              -27
+            ],
+            [
+              -54,
+              -27
+            ],
+            [
+              -54,
+              -26
+            ],
+            [
+              -55,
+              -26
+            ],
+            [
+              -55,
+              -27
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S27_W55.parquet",
+        "geo_west": -55.0,
+        "geo_south": -27.0,
+        "geo_east": -54.0,
+        "geo_north": -26.0,
+        "building_count": 86335,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -48,
+        -25,
+        -47,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -48,
+              -25
+            ],
+            [
+              -47,
+              -25
+            ],
+            [
+              -47,
+              -24
+            ],
+            [
+              -48,
+              -24
+            ],
+            [
+              -48,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W48.parquet",
+        "geo_west": -48.0,
+        "geo_south": -25.0,
+        "geo_east": -47.0,
+        "geo_north": -24.0,
+        "building_count": 1546,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -51,
+        -23,
+        -50,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51,
+              -23
+            ],
+            [
+              -50,
+              -23
+            ],
+            [
+              -50,
+              -22
+            ],
+            [
+              -51,
+              -22
+            ],
+            [
+              -51,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W51.parquet",
+        "geo_west": -51.0,
+        "geo_south": -23.0,
+        "geo_east": -50.0,
+        "geo_north": -22.0,
+        "building_count": 187786,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -50,
+        -27,
+        -49,
+        -26
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -50,
+              -27
+            ],
+            [
+              -49,
+              -27
+            ],
+            [
+              -49,
+              -26
+            ],
+            [
+              -50,
+              -26
+            ],
+            [
+              -50,
+              -27
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S27_W50.parquet",
+        "geo_west": -50.0,
+        "geo_south": -27.0,
+        "geo_east": -49.0,
+        "geo_north": -26.0,
+        "building_count": 465733,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -49,
+        -24,
+        -48,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -49,
+              -24
+            ],
+            [
+              -48,
+              -24
+            ],
+            [
+              -48,
+              -23
+            ],
+            [
+              -49,
+              -23
+            ],
+            [
+              -49,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W49.parquet",
+        "geo_west": -49.0,
+        "geo_south": -24.0,
+        "geo_east": -48.0,
+        "geo_north": -23.0,
+        "building_count": 428777,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -52,
+        -23,
+        -51,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -52,
+              -23
+            ],
+            [
+              -51,
+              -23
+            ],
+            [
+              -51,
+              -22
+            ],
+            [
+              -52,
+              -22
+            ],
+            [
+              -52,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W52.parquet",
+        "geo_west": -52.0,
+        "geo_south": -23.0,
+        "geo_east": -51.0,
+        "geo_north": -22.0,
+        "building_count": 409679,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -51,
+        -25,
+        -50,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51,
+              -25
+            ],
+            [
+              -50,
+              -25
+            ],
+            [
+              -50,
+              -24
+            ],
+            [
+              -51,
+              -24
+            ],
+            [
+              -51,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W51.parquet",
+        "geo_west": -51.0,
+        "geo_south": -25.0,
+        "geo_east": -50.0,
+        "geo_north": -24.0,
+        "building_count": 198076,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -55,
+        -25,
+        -54,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -55,
+              -25
+            ],
+            [
+              -54,
+              -25
+            ],
+            [
+              -54,
+              -24
+            ],
+            [
+              -55,
+              -24
+            ],
+            [
+              -55,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W55.parquet",
+        "geo_west": -55.0,
+        "geo_south": -25.0,
+        "geo_east": -54.0,
+        "geo_north": -24.0,
+        "building_count": 209912,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -51,
+        -26,
+        -50,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51,
+              -26
+            ],
+            [
+              -50,
+              -26
+            ],
+            [
+              -50,
+              -25
+            ],
+            [
+              -51,
+              -25
+            ],
+            [
+              -51,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W51.parquet",
+        "geo_west": -51.0,
+        "geo_south": -26.0,
+        "geo_east": -50.0,
+        "geo_north": -25.0,
+        "building_count": 509205,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -48,
+        -26,
+        -47,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -48,
+              -26
+            ],
+            [
+              -47,
+              -26
+            ],
+            [
+              -47,
+              -25
+            ],
+            [
+              -48,
+              -25
+            ],
+            [
+              -48,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W48.parquet",
+        "geo_west": -48.0,
+        "geo_south": -26.0,
+        "geo_east": -47.0,
+        "geo_north": -25.0,
+        "building_count": 210,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -52,
+        -26,
+        -51,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -52,
+              -26
+            ],
+            [
+              -51,
+              -26
+            ],
+            [
+              -51,
+              -25
+            ],
+            [
+              -52,
+              -25
+            ],
+            [
+              -52,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W52.parquet",
+        "geo_west": -52.0,
+        "geo_south": -26.0,
+        "geo_east": -51.0,
+        "geo_north": -25.0,
+        "building_count": 192344,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -55,
+        -24,
+        -54,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -55,
+              -24
+            ],
+            [
+              -54,
+              -24
+            ],
+            [
+              -54,
+              -23
+            ],
+            [
+              -55,
+              -23
+            ],
+            [
+              -55,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W55.parquet",
+        "geo_west": -55.0,
+        "geo_south": -24.0,
+        "geo_east": -54.0,
+        "geo_north": -23.0,
+        "building_count": 106493,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -52,
+        -24,
+        -51,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -52,
+              -24
+            ],
+            [
+              -51,
+              -24
+            ],
+            [
+              -51,
+              -23
+            ],
+            [
+              -52,
+              -23
+            ],
+            [
+              -52,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W52.parquet",
+        "geo_west": -52.0,
+        "geo_south": -24.0,
+        "geo_east": -51.0,
+        "geo_north": -23.0,
+        "building_count": 1153785,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -53,
+        -27,
+        -52,
+        -26
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -53,
+              -27
+            ],
+            [
+              -52,
+              -27
+            ],
+            [
+              -52,
+              -26
+            ],
+            [
+              -53,
+              -26
+            ],
+            [
+              -53,
+              -27
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S27_W53.parquet",
+        "geo_west": -53.0,
+        "geo_south": -27.0,
+        "geo_east": -52.0,
+        "geo_north": -26.0,
+        "building_count": 270149,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -51,
+        -24,
+        -50,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51,
+              -24
+            ],
+            [
+              -50,
+              -24
+            ],
+            [
+              -50,
+              -23
+            ],
+            [
+              -51,
+              -23
+            ],
+            [
+              -51,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W51.parquet",
+        "geo_west": -51.0,
+        "geo_south": -24.0,
+        "geo_east": -50.0,
+        "geo_north": -23.0,
+        "building_count": 337080,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -48,
+        -24,
+        -47,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -48,
+              -24
+            ],
+            [
+              -47,
+              -24
+            ],
+            [
+              -47,
+              -23
+            ],
+            [
+              -48,
+              -23
+            ],
+            [
+              -48,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W48.parquet",
+        "geo_west": -48.0,
+        "geo_south": -24.0,
+        "geo_east": -47.0,
+        "geo_north": -23.0,
+        "building_count": 12621,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -49,
+        -26,
+        -48,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -49,
+              -26
+            ],
+            [
+              -48,
+              -26
+            ],
+            [
+              -48,
+              -25
+            ],
+            [
+              -49,
+              -25
+            ],
+            [
+              -49,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W49.parquet",
+        "geo_west": -49.0,
+        "geo_south": -26.0,
+        "geo_east": -48.0,
+        "geo_north": -25.0,
+        "building_count": 286714,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -49,
+        -27,
+        -48,
+        -26
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -49,
+              -27
+            ],
+            [
+              -48,
+              -27
+            ],
+            [
+              -48,
+              -26
+            ],
+            [
+              -49,
+              -26
+            ],
+            [
+              -49,
+              -27
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S27_W49.parquet",
+        "geo_west": -49.0,
+        "geo_south": -27.0,
+        "geo_east": -48.0,
+        "geo_north": -26.0,
+        "building_count": 543773,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -54,
+        -24,
+        -53,
+        -23
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -54,
+              -24
+            ],
+            [
+              -53,
+              -24
+            ],
+            [
+              -53,
+              -23
+            ],
+            [
+              -54,
+              -23
+            ],
+            [
+              -54,
+              -24
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S24_W54.parquet",
+        "geo_west": -54.0,
+        "geo_south": -24.0,
+        "geo_east": -53.0,
+        "geo_north": -23.0,
+        "building_count": 253621,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -50,
+        -23,
+        -49,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -50,
+              -23
+            ],
+            [
+              -49,
+              -23
+            ],
+            [
+              -49,
+              -22
+            ],
+            [
+              -50,
+              -22
+            ],
+            [
+              -50,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W50.parquet",
+        "geo_west": -50.0,
+        "geo_south": -23.0,
+        "geo_east": -49.0,
+        "geo_north": -22.0,
+        "building_count": 147846,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -50,
+        -26,
+        -49,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -50,
+              -26
+            ],
+            [
+              -49,
+              -26
+            ],
+            [
+              -49,
+              -25
+            ],
+            [
+              -50,
+              -25
+            ],
+            [
+              -50,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W50.parquet",
+        "geo_west": -50.0,
+        "geo_south": -26.0,
+        "geo_east": -49.0,
+        "geo_north": -25.0,
+        "building_count": 1880286,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -53,
+        -25,
+        -52,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -53,
+              -25
+            ],
+            [
+              -52,
+              -25
+            ],
+            [
+              -52,
+              -24
+            ],
+            [
+              -53,
+              -24
+            ],
+            [
+              -53,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W53.parquet",
+        "geo_west": -53.0,
+        "geo_south": -25.0,
+        "geo_east": -52.0,
+        "geo_north": -24.0,
+        "building_count": 225246,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -53,
+        -26,
+        -52,
+        -25
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -53,
+              -26
+            ],
+            [
+              -52,
+              -26
+            ],
+            [
+              -52,
+              -25
+            ],
+            [
+              -53,
+              -25
+            ],
+            [
+              -53,
+              -26
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S26_W53.parquet",
+        "geo_west": -53.0,
+        "geo_south": -26.0,
+        "geo_east": -52.0,
+        "geo_north": -25.0,
+        "building_count": 239561,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -48,
+        -23,
+        -47,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -48,
+              -23
+            ],
+            [
+              -47,
+              -23
+            ],
+            [
+              -47,
+              -22
+            ],
+            [
+              -48,
+              -22
+            ],
+            [
+              -48,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W48.parquet",
+        "geo_west": -48.0,
+        "geo_south": -23.0,
+        "geo_east": -47.0,
+        "geo_north": -22.0,
+        "building_count": 931,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -50,
+        -25,
+        -49,
+        -24
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -50,
+              -25
+            ],
+            [
+              -49,
+              -25
+            ],
+            [
+              -49,
+              -24
+            ],
+            [
+              -50,
+              -24
+            ],
+            [
+              -50,
+              -25
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S25_W50.parquet",
+        "geo_west": -50.0,
+        "geo_south": -25.0,
+        "geo_east": -49.0,
+        "geo_north": -24.0,
+        "building_count": 193224,
+        "coord_type": "geographic"
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [
+        -54,
+        -23,
+        -53,
+        -22
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -54,
+              -23
+            ],
+            [
+              -53,
+              -23
+            ],
+            [
+              -53,
+              -22
+            ],
+            [
+              -54,
+              -22
+            ],
+            [
+              -54,
+              -23
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id_filename": "OpenBuildings_S23_W54.parquet",
+        "geo_west": -54.0,
+        "geo_south": -23.0,
+        "geo_east": -53.0,
+        "geo_north": -22.0,
+        "building_count": 54050,
+        "coord_type": "geographic"
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+[[BLDG.datasets]]
+name = "gob-h-parana-parquets"
+minio_key = "root/dem-datasets/bldg/gob-h-parana-parquets"
+enabled = true
+
+[[DSM.datasets]]
+name = "copernicus-dsm-parana"
+minio_key = "root/dem-datasets/dsm/copernicus-dsm-parana"
+crs = "EPSG:4326"
+resolution = [0.0002777777777777778, 0.0002777777777777778]
+bands = 1
+enabled = true
+
+[[DSM.datasets]]
+name = "aster-gdem-parana"
+minio_key = "root/dem-datasets/dsm/aster-gdem-parana"
+crs = "EPSG:4326"
+resolution = [0.000277777777777778, 0.000277777777777778]
+bands = 1
+enabled = true
+
+[[DTM.datasets]]
+name = "anadem-dtm-parana"
+minio_key = "root/dem-datasets/dtm/anadem-dtm-parana"
+crs = "EPSG:4326"
+resolution = [0.00026949458523585647, 0.00026949458523585647]
+bands = 1
+enabled = true
+
+[[DTM.datasets]]
+name = "fabdem-dtm-parana"
+minio_key = "root/dem-datasets/dtm/fabdem-dtm-parana"
+crs = "EPSG:4326"
+resolution = [0.0002777777777777778, 0.0002777777777777778]
+bands = 1
+enabled = true
+
+[[COVER.datasets]]
+name = "esri-land-2024-utm"
+minio_key = "root/dem-datasets/lulc/esri-land-2024-utm"
+crs = "EPSG:32722"
+resolution = [10.0, 10.0]
+bands = 1
+enabled = true
+
+[[COVER.datasets]]
+name = "esri-land-cover-2024"
+minio_key = "root/dem-datasets/lulc/esri-land-cover-2024"
+crs = "EPSG:32722"
+resolution = [10.0, 10.0]
+bands = 1
+enabled = true
+
+[[COVER.datasets]]
+name = "esa-world-cover"
+minio_key = "root/dem-datasets/lulc/esa-world-cover"
+crs = "EPSG:4326"
+resolution = [8.333333333333333e-05, 8.333333333333333e-05]
+bands = 1
+enabled = true
+

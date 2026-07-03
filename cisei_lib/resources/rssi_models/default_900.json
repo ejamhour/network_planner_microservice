@@ -1,0 +1,44 @@
+{
+  "fixed_terms": {
+    "tx_power": "tx.pw",
+    "tx_gain": "tx.ant_gain",
+    "rx_gain": "rx.ant_gain",
+    "fspl": "-features.fspl",
+    "diff": "-features.delta_diffra"
+  },
+  "fixed_coeffs": {
+    "tx_power": 1.0,
+    "tx_gain": 1.0,
+    "rx_gain": 1.0,
+    "fspl": 1.114337839919779,
+    "diff": 1.0
+  },
+  "learned_terms": {
+    "veg_boundary": "-math.log10(1.0 + features.vegetation.boundary)",
+    "veg_fresnel": "-math.log10(1.0 + features.vegetation.fresnel)",
+    "veg_core": "-math.log10(1.0 + features.vegetation.core)",
+    "bldg_boundary": "-math.log10(1.0 + features.buildings.boundary)",
+    "bldg_fresnel": "-math.log10(1.0 + features.buildings.fresnel)",
+    "bldg_core": "-math.log10(1.0 + features.buildings.core)"
+  },
+  "learned_coeffs": {
+    "veg_boundary": 3.8985885737347314,
+    "veg_fresnel": 3.5705186009718783,
+    "veg_core": 2.3521739217803233,
+    "bldg_boundary": 2.000981734235844,
+    "bldg_fresnel": 1.2459287281563058,
+    "bldg_core": 1.0752391958170007
+  },
+  "intercept": 0.0,
+  "y_expr": "measures.rssi",
+  "training_info": {
+    "n_training_records": 1890,
+    "n_input_records": 1890,
+    "tau": 0.5,
+    "fit_intercept": false,
+    "l2_to_prior": 0.01,
+    "iterations": 5000,
+    "objective": 4.351107412205321,
+    "optimizer": "projected_subgradient"
+  }
+}

@@ -1,0 +1,145 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    "-53.17205",
+                    "-25.54278"
+                ]
+            },
+            "properties": {
+                "name": "FOC-S-GE-001",
+                "host_router": "FOC-S-GE-002",
+                "ant_type": "YAGI",
+                "ant_dB": 14.0,
+                "pole_id": "562450054",
+                "network": "FOC-S",
+                "layer": "bhns",
+                "Nic ID": "401",
+                "Routes": "401,402,510",
+                "Down Stream Avg LQI": 7.9,
+                "Down Stream Avg RSSI": -83.8,
+                "Down Stream Avg SNR": 25.6,
+                "Data Retries": 7.0,
+                "GE Device Mode": "remote",
+                "GE Gateway ID": "402",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 7.9,
+                "Parent Node Avg Rssi": -83.8,
+                "Parent Node Avg Snr": 25.6,
+                "Name": "FOC-S-GE-001",
+                "Hops": 2.0,
+                "Route": "401, 402, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 1300.5,
+                "GE Network Name": "COPEL-FOC-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "",
+                "Packet Loss Count": 0.0,
+                "Packet Loss Rate": 0.0,
+                "Etx Total": 0
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    "-53.11256",
+                    "-25.5158"
+                ]
+            },
+            "properties": {
+                "name": "FOC-S-GE-002",
+                "host_router": "FOC-S-P7-001",
+                "ant_type": null,
+                "ant_dB": null,
+                "pole_id": "789878358",
+                "network": "FOC-S",
+                "layer": "bhns",
+                "Nic ID": "402",
+                "Routes": "402,510",
+                "Down Stream Avg LQI": 8.0,
+                "Down Stream Avg RSSI": -58.0,
+                "Down Stream Avg SNR": 51.6,
+                "Data Retries": 7.0,
+                "GE Device Mode": "store-and-forward",
+                "GE Gateway ID": "510",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 8.0,
+                "Parent Node Avg Rssi": -58.0,
+                "Parent Node Avg Snr": 51.6,
+                "Name": "FOC-S-GE-002",
+                "Hops": 1.0,
+                "Route": "402, 501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 1104.5,
+                "GE Network Name": "COPEL-FOC-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "7.0",
+                "Packet Loss Count": 0.2,
+                "Packet Loss Rate": 2.0,
+                "Etx Total": 0
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    "-53.09729273",
+                    "-25.52413013"
+                ]
+            },
+            "properties": {
+                "name": "FOC-S-P7-001",
+                "host_router": "None",
+                "ant_type": "OMNI",
+                "ant_dB": 8.15,
+                "pole_id": "-",
+                "network": "FOC-S",
+                "layer": "bhns",
+                "Nic ID": "501",
+                "Routes": "",
+                "Down Stream Avg LQI": 0,
+                "Down Stream Avg RSSI": 0,
+                "Down Stream Avg SNR": 0,
+                "Data Retries": 7.0,
+                "GE Device Mode": "access-point",
+                "GE Gateway ID": "None",
+                "GE LNA State": "high-sensitivity",
+                "Parent Node Avg Lqi": 0,
+                "Parent Node Avg Rssi": 0,
+                "Parent Node Avg Snr": 0,
+                "Name": "",
+                "Hops": 0,
+                "Route": "501",
+                "Rx Bytes": 0,
+                "Rx Error": 0,
+                "Rx Packets": 0,
+                "Tx Bytes": 0,
+                "Tx Error": 0,
+                "Tx Packets": 0,
+                "GE Network Name": "COPEL-FOC-S-001",
+                "GE RF Power": 30.0,
+                "Loc Altitude": "15.0",
+                "Packet Loss Count": 0.0,
+                "Packet Loss Rate": 0.0,
+                "link_mode": "b2b",
+                "Etx Next": 0,
+                "Etx Total": 0
+            }
+        }
+    ]
+}

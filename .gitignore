@@ -1,0 +1,23 @@
+# GeoTIFF and raster data
+*.tif
+*.tiff
+*.tfw
+*.aux.xml
+*.ovr
+*.parquet
+
+# Optional: large intermediate files
+*.zip
+*.tar
+*.tar.gz
+*.tmp
+*.temp
+
+# IDE and environment
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.env
+.venv/

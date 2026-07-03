@@ -1,0 +1,19 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+
+# IDEs
+.vscode/
+.devcontainer/
+
+# Dados/Logs
+*.log
+data/

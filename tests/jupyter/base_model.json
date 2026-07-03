@@ -1,0 +1,32 @@
+{
+  "fixed_terms": {
+    "tx_power": "tx.pw",
+    "tx_gain": "tx.ant_gain",
+    "rx_gain": "rx.ant_gain"
+  },
+  "fixed_coeffs": {
+    "tx_power": 1.0,
+    "tx_gain": 1.0,
+    "rx_gain": 1.0
+  },
+  "learned_terms": {
+    "fspl": "-features.fspl",
+    "diff": "-features.delta_diffra"
+  },
+  "learned_coeffs": {
+    "fspl": 1.114337839919779,
+    "diff": 1.0
+  },
+  "intercept": 0.0,
+  "y_expr": "measures.rssi",
+  "training_info": {
+    "n_training_records": 243,
+    "n_input_records": 243,
+    "tau": 0.5,
+    "fit_intercept": false,
+    "l2_to_prior": 0.01,
+    "iterations": 2114,
+    "objective": 3.369124809338258,
+    "optimizer": "projected_subgradient"
+  }
+}

@@ -1,0 +1,1 @@
+P2PLink(tx=(-25.830552, -51.26201), rx=(-25.844325, -51.258177), tx_ha=7.0, rx_ha=7.0, freq_mhz=900, tx_ha_abs=None, rx_ha_abs=None, on_rooftop=False)

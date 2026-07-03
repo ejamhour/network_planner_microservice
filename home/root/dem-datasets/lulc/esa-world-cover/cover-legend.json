@@ -1,0 +1,13 @@
+{
+  "10": {"name": "tree_cover",      "color": [0,   100,   0]},
+  "20": {"name": "shrubland",       "color": [255, 187,  34]},
+  "30": {"name": "grassland",       "color": [255, 255,  76]},
+  "40": {"name": "cropland",        "color": [240, 150, 255]},
+  "50": {"name": "built_up",        "color": [250,   0,   0]},
+  "60": {"name": "sparse_veg",      "color": [180, 180, 180]},
+  "70": {"name": "snow_ice",        "color": [240, 240, 240]},
+  "80": {"name": "water",           "color": [0,   100, 200]},
+  "90": {"name": "wetland",         "color": [0,   150, 160]},
+  "95": {"name": "mangroves",       "color": [0,   207, 117]},
+  "100": {"name": "moss_lichen",    "color": [250, 230, 160]}
+}

@@ -1,0 +1,56 @@
+{
+  "name": "Planning Dev",
+  "dockerFile": "../infra/DockerfileDev",
+  "context": "..",
+  "workspaceFolder": "/workspaces/planning_service",   // <-- ROOT
+  "forwardPorts": [8080],
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  
+  // Use host network to access WireGuard/Netbird VPN on host
+  "runArgs": [
+    //"--network=host"
+  ],
+
+  "remoteEnv": {
+    "PYTHONPATH": "/workspaces/planning_service:${PYTHONPATH}"
+  },
+
+  "postCreateCommand": "pip install -U pip && pip install -r requirements/dev.txt && pip install -e ./cisei_lib[dev]",
+
+  "postStartCommand": "uvicorn app.main_hub:hub_app --host 0.0.0.0 --port 8080 --reload &", 
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.terminal.useEnvFile": true,
+        "python.envFile": "${workspaceFolder}/.env",
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+
+        // VS Code Python extension sees the package
+        "python.analysis.extraPaths": [
+          "/workspaces/planning_service"
+        ],
+
+        // Pytest integration
+        "python.testing.pytestArgs": [
+          "tests",
+          "-q",
+          "--tb=line"
+        ],
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestEnabled": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+
+  "remoteUser": "root"
+}
+

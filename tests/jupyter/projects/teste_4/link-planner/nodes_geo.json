@@ -1,0 +1,20 @@
+{
+"type": "FeatureCollection",
+"name": "nodes_geo",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "name": "teste_4_BHN_3", "next_hop": "597359559", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "src", "iconType": "new" }, "geometry": { "type": "Point", "coordinates": [ -50.106751795971341, -25.540379731866 ] } },
+{ "type": "Feature", "properties": { "name": "PAM-R-P7-001", "next_hop": null, "link_mode": "GE-NX", "ant_h": 7, "hop_type": "dst", "iconType": "new" }, "geometry": { "type": "Point", "coordinates": [ -49.890799999948911, -25.56399999992 ] } },
+{ "type": "Feature", "properties": { "name": "597359559", "next_hop": "216815734", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -50.106063333004592, -25.551996505853548 ] } },
+{ "type": "Feature", "properties": { "name": "216815734", "next_hop": "PAM-R-P7-001", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -50.021317330063248, -25.54931457092977 ] } },
+{ "type": "Feature", "properties": { "name": "593452318", "next_hop": "PAM-R-P7-001", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -50.021509738284188, -25.548909525353878 ] } },
+{ "type": "Feature", "properties": { "name": "teste_4_BHN_2", "next_hop": "552788217", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "src", "iconType": "new" }, "geometry": { "type": "Point", "coordinates": [ -50.109157536487473, -25.535355767714002 ] } },
+{ "type": "Feature", "properties": { "name": "552788217", "next_hop": "216815703", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -50.10659744053946, -25.536342210312661 ] } },
+{ "type": "Feature", "properties": { "name": "216815703", "next_hop": "216815734", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -50.021762816239665, -25.548387500134229 ] } },
+{ "type": "Feature", "properties": { "name": "teste_4_BHN_4", "next_hop": "906290995", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "src", "iconType": "new" }, "geometry": { "type": "Point", "coordinates": [ -49.965056408023017, -25.704710966253998 ] } },
+{ "type": "Feature", "properties": { "name": "583793129", "next_hop": "PAM-R-P7-001", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.917495657559364, -25.678226897480769 ] } },
+{ "type": "Feature", "properties": { "name": "583800268", "next_hop": "570933851", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.923694654621023, -25.676972546096223 ] } },
+{ "type": "Feature", "properties": { "name": "570933851", "next_hop": "PAM-R-P7-001", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.909728538586627, -25.698484808901171 ] } },
+{ "type": "Feature", "properties": { "name": "906290995", "next_hop": "583800268", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.98112406761134, -25.710188495863441 ] } }
+]
+}

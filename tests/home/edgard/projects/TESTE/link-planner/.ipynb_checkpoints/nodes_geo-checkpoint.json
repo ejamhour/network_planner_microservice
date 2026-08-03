@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"name": "nodes_geo",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "name": "copel", "next_hop": "tenis", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.339207159685344, -25.432730835150082 ] } },
+{ "type": "Feature", "properties": { "name": "tenis", "next_hop": "itallia", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.29212222420152, -25.425356577135183 ] } },
+{ "type": "Feature", "properties": { "name": "itallia", "next_hop": "guaira", "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.266232140399694, -25.430175315464119 ] } },
+{ "type": "Feature", "properties": { "name": "guaira", "next_hop": null, "link_mode": "GE-NX", "ant_h": 7, "hop_type": "rep", "iconType": "repeater" }, "geometry": { "type": "Point", "coordinates": [ -49.265536100550804, -25.42777449459199 ] } }
+]
+}

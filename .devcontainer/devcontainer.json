@@ -1,8 +1,8 @@
 {
-  "name": "Planning Dev",
-  "dockerFile": "../infra/DockerfileDev",
+   "dockerFile": "../infra/DockerfileDev",
   "context": "..",
-  "workspaceFolder": "/workspaces/planning_service",   // <-- ROOT
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/network_service,type=bind",
+  "workspaceFolder": "/workspaces/network_service",   // <-- ROOT
   "forwardPorts": [8080],
 
   "features": {
@@ -10,12 +10,14 @@
   },
   
   // Use host network to access WireGuard/Netbird VPN on host
+  "name": "Network Dev",
   "runArgs": [
-    //"--network=host"
+    "--network=app-dev",
+    "--network-alias=network-service"
   ],
 
   "remoteEnv": {
-    "PYTHONPATH": "/workspaces/planning_service:${PYTHONPATH}"
+    "PYTHONPATH": "/workspaces/network_service:${PYTHONPATH}"
   },
 
   "postCreateCommand": "pip install -U pip && pip install -r requirements/dev.txt && pip install -e ./cisei_lib[dev]",
@@ -31,7 +33,7 @@
 
         // VS Code Python extension sees the package
         "python.analysis.extraPaths": [
-          "/workspaces/planning_service"
+          "/workspaces/network_service"
         ],
 
         // Pytest integration

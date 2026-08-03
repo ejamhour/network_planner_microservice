@@ -1,138 +1,178 @@
-import base64
+"""Jupyter adapter for GeoServiceClient.
+
+This module contains presentation code only.  The REST transport and domain
+methods live in geo_service_client.py.
+"""
+
+from __future__ import annotations
+
 from io import BytesIO
-from dataclasses import dataclass
-
-import requests
-from PIL import Image
-from IPython.display import display
-from IPython.display import display, JSON, HTML
-
+from typing import Any, Callable
 import inspect
 
+from IPython.display import HTML, JSON, display
+from PIL import Image
 
-@dataclass
-class APIResult:
-    kind: str
-    data: object
-    response: requests.Response | None = None
-
-    def _repr_pretty_(self, p, cycle):
-        if cycle:
-            p.text("APIResult(...)")
-        else:
-            p.text(f"APIResult(kind={self.kind!r})")
-
-    def __repr__(self):
-        return f"APIResult(kind={self.kind!r})"
+from geo_service_client import (
+    APIResult,
+    GeoServiceAPIError,
+    GeoServiceClient,
+    GeoServiceError,
+    GeoServiceHTTPError,
+    GeoServiceRequestError,
+)
 
 
 class GeoNotebook:
-    def __init__(self, base_url="http://localhost:8080", timeout=20):
-        self.base_url = base_url.rstrip("/")
-        self.timeout = timeout
-        self.user_id = None
-        self.token = None
+    """Notebook-facing adapter around GeoServiceClient.
 
-#------------------------------------
+    Domain methods are forwarded to `self.client`. By default, results are
+    displayed and `None` is returned, matching the previous notebook behavior.
+
+    To get the raw APIResult instead, call any forwarded method with:
+
+        display_result=False
+    """
+
+    def __init__(
+        self,
+        base_url: str = "http://localhost:8080",
+        timeout: int = 20,
+        client: GeoServiceClient | None = None,
+        **client_kwargs: Any,
+    ):
+        self.client = client or GeoServiceClient(
+            base_url=base_url,
+            timeout=timeout,
+            **client_kwargs,
+        )
+
+    @property
+    def base_url(self) -> str:
+        return self.client.base_url
+
+    @property
+    def timeout(self) -> int:
+        return self.client.timeout
+
+    @property
+    def user_id(self) -> str | None:
+        return self.client.user_id
+
+    @property
+    def token(self) -> str | None:
+        return self.client.token
+
+    def __getattr__(self, name: str) -> Any:
+        attr = getattr(self.client, name)
+
+        if not callable(attr):
+            return attr
+
+        def displayed_call(*args: Any, display_result: bool = True, **kwargs: Any) -> APIResult | None:
+            try:
+                result = attr(*args, **kwargs)
+            except GeoServiceError as e:
+                result = self._exception_result(e)
+
+            if display_result:
+                self._display_result(result)
+                return None
+
+            return result
+
+        displayed_call.__name__ = name
+        displayed_call.__doc__ = attr.__doc__
+        return displayed_call
+
     def call_api(
         self,
-        route,
-        params=None,
-        body=None,
-        method="get",
-        timeout=None,
-        display_result=True,        
-    ):
-        if self.user_id:
-            url = f"{self.base_url}/{self.user_id}/{route.lstrip('/')}"
-            headers = {"X-Token": self.token }
-        else:
-            url = f"{self.base_url}/{route.lstrip('/')}"
-            headers = {}            
-
-        timeout = timeout or self.timeout
-        method = method.lower()
-
+        route: str,
+        params: dict[str, Any] | None = None,
+        body: dict[str, Any] | None = None,
+        method: str = "get",
+        timeout: int | None = None,
+        display_result: bool = True,
+    ) -> APIResult | None:
+        """Call an arbitrary backend route from a notebook."""
         try:
-            if method == "post":
-                response = requests.post(url, params=params, headers=headers, json=body, timeout=timeout)
-            else:
-                response = requests.get(url, params=params, headers=headers, timeout=timeout)
-
-            response.raise_for_status()
-            result = self._parse_response(response)
-
-        except requests.HTTPError as e:
-            response = getattr(e, "response", None)
-            result = APIResult(
-                "http_error",
-                {"status": "error", "kind": "http_error", "data": str(e)},
-                response,
+            result = self.client.request(
+                route,
+                params=params,
+                body=body,
+                method=method,
+                timeout=timeout,
             )
-        except requests.RequestException as e:
-            result = APIResult(
-                "request_error",
-                {"status": "error", "kind": "request_error", "data": str(e)},
-                None,
-            )
-        except Exception as e:
-            result = APIResult(
-                "error",
-                {"status": "error", "kind": "client_error", "data": str(e)},
-                None,
-            )
+        except GeoServiceError as e:
+            result = self._exception_result(e)
 
         if display_result:
             self._display_result(result)
             return None
+
         return result
 
-    def _parse_response(self, response):
-        ctype = (response.headers.get("content-type") or "").lower()
+    def doc(self, name: str) -> None:
+        """Print the docstring for a forwarded client method."""
+        method: Callable[..., Any] = getattr(self.client, name)
+        print(f"\n*** {name} ***")
+        print(inspect.cleandoc(method.__doc__ or ""))
 
-        if "application/json" in ctype:
-            return self._parse_json_payload(response.json(), response)
+    def _exception_result(self, exc: GeoServiceError) -> APIResult:
+        if isinstance(exc, GeoServiceHTTPError):
+            return APIResult(
+                kind="error",
+                data={
+                    "status": "error",
+                    "kind": "http_error",
+                    "data": str(exc),
+                },
+                status="error",
+            )
 
-        if ctype.startswith("image/"):
-            img = Image.open(BytesIO(response.content))
-            return APIResult("image", img, response)
+        if isinstance(exc, GeoServiceRequestError):
+            return APIResult(
+                kind="error",
+                data={
+                    "status": "error",
+                    "kind": "request_error",
+                    "data": str(exc),
+                },
+                status="error",
+            )
 
-        if "text/" in ctype:
-            return APIResult("text", response.text, response)
+        if isinstance(exc, GeoServiceAPIError):
+            return APIResult(
+                kind="error",
+                data={
+                    "status": "error",
+                    "kind": "api_error",
+                    "data": exc.payload,
+                },
+                status="error",
+            )
 
-        return APIResult("bytes", response.content, response)
+        return APIResult(
+            kind="error",
+            data={
+                "status": "error",
+                "kind": "client_error",
+                "data": str(exc),
+            },
+            status="error",
+        )
 
-    def _parse_json_payload(self, data, response):
-        if not isinstance(data, dict):
-            return APIResult("json", data, response)
-
-        status = str(data.get("status", "")).lower()
-        kind = data.get("kind")
-        payload = data.get("data")
-
-        if kind == "image" and status == "ok":
-            img = Image.open(BytesIO(base64.b64decode(payload)))
-            return APIResult("image", img, response)
-
-        if kind == "text":
-            return APIResult("text", {"status": status, "data": payload}, response)
-
-        return APIResult("json", data, response)
-
-    def _display_result(self, result):
-        if result.kind == "image":
-            display(result.data)
+    def _display_result(self, result: APIResult) -> None:
+        if result.kind == "image_bytes":
+            img = Image.open(BytesIO(result.data))
+            display(img)
             return
 
         if result.kind == "text":
-            status = result.data.get("status", "")
-            txt = result.data.get("data")
-
-            if txt:
-                if status == "ok":
-                    display(HTML(f"✅ {txt}"))
-                else:
-                    display(HTML(f"❌ {txt}"))
+            if result.status == "error":
+                display(HTML(f"❌ {result.data}"))
+            elif result.data:
+                display(HTML(f"✅ {result.data}"))
             return
 
         if result.kind == "json":
@@ -147,14 +187,7 @@ class GeoNotebook:
             payload = data.get("data")
 
             if status == "error":
-                if kind == "http_error":
-                    display(f"❌ HTTP/backend error: {payload}")
-                elif kind == "request_error":
-                    display(f"❌ Request error: {payload}")
-                elif kind == "client_error":
-                    display(f"❌ Client error: {payload}")
-                else:
-                    display(f"❌ Error: {payload}")
+                display(f"❌ Error: {payload}")
                 return
 
             if "data" not in data:
@@ -170,183 +203,18 @@ class GeoNotebook:
                 display(payload)
             return
 
-        if result.kind == "http_error":
-            display(f"❌ HTTP/backend error: {result.data.get('data', 'Unknown error')}")
-            return
-
-        if result.kind == "request_error":
-            display(f"❌ Request error: {result.data.get('data', 'Unknown error')}")
-            return
-
         if result.kind == "error":
-            display(f"❌ Client error: {result.data.get('data', 'Unknown error')}")
+            data = result.data
+            if isinstance(data, dict):
+                kind = data.get("kind", "error")
+                payload = data.get("data", "Unknown error")
+                display(f"❌ {kind}: {payload}")
+            else:
+                display(f"❌ {data}")
             return
-     
-    def doc(self, name):
-        method = getattr(self, name)
-        print(f'\n*** {name} ***')
-        print(inspect.cleandoc(method.__doc__))
 
-#---------------------------------------
-    def register(self, user_id):
-        res = self.call_api("register", params={"user_id": user_id}, method="post", display_result=False)
-        self.user_id = res.data['user_id']
-        self.token = res.data['token']
-        display(HTML(f"✅ {res.data['status']}"))
+        if result.kind == "bytes":
+            display(f"{len(result.data)} bytes")
+            return
 
-
-    def link(self, tx, rx, prepare_link=True, **kwargs):
-        """
-        Updates the active link stored in the backend runtime..
-
-        Mandatory params
-        ----------
-        tx : (lat, lon) 
-        rx : (lat, lon)
-
-        Optional (must include param name)
-        ----------
-        tx_ha: tx antenna height in meters (default = 7)
-        rx_ha: rx antenna height in meters (default = 7)
-        freq_mhz: frequency of the RF signal in mHz (default = 900)
-        tx_ha_abs: tx absolute antenna height (including DTM) in meters
-        rx_ha_abs: tx absolute antenna height (including DTM) in meters
-        on_rooftop: add building height automatically (True or False)    
-
-        Return:
-        ---------
-        JSON response from the backend. Access payload with `result.data`.
-        """
-        tx_lat, tx_lon = tx
-        rx_lat, rx_lon = rx
-
-        params = {
-            "tx_lat": tx_lat,
-            "tx_lon": tx_lon,
-            "rx_lat": rx_lat,
-            "rx_lon": rx_lon,
-            **kwargs,
-        }
-        
-        if prepare_link:
-            self.call_api("set_link", params=params, method="post", display_result=False)    
-            return self.call_api("prepare_profiles", method="post")
-        else:
-            self.call_api("set_link", params=params, method="post", display_result=True)
-          
-    def link_area(self, ds_string : str):
-        """
-        Shows the visual representation of the DEM source for the link area
-
-        Mandatory params
-        ----------
-        ds_string: COVER, DTM or DSM
-
-        APIResult
-        -------
-        Visual representation of the link area
-        """
-
-        return self.call_api("link_area", params={"ds_string": ds_string}, method="get") 
-
-    def link_profile(self, v_h=0, **kwargs):
-        """
-        Shows the elevation profile of a slice of the horizontal fresnel plane.
-
-        Mandatory params
-        ----------
-        v_h : horizontal fresnel offset where left > 0 (defaut = 0)
-
-        Optional (must include param name)
-        ----------
-        figsize: figure size (w, h) in inches
-        dpi: figure dpi (pixels per inch)
-        
-        Return:
-        ---------
-        Visual representation of the link profile.
-        """
-                
-        return self.call_api(
-            "link_profile", 
-            params={"v_h": v_h},
-            body={"options": kwargs} if kwargs is not None else None,
-            method="post")
-
-    def lulc_fresnel(self, **kwargs):        
-        return self.call_api("lulc_fresnel", 
-            body={"options": kwargs} if kwargs is not None else None,
-            method="post")
-
-    def dem_tiles(self, ds_string : str, **kwargs):
-        params = {"ds_string": ds_string}
-        options = ['downscale', 'minio_time', 'direction', 'reverse']
-        for o in options:
-            if o in kwargs:
-                params[o] = kwargs[o]
-
-        return self.call_api("show_tiff_band", params=params, method="get")
-   
-    def dem_profiles(self, v_h=0, v_v=0, **kwargs):
-        return self.call_api(
-            "show_profiles",
-            params={"v_h": v_h, "v_v": v_v},
-            body={"options": kwargs} if kwargs is not None else None,
-            method="post",
-        )
-
-    def dem_surface(self, ds, **kwargs):
-        return self.call_api(
-            "plot_surface_dict",
-            params={"ds_string": ds},
-            body={"options": kwargs} if kwargs is not None else None,
-            method="post",
-        )
-       
-    def bldg_prepare(self):
-        """
-        Load building information for the link - required for building clutering evaluation
-
-        Return:
-        ---------
-        JSON response from the backend. Access payload with `result.data`.        
-        """        
-         
-        return self.call_api('prepare_bldg', params={}, method="get", timeout=120 )
-    
-    def bldg_fresnel(self, **kwargs):   
-        kwargs['base64'] = True     
-        return self.call_api("bldg_fresnel", 
-            body={"options": kwargs} if kwargs is not None else None,
-            method="post")
-    
-    def bldg_profile(self, filtered=False, **kwargs):   
-        kwargs['base64'] = True     
-        return self.call_api("bldg_profile", 
-            params = {"filtered": filtered}, 
-            body={"options": kwargs} if kwargs is not None else None,
-            method="post")
-           
-    def bldg_filter(self, v_v=-1, v_h=-1):
-        params = {"v_v": v_v, "v_h" : v_h}        
-        return self.call_api("bldg_filter", params=params, method="get")
-    
-    def bldg_invasions(self):        
-        return self.call_api("bldg_invasions", params={}, method="get")
-
-    def bldg_browser(self, order_by_invasion = False, **kwargs):   
-        kwargs['base64'] = True        
-        return self.call_api("bldg_browser", 
-            body={"options": kwargs} if kwargs is not None else None,
-            params={'order_by_invasion' : order_by_invasion}, 
-            method="post")
-
-    def bldg_next_invasion(self):        
-        return self.call_api("bldg_next_invasion",         
-            params={}, 
-            method="get")
-    
-    def link_features(self):        
-        return self.call_api("link_features",         
-            params={}, 
-            method="get")
+        display(result.data)

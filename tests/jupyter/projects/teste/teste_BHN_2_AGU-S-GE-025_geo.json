@@ -1,0 +1,140 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.25721748627114,
+                    -26.008314037482936
+                ]
+            },
+            "properties": {
+                "name": "teste_BHN_2",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R1",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "hop_type": "src",
+                "rssi": -95.3,
+                "ant_dB": 14,
+                "ant_type": "directional",
+                "ant_name": "YAGI"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.274600800679465,
+                    -26.010328033333735
+                ]
+            },
+            "properties": {
+                "name": "R1",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R1_1",
+                "link_mode": "b2b",
+                "ant_h": 7,
+                "hop_type": "rep",
+                "ant_dB": 14,
+                "ant_type": "directional",
+                "ant_name": "YAGI"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.274600800679465,
+                    -26.010328033333735
+                ]
+            },
+            "properties": {
+                "name": "R1_1",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R2",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "hop_type": "rep",
+                "ant_dB": 14,
+                "ant_type": "directional",
+                "ant_name": "YAGI",
+                "rssi": -66.22
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.3310297956902,
+                    -26.060921388353105
+                ]
+            },
+            "properties": {
+                "name": "R2",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R2_1",
+                "link_mode": "b2b",
+                "ant_h": 7,
+                "hop_type": "rep",
+                "ant_dB": 14,
+                "ant_type": "directional",
+                "ant_name": "YAGI"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.3310297956902,
+                    -26.060921388353105
+                ]
+            },
+            "properties": {
+                "name": "R2_1",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "AGU-S-GE-025",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "hop_type": "rep",
+                "ant_dB": 14,
+                "ant_type": "directional",
+                "ant_name": "YAGI",
+                "rssi": -65.92
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.32859999923694,
+                    -26.058974999976
+                ]
+            },
+            "properties": {
+                "name": "AGU-S-GE-025",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": null,
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "hop_type": "dst",
+                "ant_dB": 14,
+                "ant_type": "directional",
+                "ant_name": "YAGI"
+            }
+        }
+    ]
+}

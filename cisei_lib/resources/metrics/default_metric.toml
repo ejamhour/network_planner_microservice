@@ -1,0 +1,60 @@
+version = 1
+result = "metric"
+
+[expressions]
+
+top_invasion = """
+max(0.0, terrain_peak.vv_0)
+"""
+
+linear_progress = """
+clip(
+    (
+        top_invasion
+        - params.clear_limit
+    ) / (
+        params.penalty_start
+        - params.clear_limit
+    ),
+    0.0,
+    1.0
+)
+"""
+
+base_cost = """
+(
+    1.0
+    + (
+        params.cost_at_penalty_start
+        - 1.0
+    ) * linear_progress
+)
+"""
+
+penalty = """
+(
+    params.penalty_weight
+    * max(
+        0.0,
+        (
+            top_invasion
+            - params.penalty_start
+        ) / params.penalty_scale
+    ) ** params.penalty_power
+)
+"""
+
+metric = """
+base_cost + penalty
+"""
+
+[parameters]
+clear_limit = 0.4
+
+penalty_start = 1.0
+cost_at_penalty_start = 1.9
+
+penalty_scale = 0.2
+penalty_weight = 2.0
+penalty_power = 2.0
+

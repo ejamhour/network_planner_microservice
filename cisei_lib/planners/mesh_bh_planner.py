@@ -1,11 +1,11 @@
-from cisei_lib.cli.usermng.homeFolder import user_home
-from cisei_lib.cli.usermng.configTools import configRadio
-from cisei_lib.cli.bhnplanner.geo_rpl import GeoRPL
+from cisei_lib.usermng.homeFolder import user_home
+from cisei_lib.usermng.configTools import configRadio
+from cisei_lib.planners.geo_rpl import GeoRPL
 import geopandas as gpd
 from pandas import concat, isna
 from multiprocessing import Manager, Lock, Process, Queue
 from queue import Empty  # for timeout handling
-from cisei_lib.cli.bhnplanner.link_planner_worker import LinkPlannerWorker
+from cisei_lib.planners.link_planner_worker import LinkPlannerWorker
 
 class MeshBHPlanner(GeoRPL):
 
@@ -83,7 +83,7 @@ class MeshBHPlanner(GeoRPL):
             src_pos = res.geometry
             res = self.bhns.query(f"name == '{next_hop}'").iloc[0]
 
-   # Update new and bhn gdfs with 'relay' flag indicating if they can act as routers
+    # Update new and bhn gdfs with 'relay' flag indicating if they can act as routers
     def _init_relay_property(self):
 
         if not self.context['dads_relay']:

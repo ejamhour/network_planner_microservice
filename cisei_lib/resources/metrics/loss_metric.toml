@@ -1,0 +1,94 @@
+version = 1
+result = "metric"
+
+[expressions]
+
+vegetation_depth = """
+(
+    vegetation.core * params.vegetation_core_weight
+    + vegetation.fresnel * params.vegetation_fresnel_weight
+    + vegetation.boundary * params.vegetation_boundary_weight
+)
+"""
+
+building_depth = """
+(
+    buildings.core * params.building_core_weight
+    + buildings.fresnel * params.building_fresnel_weight
+    + buildings.boundary * params.building_boundary_weight
+)
+"""
+
+vegetation_loss = """
+(
+    0.0
+    if vegetation_depth <= 0.0
+    else (
+        params.vegetation_A
+        * (freq_mhz / 1000.0) ** params.vegetation_B
+        * vegetation_depth ** params.vegetation_C
+    )
+)
+"""
+
+building_loss = """
+(
+    0.0
+    if building_depth <= 0.0
+    else (
+        params.building_A
+        * (freq_mhz / 1000.0) ** params.building_B
+        * building_depth ** params.building_C
+    )
+)
+"""
+
+total_loss = """
+(
+    fspl
+    + delta_diffra
+    + vegetation_loss
+    + building_loss
+)
+"""
+
+metric = """
+(
+    max(
+        1.0,
+        total_loss / params.normalization_loss
+    )
+    + params.penalty_weight
+      * max(
+            0.0,
+            (
+                total_loss
+                - params.penalty_start
+            ) / params.penalty_scale
+        ) ** params.penalty_power
+)
+"""
+
+[parameters]
+vegetation_A = 0.39
+vegetation_B = 0.39
+vegetation_C = 0.25
+
+vegetation_core_weight = 1.0
+vegetation_fresnel_weight = 0.0
+vegetation_boundary_weight = 0.0
+
+building_A = 0.39
+building_B = 0.39
+building_C = 0.25
+
+building_core_weight = 1.0
+building_fresnel_weight = 0.0
+building_boundary_weight = 0.0
+
+normalization_loss = 110.0
+penalty_start = 130.0
+penalty_scale = 10.0
+penalty_weight = 10.0
+penalty_power = 2.0
+

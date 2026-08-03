@@ -1,0 +1,23 @@
+title = "BHN Planner Project"
+name = "teste"
+new_bhnlayer = true
+
+[regions]
+
+[[dataset]]
+name = "fase2"
+nodes = ["pops", "dads", "bhns"]
+
+[dataset.properties]
+network = "AGU-S"
+
+
+[[dataset]]
+name = "fase2_exp"
+nodes = ["dads"]
+properties = {'network' = 'AGU-S' }
+
+[[dataset]]
+name = "fase2"
+nodes = ["poles"]
+regions = ["dads", "bhns"]

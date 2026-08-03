@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "pops_geo",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "name": "PAM-R-P7-001", "LAT": "-25.564", "LONG": "-49.8908", "Status": "Em Projeto", "Equipamento": "P70", "Endereco_IP": "", "Nome_da_Rede": "", "NIC_ID": "", "Gateway_ID": "", "Tipo": "P70", "Tipo_do_Equipamento": "", "Device_Mode": "access-point", "ID_B2B___ETH1": "", "Municipio": "PORTO AMAZONAS", "SE": "REPETIDORA PORTO AMAZONAS", "layer": "pops", "network": "PAM-R", "next_hop": "", "ant_type": "OMNI", "ant_dB": 8.0, "ant_azimuth": "0", "radio_pw": 30, "id_ami": null, "id_da": null, "pole_id": null }, "geometry": { "type": "Point", "coordinates": [ -49.890799999948911, -25.56399999992 ] } }
+]
+}

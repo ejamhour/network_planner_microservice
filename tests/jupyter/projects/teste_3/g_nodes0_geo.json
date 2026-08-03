@@ -1,0 +1,25 @@
+{
+"type": "FeatureCollection",
+"name": "g_nodes0_geo",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "name": "AGU-S-P7-001", "layer": "planned", "iconType": "planned", "fixed": true, "relay": true, "rank": 0.0, "parent": null }, "geometry": { "type": "Point", "coordinates": [ -49.334199999970913, -25.988000000004 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_1", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 9.5, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.297608193868712, -26.019486804165005 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_2", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 2.5, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.357153342797758, -26.000919854776988 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_3", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 7.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.300262071994482, -26.020438871459987 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_4", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 2.5, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.325575523012461, -26.003121322162993 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_6", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 10.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.354298392888808, -25.952750829077992 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_7", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 6.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.361281134539709, -25.926585834856976 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_8", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 7.5, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.406940393962081, -26.006162933420988 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_9", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 3.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.374537684153381, -26.033364109247007 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_13", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 8.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.301820887936422, -26.020421099323002 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_17", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 4.5, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.402890751340053, -26.007174462940991 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_18", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 6.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.359365610717532, -25.927936379614998 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_19", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 1.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.33691296802678, -25.985458373474 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_20", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 4.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.360736906840835, -26.049277534819993 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_21", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 7.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.306534980289008, -26.077522185149995 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_22", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 3.5, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.332492544956317, -26.017672814993997 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_23", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 7.5, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.364995497003591, -26.014595738482999 ] } },
+{ "type": "Feature", "properties": { "name": "teste_3_BHN_26", "layer": "planned", "iconType": "planned", "fixed": false, "relay": false, "rank": 3.0, "parent": "AGU-S-P7-001" }, "geometry": { "type": "Point", "coordinates": [ -49.440838235240697, -26.010595366065004 ] } }
+]
+}

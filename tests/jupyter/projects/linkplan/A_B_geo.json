@@ -1,0 +1,43 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.4545370100964,
+                    -26.0653893340446
+                ]
+            },
+            "properties": {
+                "name": "A",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "B",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "hop_type": "src"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.44739813282138,
+                    -26.086031876627
+                ]
+            },
+            "properties": {
+                "name": "B",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": null,
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "hop_type": "dst"
+            }
+        }
+    ]
+}

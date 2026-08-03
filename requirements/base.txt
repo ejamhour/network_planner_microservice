@@ -8,6 +8,8 @@ httpx
 numpy
 pandas
 matplotlib
+mapclassify
+folium
 
 # --- Vector Geospatial ---
 # Note: These depend on libgeos-dev and libproj-dev

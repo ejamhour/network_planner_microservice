@@ -1,0 +1,131 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.4545370100964,
+                    -26.0653893340446
+                ]
+            },
+            "properties": {
+                "name": "A",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R2",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "ant_dB": 2,
+                "ant_type": "omni",
+                "ant_name": "OMNI_URBAN"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.46258638393627,
+                    -26.059186645592963
+                ]
+            },
+            "properties": {
+                "name": "R2",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R1",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "ant_dB": 2,
+                "ant_type": "omni",
+                "ant_name": "OMNI_URBAN"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.440777935405315,
+                    -26.09233718449897
+                ]
+            },
+            "properties": {
+                "name": "R1",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R4",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "ant_dB": 6.25,
+                "ant_type": "omni",
+                "ant_name": "OMNI"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.43638467153217,
+                    -26.09115213834297
+                ]
+            },
+            "properties": {
+                "name": "R4",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "R3",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "ant_dB": 2,
+                "ant_type": "omni",
+                "ant_name": "OMNI_URBAN"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.44211786265496,
+                    -26.07948720213616
+                ]
+            },
+            "properties": {
+                "name": "R3",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": "B",
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "ant_dB": 2,
+                "ant_type": "omni",
+                "ant_name": "OMNI_URBAN"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -49.44739813282138,
+                    -26.086031876627
+                ]
+            },
+            "properties": {
+                "name": "B",
+                "layer": "new",
+                "iconType": "new_radio",
+                "next_hop": null,
+                "link_mode": "GE-NX",
+                "ant_h": 7,
+                "ant_dB": 2,
+                "ant_type": "omni",
+                "ant_name": "OMNI_URBAN"
+            }
+        }
+    ]
+}

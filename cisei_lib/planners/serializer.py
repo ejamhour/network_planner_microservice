@@ -4,7 +4,7 @@ import geopandas as gpd
 from shapely.geometry import Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
 from pathlib import Path
 import networkx as nx
-from cisei_lib.cli.tools.safe_code import tomlkit_encoder, tomlkit_decoder
+from cisei_lib.tools.safe_code import tomlkit_encoder, tomlkit_decoder
 
 # new, floating, repeater
 class Serializer: 
@@ -18,6 +18,7 @@ class Serializer:
             'pack_filename': 'unnamed',
             'nodes_filename': 'nodes_geo.json',
             'links_filename': 'links_geo.json',
+            'plan_filename': 'plan_geo.json',
             'append': False,
             'layer': 'new'
         }
@@ -53,7 +54,10 @@ class Serializer:
     # Exports planned nodes with antenna configuration and metadata.
     def to_geojson_nodes(self, new_nodes: dict):
 
-        path = Path(self.context['folder']) / str(self.context['sub_folder']) / str(self.context['nodes_filename'])
+        path = self.get_path_name('nodes')
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+
         new_nodes = deepcopy(new_nodes)
         if self.context['append'] and path.is_file():            
             gdf = gpd.read_file(path)
@@ -81,7 +85,9 @@ class Serializer:
 
     # Exports modeled links with RF quality estimates.
     def to_geojson_links(self, edges: list, nodes: dict):
-        path = Path(self.context['folder']) / str(self.context['sub_folder']) / str(self.context['links_filename'])
+
+        path = self.get_path_name('links')
+        path.parent.mkdir(parents=True, exist_ok=True)
 
         new_links = {}
         for u, v, data in edges:
@@ -102,6 +108,59 @@ class Serializer:
 
         links = self._sanitize_properties(links)   
         gdf = gpd.GeoDataFrame(links, geometry='geometry', crs="EPSG:4326")
+        gdf.to_file(path, driver="GeoJSON")
+        return gdf
+
+    # Exports both, nodes and links in a single GDF
+    def to_geojson_plan(self, edges: list, nodes: dict):
+        path =self.get_path_name('plan')
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        records = []
+
+        for node in nodes.values():
+            record = deepcopy(node)
+
+            lat, lon = record.pop("pos")
+            record["feature_type"] = "node"
+            record["geometry"] = Point(lon, lat)
+
+            if record.get("hop_type") == "rep":
+                record["iconType"] = "repeater"
+            else:
+                record["iconType"] = "new"
+
+            records.append(record)
+
+        for src, dst, data in edges:
+            lat1, lon1 = nodes[src]["pos"]
+            lat2, lon2 = nodes[dst]["pos"]
+
+            record = {
+                "src": src,
+                "dst": dst,
+                "feature_type": "link",
+                **{
+                    key: value
+                    for key, value in data.items()
+                    if key != "geometry"
+                },
+                "geometry": LineString([
+                    (lon1, lat1),
+                    (lon2, lat2),
+                ]),
+            }
+
+            records.append(record)
+
+        records = self._sanitize_properties(records)
+
+        gdf = gpd.GeoDataFrame(
+            records,
+            geometry="geometry",
+            crs="EPSG:4326",
+        )
+
         gdf.to_file(path, driver="GeoJSON")
         return gdf
 
@@ -134,11 +193,11 @@ class Serializer:
             pack_files = sorted(pack_files, key=lambda f: int(f.stem.split('_')[-1]))
 
             n = int(pack_files[-1].stem.split('_')[-1]) if pack_files else -1
-            file = f'{self.context['pack_filename']}_{n + 1}.pack'       
+            file = f"{self.context['pack_filename']}_{n + 1}.pack"       
         else:
             for file in pack_files:
                 if file.is_file(): file.unlink()
-            file = f'{self.context['pack_filename']}_0.pack' 
+            file = f"{self.context['pack_filename']}_0.pack" 
 
         
         file = folder / file        
@@ -147,7 +206,6 @@ class Serializer:
                 f.write(msgpack.packb(data, default=tomlkit_encoder))   
             else:
                 f.write(msgpack.packb(data, use_bin_type=True)) 
-
 
     # Retrieve serialized data as a tuple
     def deserialize_bin(self, idx = None):
@@ -175,3 +233,14 @@ class Serializer:
                 
         except FileNotFoundError:
             return None
+        
+    # Get path names
+    def get_path_name(self, file_type):
+        base_path = Path(self.context['folder']) / str(self.context['sub_folder'])
+        
+        if file_type == 'nodes':
+            return base_path / str(self.context['nodes_filename'])
+        if file_type == 'links':
+            return base_path / str(self.context['links_filename'])
+        if file_type == 'plan':
+            return base_path / str(self.context['plan_filename'])

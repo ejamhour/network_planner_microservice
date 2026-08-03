@@ -8,8 +8,10 @@ export MINIO_SECRET_KEY="Inicio@123"
 export MINIO_BUCKET="planapp"
 
 export MINIO_HOME_FOLDER="home"
-export LOCAL_HOME_FOLDER="/workspaces/planning_service/home"
+export LOCAL_HOME_FOLDER="/workspaces/network_service/home"
 
 export MINIO_DEM_ROOT_KEY="root/dem-datasets"
+
+export MS_LINK_FEATURES="http://192.168.100.29:8080"
 
 echo "MinIO environment variables applied."

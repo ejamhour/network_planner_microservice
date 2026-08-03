@@ -1,0 +1,95 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.25721748627114,
+                        -26.008314037482936
+                    ],
+                    [
+                        -49.274600800679465,
+                        -26.010328033333735
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "teste_BHN_2:R1",
+                "src": "teste_BHN_2",
+                "dst": "R1",
+                "rssi": -95.3,
+                "rssi_max": -88.67,
+                "rssi_min": -101.94,
+                "path": -96.6,
+                "diff": -32.13,
+                "tree_min": -17.94,
+                "tree_max": -31.21,
+                "length": 1754,
+                "level": 0.5
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.274600800679465,
+                        -26.010328033333735
+                    ],
+                    [
+                        -49.3310297956902,
+                        -26.060921388353105
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R1_1:R2",
+                "src": "R1_1",
+                "dst": "R2",
+                "rssi": -66.22,
+                "rssi_max": -56.36,
+                "rssi_min": -76.08,
+                "path": -109.73,
+                "diff": -4.63,
+                "tree_min": 0.0,
+                "tree_max": -19.71,
+                "length": 7957,
+                "level": 0.5
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.3310297956902,
+                        -26.060921388353105
+                    ],
+                    [
+                        -49.32859999923694,
+                        -26.058974999976
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R2_1:AGU-S-GE-025",
+                "src": "R2_1",
+                "dst": "AGU-S-GE-025",
+                "rssi": -65.92,
+                "rssi_max": -59.24,
+                "rssi_min": -72.59,
+                "path": -81.95,
+                "diff": -31.52,
+                "tree_min": -3.77,
+                "tree_max": -17.12,
+                "length": 324,
+                "level": 0.5
+            }
+        }
+    ]
+}

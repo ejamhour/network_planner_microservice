@@ -1,0 +1,23 @@
+title = "BHN Planner Project"
+name = "teste_4"
+new_bhnlayer = true
+
+[regions]
+
+[[dataset]]
+name = "fase2"
+nodes = ["pops", "dads"]
+
+[dataset.properties]
+network = "PAM-R"
+
+#[[dataset]] # Poles are filtered by region
+#name = "fase2_exp"
+#nodes = ["dads"]
+#properties = {'network' = 'PAM-R' }
+
+
+[[dataset]]
+name = "fase2"
+nodes = ["poles"]
+regions = ["dads", "pops"]

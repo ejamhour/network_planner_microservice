@@ -1,0 +1,65 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.274552427609244,
+                        -26.008169928332222
+                    ],
+                    [
+                        -49.3310297956902,
+                        -26.060921388353105
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R2_1:R1",
+                "src": "R2_1",
+                "dst": "R1",
+                "rssi": -83.96,
+                "rssi_max": -81.51,
+                "rssi_min": -86.42,
+                "path": -109.92,
+                "diff": -18.45,
+                "tree_min": -11.13,
+                "tree_max": -16.05,
+                "length": 8130,
+                "level": 0.5
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.3310297956902,
+                        -26.060921388353105
+                    ],
+                    [
+                        -49.32859999923694,
+                        -26.058974999976
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R1_1:AGU-S-GE-025",
+                "src": "R1_1",
+                "dst": "AGU-S-GE-025",
+                "rssi": -65.92,
+                "rssi_max": -59.24,
+                "rssi_min": -72.59,
+                "path": -81.95,
+                "diff": -31.52,
+                "tree_min": -3.77,
+                "tree_max": -17.12,
+                "length": 324,
+                "level": 0.5
+            }
+        }
+    ]
+}

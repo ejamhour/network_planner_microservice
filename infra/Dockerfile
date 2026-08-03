@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 ENV DEBIAN_FRONTEND=noninteractive 
 ENV PATH="/root/.local/bin:${PATH}" 
-ENV PYTHONPATH="/workspaces/planning_service" 
+ENV PYTHONPATH="/workspaces/network_service" 
 ENV PYTHONUNBUFFERED=1
 
 # Instalação de dependências de sistema necessárias para GDAL [cite: 1]
@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* [cite: 1]
 
 # MATCH THIS TO devcontainer.json "workspaceFolder"
-WORKDIR /workspaces/planning_service
+WORKDIR /workspaces/network_service
 
 # 1. Copy the entire folder to maintain relative paths for -r base.txt
 COPY requirements/ ./requirements/

@@ -1,0 +1,145 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.4545370100964,
+                        -26.0653893340446
+                    ],
+                    [
+                        -49.46258638393627,
+                        -26.059186645592963
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "A:R2",
+                "src": "A",
+                "dst": "R2",
+                "rssi_max": -62.21,
+                "rssi_min": -82.43,
+                "path": -92.21,
+                "diff": -0.0,
+                "tree_min": -0.0,
+                "tree_max": -20.22,
+                "length": 1058
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.46258638393627,
+                        -26.059186645592963
+                    ],
+                    [
+                        -49.440777935405315,
+                        -26.09233718449897
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R2:R1",
+                "src": "R2",
+                "dst": "R1",
+                "rssi_max": -74.33,
+                "rssi_min": -81.72,
+                "path": -104.33,
+                "diff": -0.0,
+                "tree_min": 0,
+                "tree_max": -7.39,
+                "length": 4272
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.440777935405315,
+                        -26.09233718449897
+                    ],
+                    [
+                        -49.43638467153217,
+                        -26.09115213834297
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R1:R4",
+                "src": "R1",
+                "dst": "R4",
+                "rssi_max": -63.88,
+                "rssi_min": -74.35,
+                "path": -84.95,
+                "diff": -8.94,
+                "tree_min": -0.0,
+                "tree_max": -10.46,
+                "length": 458
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.43638467153217,
+                        -26.09115213834297
+                    ],
+                    [
+                        -49.44211786265496,
+                        -26.07948720213616
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R4:R3",
+                "src": "R4",
+                "dst": "R3",
+                "rssi_max": -64.73,
+                "rssi_min": -64.73,
+                "path": -94.73,
+                "diff": -0.0,
+                "tree_min": -0.0,
+                "tree_max": -0.0,
+                "length": 1413
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -49.44211786265496,
+                        -26.07948720213616
+                    ],
+                    [
+                        -49.44739813282138,
+                        -26.086031876627
+                    ]
+                ]
+            },
+            "properties": {
+                "name": "R3:B",
+                "src": "R3",
+                "dst": "B",
+                "rssi_max": -60.77,
+                "rssi_min": -60.77,
+                "path": -90.77,
+                "diff": -0.0,
+                "tree_min": -0.0,
+                "tree_max": -0.0,
+                "length": 897
+            }
+        }
+    ]
+}

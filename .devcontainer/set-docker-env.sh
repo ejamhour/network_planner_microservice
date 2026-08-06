@@ -12,6 +12,8 @@ export LOCAL_HOME_FOLDER="/workspaces/network_service/home"
 
 export MINIO_DEM_ROOT_KEY="root/dem-datasets"
 
-export MS_LINK_FEATURES="http://192.168.100.29:8080"
+# export MS_LINK_FEATURES="http://192.168.100.29:8080"
+# export MS_LINK_FEATURES="http://10.32.13.19:8080"
+export MS_LINK_FEATURES="http://planning-service:8080"
 
 echo "MinIO environment variables applied."

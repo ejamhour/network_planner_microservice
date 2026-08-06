@@ -119,13 +119,43 @@ class AsyncGeoServicePool:
         if pending:
             await asyncio.gather(*pending, return_exceptions=True)
 
+        clients: list[GeoServiceClient] = []
+
+        if self._clients is not None:
+            while not self._clients.empty():
+                clients.append(self._clients.get_nowait())
+
+        close_results = []
+
         if self._executor is not None:
-            self._executor.shutdown(wait=True, cancel_futures=False)
+            close_results = await asyncio.gather(
+                *(
+                    self._run_blocking(client.close_worker)
+                    for client in clients
+                ),
+                return_exceptions=True,
+            )
+
+            self._executor.shutdown(
+                wait=True,
+                cancel_futures=False,
+            )
 
         self._executor = None
         self._clients = None
         self._started = False
         self._closed = True
+
+        for client, result in zip(clients, close_results):
+            if isinstance(result, Exception):
+                raise GeoServiceError(
+                    f"Failed to close worker {client.user_id}: {result}"
+                )
+
+            self._validate_result(
+                result,
+                f"close_worker {client.user_id}",
+            )
 
     async def __aenter__(self) -> AsyncGeoServicePool:
         return await self.start()

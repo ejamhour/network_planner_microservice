@@ -143,6 +143,88 @@ class GeoServiceClient:
 
         return result
 
+    def workers_status(self) -> APIResult:
+        """Return hub worker and memory status."""
+        try:
+            response = requests.get(
+                f"{self.base_url}/status",
+                timeout=self.timeout,
+            )
+
+            response.raise_for_status()
+            return self._parse_response(response)
+
+        except requests.HTTPError as exc:
+            response = getattr(exc, "response", None)
+            return APIResult(
+                "http_error",
+                {
+                    "status": "error",
+                    "kind": "http_error",
+                    "data": str(exc),
+                },
+                response,
+            )
+
+        except requests.RequestException as exc:
+            return APIResult(
+                "request_error",
+                {
+                    "status": "error",
+                    "kind": "request_error",
+                    "data": str(exc),
+                },
+                None,
+            )
+
+    def close_worker(self) -> APIResult:
+        """Stop this client's worker while keeping its registration."""
+        if not self.user_id or not self.token:
+            return APIResult(
+                "error",
+                {
+                    "status": "error",
+                    "kind": "client_error",
+                    "data": "Client is not registered",
+                },
+                None,
+            )
+
+        try:
+            response = requests.delete(
+                f"{self.base_url}/workers/{self.user_id}",
+                headers={"X-Token": self.token},
+                timeout=self.timeout,
+            )
+
+            response.raise_for_status()
+            return self._parse_response(response)
+
+        except requests.HTTPError as exc:
+            response = getattr(exc, "response", None)
+            return APIResult(
+                "http_error",
+                {
+                    "status": "error",
+                    "kind": "http_error",
+                    "data": str(exc),
+                },
+                response,
+            )
+
+        except requests.RequestException as exc:
+            return APIResult(
+                "request_error",
+                {
+                    "status": "error",
+                    "kind": "request_error",
+                    "data": str(exc),
+                },
+                None,
+            )
+    
+    # --- service encapsulation methods
+
     def link(self, tx, rx, prepare_link=True, **kwargs):
         tx_lat, tx_lon = tx
         rx_lat, rx_lon = rx

@@ -75,8 +75,8 @@ class PoleGraph:
             'radius_poles': 10, # controls adaptative radius search goal
             'cone_angle': 0, # dual-cone angle (0 - disable_constraint)
             'cone_poles': 10, # controls the number of poles selected by cone
-            'sector_exclusion' : 30, # semi-sector
-            'sector_count' : 6, # number of sectors
+            'sector_exclusions' : [0,3], # Adjust in accordance to the number of sectors
+            'sector_count' : 6, # number of sectors centered at s ---> d (numbered clockwise)
             'sector_bands' : 3, # number of rings around the obstacle
             'sector_poles': 3, # number of poles per sector (sector_count * sector_poles)
             'debug' : False, # enable print of debug messages 
@@ -588,9 +588,27 @@ class PoleGraph:
 
     # Adaptative radius search
     def _adaptive_radius_filter(self, obs_pos, len_km):
-        '''
-        Search for poles near the obstacle position with adaptive radius expansion based on density.
-        '''
+        """
+        Return candidate poles within an adaptive radius around an obstacle.
+
+        The initial radius is based on a fraction of the link length, bounded
+        by radius_min and radius_max. If fewer than radius_poles candidates
+        are found, the radius is increased by radius_increment until enough
+        poles are available or radius_max is reached.
+
+        Parameters
+        ----------
+        obs_pos : tuple[float, float]
+            Obstacle position as (lat, lon).
+
+        len_km : float
+            Length of the link in kilometers.
+
+        Returns
+        -------
+        GeoDataFrame
+            Candidate poles inside the final search radius.
+        """
         # Initial radius from context
         radius_km = max(self.context["radius_min"], self.context["radius_percent"] * len_km)
         radius_km = min(radius_km, self.context["radius_max"])
@@ -612,9 +630,14 @@ class PoleGraph:
                 radius_km += self.context['radius_increment']
 
     # Apply an angle contraint for the repeater positions searched along the link
-    def _angular_filter(self, s_label, d_label, poles_in_radius):
-    
-        max_angle = self.context['max_angle']
+    def _cone_angle_filter(self, s_label, d_label, poles_in_radius):
+
+        """
+        Keep only candidate poles whose direction does not deviate
+        too far from the source-destination path at either endpoint.
+        """
+        
+        max_angle = self.context['cone_angle']
         src_utm = self._to_utm(self.G.nodes[s_label]['pos'])
         dst_utm = self._to_utm(self.G.nodes[d_label]['pos'])   
 
@@ -625,23 +648,30 @@ class PoleGraph:
             poles_in_radius["angle"].apply(lambda a: max(a) <= max_angle)
         ]
 
-        if len(filtered) >= self.context['angle_poles']:
+        if len(filtered) >= self.context['cone_poles']:
             poles_in_radius = filtered
         else: # complete the remaining poles sorted by angle
             extra = poles_in_radius[~poles_in_radius.index.isin(filtered.index)]
             extra_sorted = extra.sort_values(by="angle", key=lambda s: s.apply(max))
-            poles_in_radius = pd.concat([filtered, extra_sorted]).head(self.context['angle_poles'])
+            poles_in_radius = pd.concat([filtered, extra_sorted]).head(self.context['cone_poles'])
         
         return poles_in_radius
 
     # Return poles around the highest obstacles and angle restriction to the straight path
     async def _get_poles_by_dual_cone(self, s_label, d_label):
-        '''
-        For a given link already in the graph, search for poles within a radius of ~n km,
-        and return up to test_poles with the highest elevation.
-        '''
-        obs_pos = self.G.get_edge_data(s_label, d_label, {}).get('obs_pos')
-        len_dm = self.G.get_edge_data(s_label, d_label, {}).get('dist_m')
+
+        """
+        Keep only candidate poles whose direction does not deviate
+        too far from the source-destination path at either endpoint.
+
+        Direction filtering is the normal operating mode. A cone_angle
+        of 0 disables this constraint and is intended only for testing
+        or exceptional cases where pole density is too low.
+        """
+
+        edge_data = self.G.get_edge_data(s_label, d_label, {})
+        obs_pos = edge_data.get("obs_pos")
+        len_dm = edge_data.get("len_dm")
 
         if obs_pos is None:
             if self.context.get("search_midpoint"):
@@ -661,8 +691,12 @@ class PoleGraph:
             return poles_in_radius # Nothing to do
 
         # Add angle constraint if present
-        if self.context['cone_angle'] > 0: 
-            poles_in_radius = self._filter_poles_by_direction(s_label, d_label, poles_in_radius)
+        if self.context["cone_angle"] > 0:
+            poles_in_radius = self._cone_angle_filter(
+                s_label,
+                d_label,
+                poles_in_radius,
+        )
 
         # Add elevation (assuming self.geo.get_elevation(lat, lon))
         points = poles_in_radius["pos"].tolist()
@@ -689,19 +723,30 @@ class PoleGraph:
             + poles_in_radius["candidate_ant_h"]
         )
 
-        return poles_in_radius.nlargest(self.context['cone_poles'], "elevation")
+        return poles_in_radius.nlargest(self.context['cone_poles'], "antenna_elevation")
     
     # Return poles spread into different directions around the obstacle
     async def _get_poles_by_sector_band(self, s_label, d_label):
         """
-        Selects poles around the highest obstacle, excluding two opposite sectors centered on the s→d path
-        and dividing the remaining directions into uniform angular sectors.
-        """
+        Select repeater candidates around the highest obstacle while
+        preserving spatial diversity.
 
-        # Step 1: Get obstacle and length
+        Candidates are searched within an adaptive radius around the
+        obstacle and normally constrained to directions compatible with
+        the source-destination path.
+
+        The search region is divided into equal angular sectors centered
+        on the obstacle and into concentric radial bands. Configured sectors
+        may be excluded. Within each remaining sector, candidates are ranked
+        by antenna elevation and selected across different radial bands to
+        avoid concentrating repeater alternatives in the same region.
+
+        If no obstacle is available, the link midpoint may be used as the
+        search center when search_midpoint is enabled.
+        """
         edge_data = self.G.get_edge_data(s_label, d_label, {})
-        obs_pos = edge_data.get('obs_pos')
-        len_dm = edge_data.get('dist_m')
+        obs_pos = edge_data.get("obs_pos")
+        len_dm = edge_data.get("dist_m")
 
         if obs_pos is None:
             if self.context.get("search_midpoint"):
@@ -711,71 +756,50 @@ class PoleGraph:
                     f"Edge {s_label}-{d_label} has no terrain obstruction; "
                     "expansion skipped"
                 )
-                return self.poles_utm.iloc[0:0].copy() 
+                return self.poles_utm.iloc[0:0].copy()
 
-        # Step 2: Find candidate poles in radius
-        poles_in_radius = self._adaptive_radius_filter(obs_pos, len_dm / 1000)
+        # Candidate poles around the obstacle.
+        poles_in_radius = self._adaptive_radius_filter(
+            obs_pos,
+            len_dm / 1000,
+        )
+
         if poles_in_radius.empty:
-            self._debug(f'Warning: {s_label} {d_label} returned empty poles')
+            self._debug(
+                f"Warning: {s_label} {d_label} returned empty poles"
+            )
             return poles_in_radius
 
-        if self.context['cone_angle'] > 0:
-            poles_in_radius = await self._get_poles_by_dual_cone(
+        # Normally reject candidates pointing too far away from the link.
+        if self.context["cone_angle"] > 0:
+            poles_in_radius = self._cone_angle_filter(
                 s_label,
                 d_label,
+                poles_in_radius,
             )
 
-        # Step 3: Compute base angle (s→d direction)
-        s_utm = self._to_utm(self.G.nodes[s_label]['pos'])
-        d_utm = self._to_utm(self.G.nodes[d_label]['pos'])
-        obs_utm = self._to_utm(obs_pos)
-        dx = d_utm.x - s_utm.x
-        dy = d_utm.y - s_utm.y
-        base_angle = (degrees(atan2(dy, dx)) + 360) % 360
+            if poles_in_radius.empty:
+                return poles_in_radius
 
-        # Step 4: Compute relative angle from obstacle to pole
-        cx, cy = obs_utm.x, obs_utm.y
+        # Assign angular sectors around the obstacle.
+        poles_in_radius = self._assign_sectors(
+            poles_in_radius,
+            s_label,
+            d_label,
+            obs_pos,
+        )
 
-        def relative_angle(p):
-            dx = p.geometry.x - cx
-            dy = p.geometry.y - cy
-            angle = (degrees(atan2(dy, dx)) + 360) % 360
-            return (angle - base_angle + 360) % 360
+        # Remove explicitly excluded sectors.
+        excluded = self.context["sector_exclusions"]
+        if excluded:
+            poles_in_radius = poles_in_radius[
+                ~poles_in_radius["sector"].isin(excluded)
+            ].copy()
 
-        poles_in_radius["angle"] = poles_in_radius.apply(relative_angle, axis=1)
+        if poles_in_radius.empty:
+            return poles_in_radius
 
-        # Step 5: Exclude two opposite sectors and define usable ones
-        exclude_width = self.context['sector_exclusion']  # degrees
-        n_sectors = self.context['sector_count']
-        poles_per_sector = self.context['sector_poles']
-
-        half_width = exclude_width / 2
-        excluded_ranges = [(360 - half_width, half_width),  # centered at 0°
-                        (180 - half_width, 180 + half_width)]  # centered at 180°
-
-        # Mask poles in excluded sectors
-        def is_excluded(angle):
-            for start, end in excluded_ranges:
-                if start < end:
-                    if start <= angle < end:
-                        return True
-                else:
-                    if angle >= start or angle < end:
-                        return True
-            return False
-
-        poles_in_radius = poles_in_radius[~poles_in_radius["angle"].apply(is_excluded)]
-
-        # Step 6: Divide usable span and assign sectors
-        usable_span = 360 - 2 * exclude_width
-        sector_width = usable_span / n_sectors
-        start_angle = exclude_width + sector_width / 2  # first usable sector starts after excluded zone
-
-        # Step 7: update filtering columns
-        def sector_id(angle):
-            shifted = (angle - start_angle + 360) % 360
-            return int(shifted // sector_width)
-
+        # Obtain ground elevation.
         points = poles_in_radius["pos"].tolist()
         elevations = await self.geo.point_samples(
             points,
@@ -783,9 +807,9 @@ class PoleGraph:
             nodata_value=0,
         )
 
-        # Update pole base and antenna height
         poles_in_radius["elevation"] = elevations
 
+        # Absolute antenna elevation is the relevant selection criterion.
         default_ant_h = self.context["ant_h"]
 
         if "ant_h" in poles_in_radius.columns:
@@ -800,47 +824,72 @@ class PoleGraph:
             + poles_in_radius["candidate_ant_h"]
         )
 
-        # Implement sector filtering
-        poles_in_radius["sector"] = poles_in_radius["angle"].apply(sector_id)
-        poles_in_radius["distance"] = poles_in_radius.geometry.distance(obs_utm)
-        n_bands = self.context.get("score_band", 3)  # default to 3 if not defined
+        # Divide the search radius into concentric bands.
+        obs_utm = self._to_utm(obs_pos)
+
+        poles_in_radius["distance"] = (
+            poles_in_radius.geometry.distance(obs_utm)
+        )
+
+        n_bands = self.context["sector_bands"]
         max_dist = poles_in_radius["distance"].max()
         band_width = max_dist / n_bands
-        poles_in_radius["band"] = (poles_in_radius["distance"] // band_width).clip(upper=n_bands - 1).astype(int)
 
-        # Step 8: Collect top poles per sector
+        poles_in_radius["band"] = (
+            poles_in_radius["distance"] // band_width
+        ).clip(
+            upper=n_bands - 1
+        ).astype(int)
+
+        # Select high antennas while distributing candidates across bands.
+        n_sectors = self.context["sector_count"]
+        poles_per_sector = self.context["sector_poles"]
+
         selected = []
 
         for sector in range(n_sectors):
-            subset = poles_in_radius[poles_in_radius["sector"] == sector]
-            subset = subset.sort_values(
+            subset = poles_in_radius[
+                poles_in_radius["sector"] == sector
+            ].sort_values(
                 "antenna_elevation",
                 ascending=False,
             ).copy()
 
-            # Build band queues
             band_queues = {b: [] for b in range(n_bands)}
+
             for _, row in subset.iterrows():
                 band_queues[row["band"]].append(row)
 
             picked = []
+
             while len(picked) < poles_per_sector:
                 advanced = False
-                for b in range(n_bands):
-                    if band_queues[b]:
-                        picked.append(band_queues[b].pop(0))
+
+                for band in range(n_bands):
+                    if band_queues[band]:
+                        picked.append(band_queues[band].pop(0))
                         advanced = True
+
                         if len(picked) >= poles_per_sector:
                             break
+
                 if not advanced:
-                    break  # all queues exhausted
+                    break
 
             if picked:
-                selected.append(gpd.GeoDataFrame(picked, crs=poles_in_radius.crs))
+                selected.append(
+                    gpd.GeoDataFrame(
+                        picked,
+                        crs=poles_in_radius.crs,
+                    )
+                )
 
-
-        return pd.concat(selected) if selected else poles_in_radius.iloc[0:0]
-
+        return (
+            pd.concat(selected)
+            if selected
+            else poles_in_radius.iloc[0:0]
+        )
+    
     # Given a (lon, lat) tuple, returns the (lat, lon) coordinates of the nearest pole.
     def _nearest_pole(self, lon_lat):
         '''
@@ -857,6 +906,30 @@ class PoleGraph:
   
     # Determines the direction from src_utm to pos_utm with respect to dst_utm
     def _angles_from_path(self, a, b, p):
+        """
+        Return the angular deviation of candidate point P from link A-B.
+
+        Parameters
+        ----------
+        a : tuple
+            Source coordinates in the projected CRS.
+        b : tuple
+            Destination coordinates in the projected CRS.
+        p : tuple
+            Candidate pole coordinates in the projected CRS.
+
+        Returns
+        -------
+        tuple[float, float]
+            (angle_at_a, angle_at_b), in degrees, where:
+
+            angle_at_a is the angle between A->P and A->B.
+            angle_at_b is the angle between B->P and B->A.
+
+            Smaller values mean that P is better aligned with the
+            source-destination corridor from both endpoints.
+        """
+        
         # Angles higher than 90 may be in the wrong direction (answer between 0 and 180)
         v = np.array(b) - np.array(a)
         u1 = np.array(p) - np.array(a)
@@ -942,6 +1015,98 @@ class PoleGraph:
         
         return obs_position
 
+    # define sectorized direction to help pole selection that countour the obstacles
+    def _assign_sectors(self, poles, s_label, d_label, obs_pos):
+        """
+        Assign each candidate pole a relative angle and angular sector.
+
+        The source-to-destination direction defines 0°. Sector 0 is centered
+        on this direction. Sectors divide the full 360° equally and are
+        numbered clockwise.
+
+        Parameters
+        ----------
+        poles : GeoDataFrame
+            Candidate poles in the projected CRS.
+
+        s_label : str
+            Graph node label of the link source.
+
+        d_label : str
+            Graph node label of the link destination.
+
+        obs_pos : tuple[float, float]
+            Search-center position as (lat, lon), normally the highest
+            obstacle position or the link midpoint when fallback is enabled.
+
+        Returns
+        -------
+        GeoDataFrame
+            Copy of the candidate poles with:
+            - "angle": clockwise angle relative to the source-destination axis.
+            - "sector": angular sector ID.
+
+        Raises
+        ------
+        ValueError
+            If sector_count is not an even integer >= 2, if an excluded
+            sector ID is invalid, or if all sectors are excluded.
+        """
+        n_sectors = self.context["sector_count"]
+        excluded = set(self.context["sector_exclusions"])
+
+        if n_sectors < 2 or n_sectors % 2:
+            raise ValueError("sector_count must be an even integer >= 2")
+
+        if any(s < 0 or s >= n_sectors for s in excluded):
+            raise ValueError("sector_exclusions contains an invalid sector id")
+
+        if len(excluded) >= n_sectors:
+            raise ValueError("sector_exclusions cannot exclude all sectors")
+
+        s_utm = self._to_utm(self.G.nodes[s_label]["pos"])
+        d_utm = self._to_utm(self.G.nodes[d_label]["pos"])
+        obs_utm = self._to_utm(obs_pos)
+
+        # Absolute direction of the source -> destination axis.
+        base_angle = (
+            degrees(
+                atan2(
+                    d_utm.y - s_utm.y,
+                    d_utm.x - s_utm.x,
+                )
+            )
+            + 360
+        ) % 360
+
+        cx, cy = obs_utm.x, obs_utm.y
+
+        def relative_angle(row):
+            angle = (
+                degrees(
+                    atan2(
+                        row.geometry.y - cy,
+                        row.geometry.x - cx,
+                    )
+                )
+                + 360
+            ) % 360
+
+            # Clockwise relative to source -> destination.
+            return (base_angle - angle + 360) % 360
+
+        poles = poles.copy()
+        poles["angle"] = poles.apply(relative_angle, axis=1)
+
+        sector_width = 360 / n_sectors
+
+        # Shift half a sector so sector 0 is centered on 0°.
+        poles["sector"] = (
+            ((poles["angle"] + sector_width / 2) % 360)
+            // sector_width
+        ).astype(int)
+
+        return poles
 
 #---------------------------------------------------------------------
 if __name__ == '__main__':

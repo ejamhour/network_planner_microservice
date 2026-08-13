@@ -52,6 +52,7 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
 
         context = {
             **DEFAULT_CONTEXT,
+            "geo_user_prefix": user_id,
             **kwargs,
         }
 
@@ -138,9 +139,27 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
         src = self._get_input_node(src_id)
         dst = self._get_input_node(dst_id)
 
+        standard_fields = {
+            "node_id",
+            "name",
+            "pos",
+            "geometry",
+            "ant_h",
+        }
+
+        s_info = {
+            k: v for k, v in src.items()
+            if k not in standard_fields
+        }
+
+        d_info = {
+            k: v for k, v in dst.items()
+            if k not in standard_fields
+        }
+
         kwargs = {
-            "s_info": src.get("extra"),
-            "d_info": dst.get("extra"),
+            "s_info": s_info or None,
+            "d_info": d_info or None,
         }
 
         if pd.notna(src.get("ant_h")):
@@ -326,11 +345,14 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
         return m
 
     # Encapsulates the main execution of the class for planning a link
-    async def run(self, nodes_gdf, s_label, d_label, show=False):
-        await self.set_link_gdf(nodes_gdf, s_label, d_label)
+    async def run(self, src_id, dst_id, show=False):
+        await self.set_link_by_id(src_id, dst_id)
+
         result = await self.plan_link()
+
         if show:
-             self.show_graph(s_label, d_label)
+            self.show_graph(self.s_label, self.d_label)
+
         return result
 
     # --- Private methods ---
@@ -374,11 +396,9 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
         self.path = None
         self.nodes = {}
         self.G.clear()
-        self.virtual_edges = []
         
         self.s_label = s_label
         self.d_label = d_label
-        self.virtual_edges.append((s_label, d_label))
 
         # Source node
         s_args = {
@@ -401,49 +421,7 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
         edge_info = await self.edge_metric(s_pos, d_pos, s_args['ant_h'], d_args['ant_h'])        
         self.add_edge(self.nodes[s_label], self.nodes[d_label], edge_info)
 
-    # Displays each segment's LOS and antenna configuration (visual debug).        
-    def _show_link(self, s_label):         
-         while True:
-            start = self.nodes[s_label]
-            d_label = start['next_hop']
-            if d_label is None: break
-            end = self.nodes[d_label]
-            print(s_label, d_label)                        
-            self.geo.show_link(start['pos'], end['pos'], ha_s=start['ant_h'], ha_d = end['ant_h'] )
-            s_label = d_label
-
-
-    def _load_context(self, context, flat, inplace=True):
-        for k in flat:
-            if k in context:
-                raise KeyError(f"Key conflict: '{k}' already exists in context")
-        if inplace:
-            context.update(flat)
-            return context
-        else:
-            return {**context, **flat}
-
-            
-#---------------------------------------------------------------------
-if __name__ == '__main__':
-
     
-    '''
-    find the minimum number of repeaters to create LOS link
-    '''
-
-    start = (-26.0653893340446, -49.4545370100964)
-    end = (-26.086031876627, -49.44739813282138)
-    htx = hrx = 7
-
-    with LinkPlanner('AGU-S') as x:
-        x.set_link('A', start, 7, 'B', end, 7)
-        x.plan_link(n=2)
-        # x.show_link(x.s_label)
-        x.to_geoJSON_nodes()
-        
-   
-
 
 
     

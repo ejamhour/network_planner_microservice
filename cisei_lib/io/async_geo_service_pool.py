@@ -17,6 +17,10 @@ EdgeKey = tuple[Any, ...]
 class GeoServiceError(RuntimeError):
     pass
 
+class GeoServiceBusy(RuntimeError):
+    def __init__(self, retry_after: float):
+        self.retry_after = retry_after
+
 
 @dataclass(slots=True)
 class FeatureRequest:
@@ -272,15 +276,23 @@ class AsyncGeoServicePool:
     async def _extract(self, request: FeatureRequest) -> Any:
         assert self._clients is not None
 
-        client = await self._clients.get()
-        try:
-            return await self._run_blocking(
-                self._extract_blocking,
-                client,
-                request,
-            )
-        finally:
-            self._clients.put_nowait(client)
+        while True:
+            client = await self._clients.get()
+
+            try:
+                return await self._run_blocking(
+                    self._extract_blocking,
+                    client,
+                    request,
+                )
+
+            except GeoServiceBusy as exc:
+                retry_after = exc.retry_after
+
+            finally:
+                self._clients.put_nowait(client)
+
+            await asyncio.sleep(retry_after)
 
     def _extract_blocking(
         self,
@@ -298,8 +310,26 @@ class AsyncGeoServicePool:
             request.tx,
             request.rx,
             prepare_link=False,
+            retry_busy=False, # retry is performed by the pool
             **parameters,
         )
+
+        if (
+            set_link_result.response is not None
+            and set_link_result.response.status_code == 503
+        ):
+            try:
+                retry_after = float(
+                    set_link_result.response.headers.get(
+                        "Retry-After",
+                        "1",
+                    )
+                )
+            except (TypeError, ValueError):
+                retry_after = 1.0
+
+            raise GeoServiceBusy(retry_after)
+
         self._validate_result(set_link_result, "set_link")
 
         prepare_result = client.request(

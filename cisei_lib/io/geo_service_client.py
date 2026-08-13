@@ -2,6 +2,7 @@ import base64
 import secrets
 from io import BytesIO
 from dataclasses import dataclass
+import time
 
 import requests
 from PIL import Image
@@ -225,7 +226,14 @@ class GeoServiceClient:
     
     # --- service encapsulation methods
 
-    def link(self, tx, rx, prepare_link=True, **kwargs):
+    def link(
+        self,
+        tx,
+        rx,
+        prepare_link=True,
+        retry_busy=True,
+        **kwargs,
+    ):
         tx_lat, tx_lon = tx
         rx_lat, rx_lon = rx
 
@@ -237,22 +245,37 @@ class GeoServiceClient:
             **kwargs,
         }
 
-        if prepare_link:
-            self.request(
+        while True:
+            result = self.request(
                 "set_link",
                 params=params,
                 method="post",
             )
+
+            busy = (
+                result.response is not None
+                and result.response.status_code == 503
+            )
+
+            if not busy or not retry_busy:
+                break
+
+            try:
+                retry_after = float(
+                    result.response.headers.get("Retry-After", "1")
+                )
+            except (TypeError, ValueError):
+                retry_after = 1.0
+
+            time.sleep(retry_after)
+
+        if prepare_link:
             return self.request(
                 "prepare_profiles",
                 method="post",
             )
 
-        return self.request(
-            "set_link",
-            params=params,
-            method="post",
-        )
+        return result
 
     def link_area(self, ds_string):
         return self.request(

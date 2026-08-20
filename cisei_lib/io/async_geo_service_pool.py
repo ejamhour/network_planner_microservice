@@ -46,7 +46,7 @@ class AsyncGeoServicePool:
         self,
         base_url: str | None,
         user_prefix: str,
-        pool_size: int = 4,
+        pool_size: int = 3,
         *,
         timeout: float = 120,
     ):

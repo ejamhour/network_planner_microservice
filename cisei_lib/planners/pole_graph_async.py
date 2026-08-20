@@ -145,7 +145,7 @@ class PoleGraph:
     # --- Non Overridable methods ---
 
     # Implements a LOS penalty metric - perfect links have cost = 1
-    async def edge_metric(self, src_pos, dst_pos, src_ha, dst_ha) -> dict | None:
+    async def edge_metric(self, src_pos, dst_pos, src_ha, dst_ha, max_attempts=3) -> dict | None:
 
         src_pos = self._normalize_pos(src_pos)
         dst_pos = self._normalize_pos(dst_pos)
@@ -154,20 +154,33 @@ class PoleGraph:
             self._debug('an edge cannot have equal src and dst positions')
             return None
 
-        try:
-            features = await self.geo.get_features(
-                src_pos,
-                dst_pos,
-                tx_ha=src_ha,
-                rx_ha=dst_ha,
-                freq_mhz=self.context['freq_mhz'],
-            )
-        except GeoServiceError as error:
-            self._debug(
-                f'failed to compute the features for the edge '
-                f'{src_pos} {dst_pos}: {error}'
-            )
-            return None
+        for attempt in range(1, max_attempts + 1):
+            try:
+                features = await self.geo.get_features(
+                    src_pos,
+                    dst_pos,
+                    tx_ha=src_ha,
+                    rx_ha=dst_ha,
+                    freq_mhz=self.context['freq_mhz'],
+                )
+                break
+
+            except GeoServiceError as error:
+                memory_error = self._is_memory_error(error)
+
+                if not memory_error or attempt == max_attempts:
+                    self._debug(
+                        f'failed to compute the features for the edge '
+                        f'{src_pos} {dst_pos}: {error}'
+                    )
+                    return None
+
+                self._debug(
+                    f'memory pressure evaluating {src_pos} {dst_pos}; '
+                    f'retrying ({attempt}/{max_attempts})'
+                )
+
+                await asyncio.sleep(attempt)
 
         # The pool returns the cached dictionary itself. Derived values are
         # therefore computed only once and remain available to later links.
@@ -552,6 +565,14 @@ class PoleGraph:
 
     def _debug(self, msg):
         if self.context['debug']: print(msg)
+
+    @staticmethod
+    def _is_memory_error(error: Exception) -> bool:
+        message = str(error).lower()
+        return (
+            "cannot allocate memory" in message
+            or "out of memory" in message
+        )
 
     def _to_utm(self, latlon):            
         return gpd.GeoSeries([Point(latlon[1], latlon[0])], crs="EPSG:4326").to_crs(self.poles_utm.crs).iloc[0]

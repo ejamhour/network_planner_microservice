@@ -1,6 +1,6 @@
 from cisei_lib.usermng.homeFolder import user_home
 from cisei_lib.usermng.configTools import configRadio
-from cisei_lib.planners.geo_rpl import GeoRPL
+from cisei_lib.planners.legacy.geo_rpl_broken import GeoRPL
 import geopandas as gpd
 from pandas import concat, isna
 from multiprocessing import Manager, Lock, Process, Queue

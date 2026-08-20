@@ -1,0 +1,59 @@
+[antennas.omni_demo]
+kind = "omni"
+gain_dbi = 0.0
+
+[interfaces.tower_access]
+tech = "rpl-demo"
+freq_mhz = 900.0
+tx_power_dbm = 43.0
+antenna_id = "omni_demo"
+can_relay = false
+
+[interfaces.field_leaf]
+tech = "rpl-demo"
+freq_mhz = 900.0
+tx_power_dbm = 20.0
+antenna_id = "omni_demo"
+can_relay = false
+
+[interfaces.field_relay]
+tech = "rpl-demo"
+freq_mhz = 900.0
+tx_power_dbm = 20.0
+antenna_id = "omni_demo"
+can_relay = true
+
+[devices.tower]
+connected = true
+can_route = false
+rank = 0.0
+mount_height_m = 30.0
+interfaces = ["tower_access"]
+
+[devices.field_node]
+connected = false
+can_route = false
+mount_height_m = 7.0
+interfaces = ["field_leaf"]
+
+[devices.relay_node]
+connected = false
+can_route = false
+mount_height_m = 7.0
+interfaces = ["field_relay"]
+
+[metrics.rpl-demo]
+spec = "default"
+
+[[net.connectivity]]
+kind = "rf"
+tech = "rpl-demo"
+source = "connected"
+destination = "unconnected"
+
+[[net.connectivity]]
+kind = "rf"
+tech = "rpl-demo"
+source = "unconnected"
+destination = "unconnected"
+degree = 3

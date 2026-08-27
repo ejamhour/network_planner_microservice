@@ -357,6 +357,61 @@ class GraphPlanner:
             nodes.extend(node.rpl_nodes())
         return nodes
 
+    def set_candidate_edges(
+        self,
+        edges: Iterable[tuple[str, str]],
+        *,
+        attrs_by_edge: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
+        default_attrs: Mapping[str, Any] | None = None,
+    ) -> list[tuple[str, str]]:
+        self.candidate_edges = []
+        self.candidate_edge_attrs = {}
+        return self.add_candidate_edges(
+            edges,
+            attrs_by_edge=attrs_by_edge,
+            default_attrs=default_attrs,
+        )
+
+    def add_candidate_edges(
+        self,
+        edges: Iterable[tuple[str, str]],
+        *,
+        attrs_by_edge: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
+        default_attrs: Mapping[str, Any] | None = None,
+    ) -> list[tuple[str, str]]:
+        rpl_by_id = {node.node_id: node for node in self.rpl_nodes()}
+        attrs_by_edge = attrs_by_edge or {}
+        default_attrs = dict(default_attrs or {})
+
+        edge_keys = {
+            frozenset(edge)
+            for edge in self.candidate_edges
+        }
+
+        for edge in edges:
+            if not isinstance(edge, tuple) or len(edge) != 2:
+                raise TypeError("Candidate edges must be (src, dst) tuples")
+
+            src, dst = edge
+            if src not in rpl_by_id:
+                raise KeyError(f"Unknown candidate edge source: {src}")
+            if dst not in rpl_by_id:
+                raise KeyError(f"Unknown candidate edge destination: {dst}")
+
+            key = frozenset((src, dst))
+            if len(key) != 2 or key in edge_keys:
+                continue
+
+            attrs = dict(default_attrs)
+            attrs.update(attrs_by_edge.get((src, dst), {}))
+            attrs.update(attrs_by_edge.get((dst, src), {}))
+
+            self.candidate_edges.append((src, dst))
+            self.candidate_edge_attrs[(src, dst)] = attrs
+            edge_keys.add(key)
+
+        return list(self.candidate_edges)
+
     def build_candidate_edges_from_rules(self) -> list[tuple[str, str]]:
         if not self.connectivity_rules:
             raise RuntimeError("No connectivity rules were configured")
@@ -608,9 +663,18 @@ class GraphPlanner:
                     freq_mhz=src_freq_mhz,
                 )
 
-                metric = float(metric_function(features))
+                features = dict(features)
+                features.setdefault("freq_mhz", src_freq_mhz)
+
+                metric_record = self._metric_record(
+                    src_node,
+                    dst_node,
+                    features,
+                )
+
+                metric = float(metric_function(metric_record))
                 edge_metrics[(src, dst)] = metric
-                edge_features[(src, dst)] = features
+                edge_features[(src, dst)] = metric_record
 
         finally:
             if manage_geo:
@@ -620,6 +684,50 @@ class GraphPlanner:
         self.edge_metrics = edge_metrics
         self.edge_features = edge_features
         return dict(edge_metrics)
+
+    def _metric_record(
+        self,
+        src_node: RPLNode,
+        dst_node: RPLNode,
+        features: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        src_antenna = self.antenna_catalog[src_node.extra["antenna_id"]]
+        dst_antenna = self.antenna_catalog[dst_node.extra["antenna_id"]]
+
+        return {
+            "tx": self._metric_terminal_record(
+                src_node,
+                src_antenna,
+                include_power=True,
+            ),
+            "rx": self._metric_terminal_record(
+                dst_node,
+                dst_antenna,
+                include_power=False,
+            ),
+            "features": dict(features),
+        }
+
+    @staticmethod
+    def _metric_terminal_record(
+        node: RPLNode,
+        antenna: AntennaSpec,
+        *,
+        include_power: bool,
+    ) -> dict[str, Any]:
+        record = {
+            "ant_gain": float(antenna.gain_dbi),
+            "ant_height": float(node.extra["mount_height_m"]),
+            "ant_type": str(antenna.kind),
+        }
+
+        if antenna.model is not None:
+            record["ant_name"] = str(antenna.model)
+
+        if include_power:
+            record["pw"] = float(node.extra["tx_power_dbm"])
+
+        return record
 
     def run_rpl(
         self,

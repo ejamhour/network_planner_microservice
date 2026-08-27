@@ -218,7 +218,16 @@ def edge_table(planner, kind: str = "candidate"):
     return _table(rows)
 
 
-def draw_network_graph(G, *, label_mode: str | None | bool = "index", figsize=(10, 7)):
+def draw_network_graph(
+    G,
+    *,
+    label_mode: str | None | bool = "index",
+    figsize=(10, 7),
+    positions=None,
+    pos_attr: str = "pos",
+    spread_same_position: bool = False,
+    spread_radius: float = 20.0,
+):
     import matplotlib.pyplot as plt
     import networkx as nx
 
@@ -256,11 +265,14 @@ def draw_network_graph(G, *, label_mode: str | None | bool = "index", figsize=(1
         else:
             colors.append("lightblue")
 
-    positions = nx.get_node_attributes(G, "pos")
+    if positions is None:
+        positions = nx.get_node_attributes(G, pos_attr)
     if len(positions) != G.number_of_nodes() or any(
         pos is None for pos in positions.values()
     ):
         positions = nx.spring_layout(G)
+    elif spread_same_position:
+        positions = _spread_same_positions(positions, radius=spread_radius)
 
     plt.figure(figsize=figsize)
     nx.draw(
@@ -280,6 +292,36 @@ def draw_network_graph(G, *, label_mode: str | None | bool = "index", figsize=(1
         )
     plt.axis("equal")
     plt.show()
+
+
+def _spread_same_positions(positions, *, radius: float):
+    import math
+
+    groups = {}
+    for node_id, pos in positions.items():
+        x, y = pos
+        key = (round(float(x), 6), round(float(y), 6))
+        groups.setdefault(key, []).append(node_id)
+
+    display_positions = {
+        node_id: (float(pos[0]), float(pos[1]))
+        for node_id, pos in positions.items()
+    }
+
+    for key, node_ids in groups.items():
+        if len(node_ids) == 1:
+            continue
+
+        cx, cy = key
+        count = len(node_ids)
+        for index, node_id in enumerate(sorted(node_ids)):
+            angle = 2.0 * math.pi * index / count
+            display_positions[node_id] = (
+                cx + radius * math.cos(angle),
+                cy + radius * math.sin(angle),
+            )
+
+    return display_positions
 
 
 def _table(rows: list[dict[str, Any]]):

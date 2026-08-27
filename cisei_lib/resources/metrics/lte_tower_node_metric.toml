@@ -1,0 +1,103 @@
+version = 1
+result = "metric"
+
+[expressions]
+
+terrain_invasion = """
+max(0.0, features.terrain_peak.vv_0)
+"""
+
+terrain_progress = """
+clip(
+    (
+        terrain_invasion
+        - params.terrain_clear_limit
+    ) / (
+        params.terrain_penalty_start
+        - params.terrain_clear_limit
+    ),
+    0.0,
+    1.0
+)
+"""
+
+building_depth = """
+(
+    max(0.0, features.buildings.fresnel)
+    + max(0.0, features.buildings.core)
+) / 2.0
+"""
+
+building_progress = """
+clip(
+    log1p(building_depth) / log1p(params.building_depth_scale),
+    0.0,
+    1.0
+)
+"""
+
+obstruction_progress = """
+clip(
+    terrain_progress
+    + params.building_weight * building_progress,
+    0.0,
+    1.0
+)
+"""
+
+base_cost = """
+(
+    1.0
+    + (
+        params.cost_at_penalty_start
+        - 1.0
+    ) * obstruction_progress
+)
+"""
+
+terrain_excess = """
+max(
+    0.0,
+    (
+        terrain_invasion
+        - params.terrain_penalty_start
+    ) / params.terrain_penalty_scale
+)
+"""
+
+building_excess = """
+max(
+    0.0,
+    (
+        log1p(building_depth)
+        - log1p(params.building_depth_scale)
+    ) / params.building_penalty_scale
+)
+"""
+
+penalty = """
+(
+    params.terrain_penalty_weight
+    * terrain_excess ** params.penalty_power
+    + params.building_penalty_weight
+    * building_excess ** params.penalty_power
+)
+"""
+
+metric = """
+base_cost + penalty
+"""
+
+[parameters]
+terrain_clear_limit = 0.4
+terrain_penalty_start = 1.0
+terrain_penalty_scale = 0.2
+
+building_depth_scale = 20.0
+building_weight = 0.7
+building_penalty_scale = 1.0
+
+cost_at_penalty_start = 2.0
+terrain_penalty_weight = 2.0
+building_penalty_weight = 1.0
+penalty_power = 2.0

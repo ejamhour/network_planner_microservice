@@ -5,17 +5,17 @@ result = "metric"
 
 vegetation_depth = """
 (
-    vegetation.core * params.vegetation_core_weight
-    + vegetation.fresnel * params.vegetation_fresnel_weight
-    + vegetation.boundary * params.vegetation_boundary_weight
+    features.vegetation.core * params.vegetation_core_weight
+    + features.vegetation.fresnel * params.vegetation_fresnel_weight
+    + features.vegetation.boundary * params.vegetation_boundary_weight
 )
 """
 
 building_depth = """
 (
-    buildings.core * params.building_core_weight
-    + buildings.fresnel * params.building_fresnel_weight
-    + buildings.boundary * params.building_boundary_weight
+    features.buildings.core * params.building_core_weight
+    + features.buildings.fresnel * params.building_fresnel_weight
+    + features.buildings.boundary * params.building_boundary_weight
 )
 """
 
@@ -25,7 +25,7 @@ vegetation_loss = """
     if vegetation_depth <= 0.0
     else (
         params.vegetation_A
-        * (freq_mhz / 1000.0) ** params.vegetation_B
+        * (features.freq_mhz / 1000.0) ** params.vegetation_B
         * vegetation_depth ** params.vegetation_C
     )
 )
@@ -37,7 +37,7 @@ building_loss = """
     if building_depth <= 0.0
     else (
         params.building_A
-        * (freq_mhz / 1000.0) ** params.building_B
+        * (features.freq_mhz / 1000.0) ** params.building_B
         * building_depth ** params.building_C
     )
 )
@@ -45,8 +45,8 @@ building_loss = """
 
 total_loss = """
 (
-    fspl
-    + delta_diffra
+    features.fspl
+    + features.delta_diffra
     + vegetation_loss
     + building_loss
 )

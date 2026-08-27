@@ -4,7 +4,7 @@ result = "metric"
 [expressions]
 
 top_invasion = """
-max(0.0, terrain_peak.vv_0)
+max(0.0, features.terrain_peak.vv_0)
 """
 
 linear_progress = """

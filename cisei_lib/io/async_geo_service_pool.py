@@ -314,32 +314,21 @@ class AsyncGeoServicePool:
             **parameters,
         )
 
-        if (
-            set_link_result.response is not None
-            and set_link_result.response.status_code == 503
-        ):
-            try:
-                retry_after = float(
-                    set_link_result.response.headers.get(
-                        "Retry-After",
-                        "1",
-                    )
-                )
-            except (TypeError, ValueError):
-                retry_after = 1.0
-
-            raise GeoServiceBusy(retry_after)
-
+        self._raise_if_busy(set_link_result)
         self._validate_result(set_link_result, "set_link")
 
         prepare_result = client.request(
             "prepare_profiles",
             method="post",
         )
+        self._raise_if_busy(prepare_result)
         self._validate_result(prepare_result, "prepare_profiles")
 
+        feature_result = client.link_features()
+        self._raise_if_busy(feature_result)
+
         return self._extract_payload(
-            client.link_features(),
+            feature_result,
             "link_features",
         )
 
@@ -350,6 +339,26 @@ class AsyncGeoServicePool:
         loop = asyncio.get_running_loop()
         call = partial(function, *args, **kwargs)
         return await loop.run_in_executor(self._executor, call)
+
+    @staticmethod
+    def _raise_if_busy(result: APIResult) -> None:
+        if (
+            result.response is None
+            or result.response.status_code != 503
+        ):
+            return
+
+        try:
+            retry_after = float(
+                result.response.headers.get(
+                    "Retry-After",
+                    "1",
+                )
+            )
+        except (TypeError, ValueError):
+            retry_after = 1.0
+
+        raise GeoServiceBusy(retry_after)
 
     @staticmethod
     def _validate_result(result: APIResult, operation: str) -> None:

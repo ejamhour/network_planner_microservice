@@ -59,6 +59,14 @@ def _softplus(x: float) -> float:
     return math.log1p(math.exp(x))
 
 
+def _eq(a: Any, b: Any) -> float:
+    return 1.0 if a == b else 0.0
+
+
+def _ne(a: Any, b: Any) -> float:
+    return 1.0 if a != b else 0.0
+
+
 SAFE_FUNCTIONS: dict[str, Callable[..., float]] = {
     "abs": abs,
     "min": min,
@@ -73,6 +81,8 @@ SAFE_FUNCTIONS: dict[str, Callable[..., float]] = {
     "clip": _clip,
     "sigmoid": _sigmoid,
     "softplus": _softplus,
+    "eq": _eq,
+    "ne": _ne,
 }
 
 
@@ -111,7 +121,48 @@ FEATURE_PATHS = frozenset({
     "tx_near_terminal_clearance_m",
     "rx_near_terminal_clearance_m",
 
-    "freq_mhz"
+    "freq_mhz",
+
+    "features.fspl",
+    "features.dist_m",
+    "features.delta_diffra",
+
+    "features.terrain.core",
+    "features.terrain.fresnel",
+    "features.terrain.boundary",
+
+    "features.vegetation.core",
+    "features.vegetation.fresnel",
+    "features.vegetation.boundary",
+
+    "features.buildings.core",
+    "features.buildings.fresnel",
+    "features.buildings.boundary",
+
+    "features.terrain_peak.count",
+
+    "features.terrain_peak.vv_0",
+    "features.terrain_peak.d_norm_0",
+    "features.terrain_peak.vv_1",
+    "features.terrain_peak.d_norm_1",
+    "features.terrain_peak.vv_2",
+    "features.terrain_peak.d_norm_2",
+
+    "features.max_obstruction_angle_rad",
+    "features.tx_rx_elevation_angle_rad",
+    "features.tx_near_terminal_clearance_m",
+    "features.rx_near_terminal_clearance_m",
+
+    "features.freq_mhz",
+
+    "tx.pw",
+    "tx.ant_gain",
+    "tx.ant_height",
+    "tx.ant_type",
+
+    "rx.ant_gain",
+    "rx.ant_height",
+    "rx.ant_type",
 })
 
 
@@ -150,10 +201,13 @@ def _parse_metric_spec(spec: str) -> dict[str, Any]:
 
     reserved_names = {
         "params",
+        "features",
         "terrain",
         "vegetation",
         "buildings",
         "terrain_peak",
+        "tx",
+        "rx",
     }
 
     normalized_expressions: dict[str, str] = {}
@@ -372,8 +426,11 @@ class _NumericConstantRewriter(ast.NodeTransformer):
                 node,
             )
 
+        if isinstance(node.value, str):
+            return node
+
         raise MetricSpecError(
-            "Only numeric and Boolean constants are allowed"
+            "Only numeric, Boolean and string constants are allowed"
         )
 
 
@@ -482,12 +539,29 @@ def _finite_float(value: Any, name: str) -> float:
     return result
 
 
+def _safe_feature_value(value: Any, name: str) -> float | str:
+    if isinstance(value, bool):
+        raise ValueError(
+            f"Feature {name!r} must be numeric or string"
+        )
+
+    if isinstance(value, str):
+        return value
+
+    return _finite_float(value, name)
+
+
 def _resolve_feature(
     features: Mapping[str, Any],
     path: str,
-) -> float:
-    if path == "terrain_peak.count":
-        peaks = features.get("terrain_peaks_vv") or []
+) -> float | str:
+    if path == "terrain_peak.count" or path == "features.terrain_peak.count":
+        source = (
+            features.get("features", {})
+            if path.startswith("features.")
+            else features
+        )
+        peaks = source.get("terrain_peaks_vv") or []
 
         if not isinstance(peaks, list):
             raise ValueError(
@@ -496,8 +570,13 @@ def _resolve_feature(
 
         return float(len(peaks))
 
-    if path.startswith("terrain_peak."):
-        field = path.split(".", 1)[1]
+    if path.startswith("terrain_peak.") or path.startswith("features.terrain_peak."):
+        source = (
+            features.get("features", {})
+            if path.startswith("features.")
+            else features
+        )
+        field = path.rsplit(".", 1)[1]
         match = _PEAK_PATTERN.fullmatch(field)
 
         if match is None:
@@ -508,7 +587,7 @@ def _resolve_feature(
         field_name, index_text = match.groups()
         index = int(index_text)
 
-        peaks = features.get("terrain_peaks_vv") or []
+        peaks = source.get("terrain_peaks_vv") or []
 
         if not isinstance(peaks, list):
             raise ValueError(
@@ -552,7 +631,7 @@ def _resolve_feature(
 
         value = value[part]
 
-    return _finite_float(value, path)
+    return _safe_feature_value(value, path)
 
 
 # ---------------------------------------------------------------------

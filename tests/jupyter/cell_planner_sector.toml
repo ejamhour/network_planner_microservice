@@ -1,0 +1,83 @@
+[antennas.lte_sector_0]
+kind = "sector"
+model = "sector_120_0"
+gain_dbi = 14.0
+azimuth_deg = 0.0
+beamwidth_deg = 120.0
+
+[antennas.lte_sector_120]
+kind = "sector"
+model = "sector_120_120"
+gain_dbi = 14.0
+azimuth_deg = 120.0
+beamwidth_deg = 120.0
+
+[antennas.lte_sector_240]
+kind = "sector"
+model = "sector_120_240"
+gain_dbi = 14.0
+azimuth_deg = 240.0
+beamwidth_deg = 120.0
+
+[antennas.lte_client_omni]
+kind = "omni"
+model = "client_omni"
+gain_dbi = 6.0
+
+[interfaces.lte_sector_0]
+tech = "lte"
+freq_mhz = 900.0
+tx_power_dbm = 43.0
+antenna_id = "lte_sector_0"
+can_relay = false
+
+[interfaces.lte_sector_120]
+tech = "lte"
+freq_mhz = 400.0
+tx_power_dbm = 43.0
+antenna_id = "lte_sector_120"
+can_relay = false
+
+[interfaces.lte_sector_240]
+tech = "lte"
+freq_mhz = 400.0
+tx_power_dbm = 43.0
+antenna_id = "lte_sector_240"
+can_relay = false
+
+[interfaces.lte_client]
+tech = "lte"
+freq_mhz = 400.0
+tx_power_dbm = 20.0
+antenna_id = "lte_client_omni"
+can_relay = false
+
+[devices.cell_sector_3x120]
+connected = true
+can_route = true
+rank = 0.0
+mount_height_m = 100.0
+interfaces = [
+    "lte_sector_0",
+    "lte_sector_120",
+    "lte_sector_240",
+]
+
+[devices.cell_sector_2x120]
+connected = true
+can_route = true
+rank = 0.0
+mount_height_m = 100.0
+interfaces = [
+    "lte_sector_120",
+    "lte_sector_240",
+]
+
+[devices.lte_leaf]
+connected = false
+can_route = false
+mount_height_m = 7.0
+interfaces = ["lte_client"]
+
+[metrics.lte]
+spec = "lte_tower_node"

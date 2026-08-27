@@ -1,0 +1,73 @@
+[antennas.lte_omni]
+kind = "omni"
+gain_dbi = 6.0
+
+[antennas.n2n_omni]
+kind = "omni"
+gain_dbi = 3.0
+
+[interfaces.lte_access]
+tech = "lte"
+freq_mhz = 900.0
+tx_power_dbm = 43.0
+antenna_id = "lte_omni"
+can_relay = false
+
+[interfaces.n2n_relay]
+tech = "n2n"
+freq_mhz = 915.0
+tx_power_dbm = 24.0
+antenna_id = "n2n_omni"
+can_relay = true
+
+[interfaces.n2n_leaf]
+tech = "n2n"
+freq_mhz = 915.0
+tx_power_dbm = 20.0
+antenna_id = "n2n_omni"
+can_relay = false
+
+[devices.lte_root]
+connected = true
+can_route = true
+rank = 0.0
+interfaces = ["lte_access"]
+
+[devices.lte_leaf]
+connected = false
+can_route = false
+interfaces = ["lte_access"]
+
+[devices.dual_leaf]
+connected = false
+can_route = false
+interfaces = ["lte_access", "n2n_leaf"]
+
+[devices.dual_router]
+connected = false
+can_route = true
+interfaces = ["lte_access", "n2n_relay"]
+
+[metrics.lte]
+spec = "lte_tower_node"
+
+[metrics.n2n]
+spec = "default"
+
+[[net.connectivity]]
+kind = "rf"
+tech = "lte"
+source = "connected"
+destination = "unconnected"
+
+[[net.connectivity]]
+kind = "rf"
+tech = "n2n"
+source = "relay"
+destination = "unconnected"
+degree = 4
+
+[[net.connectivity]]
+kind = "internal"
+metric = 0.0
+enabled_when_device_can_route = true

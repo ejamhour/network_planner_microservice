@@ -1,0 +1,5 @@
+site_id,device_profile,kind,lat,lon,x,y,mount_height_m,connected,can_route,rank
+torre,tower_lte,field,-25.0,-49.0,701845.9535190254,7233563.0161865,100.0,True,True,0.0
+saturno,field_relay_dual,field,-25.014,-49.02,699804.3072567845,7232041.863068309,7.0,False,True,inf
+deneka,field_relay_dual,field,-25.017,-49.015,700304.1236242534,7231702.160733545,7.0,False,True,inf
+woodland,field_leaf_dual,field,-25.01,-49.01,700820.191174967,7232470.158439096,7.0,False,False,inf

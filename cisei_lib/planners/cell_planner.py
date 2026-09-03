@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from cisei_lib.planners.graph_planner import GraphPlanner
+from cisei_lib.planners.planning_scenario import PlanningScenario
 
 
 class CellPlanner:
@@ -17,7 +18,7 @@ class CellPlanner:
     tower selection and relay recovery are intentionally left as later stages.
 
     Typical usage:
-    1. Build the planner from a TOML profile catalog with ``from_toml``.
+    1. Build the planner from a scenario or TOML bundle.
     2. Load point records with ``add_sites``.
     3. Build the geometric candidate graph with ``build_primary_candidates``.
     4. Optionally inspect/adjust sectors with ``sector_candidate_table``,
@@ -66,14 +67,18 @@ class CellPlanner:
         client_profile: str = "lte_leaf",
     ) -> "CellPlanner":
         """
-        Load profile catalogs and metric mappings from TOML.
+        Load a scenario from TOML and wrap it in a GraphPlanner.
 
-        This is the usual notebook/API entry point. The TOML defines antennas,
-        interface profiles, device profiles and metrics; the point records are
-        still supplied later by ``add_sites``.
+        If the TOML declares a companion instance CSV, it is loaded by
+        ``PlanningScenario.from_toml``. Point records can still be supplied
+        later with ``add_sites`` when the TOML only contains profiles.
         """
+        scenario = PlanningScenario.from_toml(
+            path,
+            working_crs=working_crs,
+        )
         return cls(
-            GraphPlanner.from_toml(path, working_crs=working_crs),
+            GraphPlanner.from_scenario(scenario),
             cell_site_ids=cell_site_ids,
             primary_tech=primary_tech,
             cell_profile=cell_profile,
@@ -121,14 +126,25 @@ class CellPlanner:
             merged.update(override)
             overrides[clean_id] = merged
 
-        return self.graph.add_records(
-            records,
-            defaults=defaults,
-            overrides_by_id=overrides,
+        instance_records = []
+        for record in records:
+            site_id = self._record_site_id(record)
+            merged = dict(defaults or {})
+            merged.update(record)
+            if site_id in overrides:
+                merged.update(overrides[site_id])
+            instance_records.append(merged)
+
+        nodes = self.graph.scenario.add_node_instances(
+            instance_records,
             resolve=resolve,
             validate=validate,
             tolerance_m=tolerance_m,
+            update=False,
         )
+        self.graph.nodes = self.graph.scenario.site_nodes
+        self.graph._clear_results()
+        return nodes
 
     def build_primary_candidates(
         self,

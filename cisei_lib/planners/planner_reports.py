@@ -69,10 +69,15 @@ def config_table(planner, kind: str = "nodes"):
                 row.update(
                     {
                         "antenna_kind": antenna.kind,
-                        "antenna_model": antenna.model,
+                        "antenna_model_id": antenna.model_id,
+                        "antenna_description": antenna.description,
                         "antenna_gain_dbi": antenna.gain_dbi,
+                        "antenna_azimuth_deg": antenna.azimuth_deg,
+                        "antenna_downtilt_deg": antenna.downtilt_deg,
                         "antenna_beamwidth_deg": antenna.beamwidth_deg,
-                        "antenna_max_links": antenna.max_links,
+                        "antenna_shadow_azimuth_deg": antenna.shadow_azimuth_deg,
+                        "antenna_shadow_width_deg": antenna.shadow_width_deg,
+                        "antenna_shadow_loss_db": antenna.shadow_loss_db,
                     }
                 )
 
@@ -105,6 +110,7 @@ def node_table(planner, kind: str = "rpl"):
                 "tx_power_dbm": node.extra.get("tx_power_dbm"),
                 "antenna_id": node.extra.get("antenna_id"),
                 "mount_height_m": node.extra.get("mount_height_m"),
+                "max_links": node.extra.get("max_links"),
                 "interface_can_relay": node.extra.get(
                     "interface_can_relay",
                     node.rpl_relay,
@@ -203,6 +209,8 @@ def edge_table(planner, kind: str = "candidate"):
             "dst_tech": dst_node.extra["tech"],
             "src_freq_mhz": src_node.extra["freq_mhz"],
             "dst_freq_mhz": dst_node.extra["freq_mhz"],
+            "src_max_links": src_node.extra.get("max_links"),
+            "dst_max_links": dst_node.extra.get("max_links"),
             "src_mount_height_m": src_node.extra.get("mount_height_m"),
             "dst_mount_height_m": dst_node.extra.get("mount_height_m"),
         }

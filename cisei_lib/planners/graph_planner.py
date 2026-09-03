@@ -1,66 +1,40 @@
+from __future__ import annotations
+
+import json
 from collections.abc import Callable, Iterable, Mapping
-from copy import deepcopy
 from importlib.resources import files
-from math import hypot, inf, isfinite
+from math import hypot, isfinite
 from pathlib import Path
 from typing import Any
 
 import cisei_lib.planners.metric_compiler as mc
+from cisei_lib.planners.antenna_planner import AntennaPlanner
 from cisei_lib.planners.geo_rpl_agnostic import GeoRPL
-from cisei_lib.planners.planner_classes import (
-    AntennaSpec,
-    Device,
-    FieldSite,
-    RadioInterface,
-    RPLNode,
-    Site,
-    SiteNode,
-    make_device_id,
-    make_interface_id,
-)
+from cisei_lib.planners.planner_classes import AntennaSpec, RPLNode, SiteNode
+from cisei_lib.planners.planning_scenario import PlanningScenario
 
 
 def is_blank(value: Any) -> bool:
     if value is None:
         return True
-
     try:
         if value != value:
             return True
     except TypeError:
         pass
-
     return isinstance(value, str) and not value.strip()
 
 
-def optional_value(
-    record: Mapping[str, Any],
-    key: str,
-    default: Any = None,
-) -> Any:
-    value = record.get(key, default)
-    return default if is_blank(value) else value
-
-
 def required_value(record: Mapping[str, Any], key: str) -> Any:
-    value = optional_value(record, key)
+    value = record.get(key)
     if is_blank(value):
-        raise ValueError(f"Missing required record field: {key}")
+        raise ValueError(f"Missing required field: {key}")
     return value
-
-
-def first_value(record: Mapping[str, Any], *keys: str) -> Any:
-    for key in keys:
-        value = record.get(key)
-        if not is_blank(value):
-            return value
-    return None
 
 
 def optional_float(value: Any) -> float | None:
     if is_blank(value):
         return None
-
     value = float(value)
     if not isfinite(value):
         raise ValueError("Numeric fields must be finite")
@@ -70,108 +44,72 @@ def optional_float(value: Any) -> float | None:
 def parse_bool(value: Any, default: bool = False) -> bool:
     if is_blank(value):
         return default
-
     if isinstance(value, bool):
         return value
-
     if isinstance(value, (int, float)):
         if not isfinite(float(value)):
             raise ValueError("Boolean numeric fields must be finite")
         return bool(value)
-
     if isinstance(value, str):
         normalized = value.strip().lower()
         if normalized in {"1", "true", "t", "yes", "y"}:
             return True
         if normalized in {"0", "false", "f", "no", "n"}:
             return False
-
     raise ValueError(f"Invalid boolean value: {value!r}")
 
 
 class GraphPlanner:
     """
-    Generic planning-data preparation helper.
+    Generic graph/RPL planner backed by a ``PlanningScenario``.
 
-    File reading stays outside this class. Notebooks, APIs, or callers prepare
-    rows as records; this class normalizes them into planning objects.
+    ``PlanningScenario`` owns user-facing preparation: antenna profiles,
+    interface profiles, device profiles, node instances, manual candidate
+    edges and TOML/CSV serialization. ``GraphPlanner`` consumes that scenario
+    and owns computational state: generated candidate edges, extracted edge
+    features, compiled metric functions and the RPL result.
     """
 
-    DEFAULT_RECORD_KEYS = {
-        "site_id",
-        "position_id",
-        "id",
-        "name",
-        "lat",
-        "lon",
-        "x",
-        "y",
-        "kind",
-        "mount_height_m",
-        "ant_h",
-        "antenna_height_m",
-        "tech",
-        "freq_mhz",
-        "tx_power_dbm",
-        "antenna_id",
-        "connected",
-        "can_route",
-        "can_relay",
-        "medium",
-        "rank",
-        "device_profile",
-    }
+    def __init__(self, scenario: PlanningScenario) -> None:
+        if not isinstance(scenario, PlanningScenario):
+            raise TypeError("GraphPlanner requires a PlanningScenario instance")
 
-    def __init__(
-        self,
-        *,
-        working_crs: str | None = None,
-        antenna_catalog: Mapping[str, AntennaSpec] | None = None,
-    ) -> None:
-        self.working_crs = working_crs
-        self.antenna_catalog: dict[str, AntennaSpec] = dict(
-            antenna_catalog or {}
+        errors = scenario.validate()
+        if errors:
+            raise ValueError(
+                "Invalid planning scenario:\n" + "\n".join(f"- {e}" for e in errors)
+            )
+
+        self.scenario = scenario
+        self.working_crs = scenario.working_crs
+        self.antenna_catalog: dict[str, AntennaSpec] = scenario.antenna_profiles
+        self.nodes: dict[str, SiteNode] = scenario.site_nodes
+        self.connectivity_rules: dict[str, dict[str, Any]] = (
+            scenario.connectivity_rules
         )
-        self.nodes: dict[str, SiteNode] = {}
-        self.candidate_edges: list[tuple[str, str]] = []
+        self.candidate_edges: list[tuple[str, str]] = list(
+            scenario.candidate_edges
+        )
+        self.candidate_edge_attrs: dict[tuple[str, str], dict[str, Any]] = {
+            edge: dict(attrs)
+            for edge, attrs in scenario.candidate_edge_attrs.items()
+        }
         self.edge_metrics: dict[tuple[str, str], float] = {}
         self.edge_features: dict[tuple[str, str], dict[str, Any]] = {}
-        self.candidate_edge_attrs: dict[tuple[str, str], dict[str, Any]] = {}
-        self.metric_functions_by_tech: dict[str, Callable[[Mapping[str, Any]], float]] = {}
-        self.interface_profiles: dict[str, dict[str, Any]] = {}
-        self.device_profiles: dict[str, dict[str, Any]] = {}
-        self.connectivity_rules: dict[str, dict[str, Any]] = {}
-        self.profile_config: dict[str, Any] = {}
+        self.metric_functions_by_tech: dict[
+            str,
+            Callable[[Mapping[str, Any]], float],
+        ] = {}
+        self.antenna_planner = AntennaPlanner()
         self.rpl: GeoRPL | None = None
 
-    def add_antenna(self, antenna_id: str, antenna: AntennaSpec) -> None:
-        self.add_antennas({antenna_id: antenna})
-
-    def add_antennas(
-        self,
-        antennas: Mapping[str, AntennaSpec],
-        *,
-        update: bool = True,
-    ) -> None:
-        if not update:
-            conflicts = set(self.antenna_catalog).intersection(antennas)
-            if conflicts:
-                raise ValueError(
-                    f"Antennas already exist: {sorted(conflicts)}"
-                )
-
-        self.antenna_catalog.update(antennas)
+        if scenario.metric_specs_by_tech:
+            self.compile_metric_specs_by_tech(scenario.metric_specs_by_tech)
 
     @classmethod
-    def from_profiles(
-        cls,
-        config: Mapping[str, Any],
-        *,
-        working_crs: str | None = None,
-    ) -> "GraphPlanner":
-        planner = cls(working_crs=working_crs)
-        planner.configure_profiles(config)
-        return planner
+    def from_scenario(cls, scenario: PlanningScenario) -> "GraphPlanner":
+        """Create a graph planner from an already prepared scenario."""
+        return cls(scenario)
 
     @classmethod
     def from_toml(
@@ -179,183 +117,31 @@ class GraphPlanner:
         path: str | Path,
         *,
         working_crs: str | None = None,
+        load_instances: bool = True,
     ) -> "GraphPlanner":
-        return cls.from_profiles(
-            cls.load_toml(path),
-            working_crs=working_crs,
+        """Load a ``PlanningScenario`` from TOML and create a graph planner."""
+        return cls(
+            PlanningScenario.from_toml(
+                path,
+                working_crs=working_crs,
+                load_instances=load_instances,
+            )
         )
 
-    @staticmethod
-    def load_toml(path: str | Path) -> dict[str, Any]:
-        import tomlkit
-
-        document = tomlkit.parse(Path(path).read_text(encoding="utf-8"))
-        return document.unwrap()
-
-    def configure_profiles(self, config: Mapping[str, Any]) -> None:
-        config = deepcopy(dict(config))
-        self.profile_config = deepcopy(config)
-
-        antennas = {}
-        for antenna_id, antenna_config in config.get("antennas", {}).items():
-            antennas[str(antenna_id)] = self._antenna_from_config(
-                antenna_config
-            )
-
-        if antennas:
-            self.add_antennas(antennas)
-
-        self.interface_profiles = {
-            str(profile_id): dict(profile)
-            for profile_id, profile in config.get("interfaces", {}).items()
-        }
-        self.device_profiles = {
-            str(profile_id): dict(profile)
-            for profile_id, profile in config.get("devices", {}).items()
-        }
-        self.connectivity_rules = self._connectivity_rules_from_config(config)
-
-        metric_specs = {}
-        for tech, metric_config in config.get("metrics", {}).items():
-            if isinstance(metric_config, str):
-                metric_specs[str(tech)] = metric_config
-                continue
-
-            metric_config = dict(metric_config)
-            spec = metric_config.get("spec", metric_config.get("formula"))
-            if spec is None:
-                raise ValueError(
-                    f"Metric profile {tech!r} requires 'spec' or 'formula'"
-                )
-            metric_specs[str(tech)] = spec
-
-        if metric_specs:
-            self.compile_metric_specs_by_tech(metric_specs)
-
-    def to_config_dict(self) -> dict[str, Any]:
-        if self.profile_config:
-            return deepcopy(self.profile_config)
-
-        return {
-            "antennas": {
-                antenna_id: antenna.to_dict()
-                for antenna_id, antenna in self.antenna_catalog.items()
-            },
-            "interfaces": deepcopy(self.interface_profiles),
-            "devices": deepcopy(self.device_profiles),
-            "net": {"connectivity": list(deepcopy(self.connectivity_rules).values())},
-        }
-
-    @staticmethod
-    def _connectivity_rules_from_config(
-        config: Mapping[str, Any],
-    ) -> dict[str, dict[str, Any]]:
-        net_config = dict(config.get("net", {}))
-        rules = net_config.get("connectivity", [])
-
-        if rules:
-            if not isinstance(rules, list):
-                raise TypeError("net.connectivity must be a list of tables")
-
-            result = {}
-            for index, rule in enumerate(rules):
-                rule = dict(rule)
-                rule_id = f"connectivity_{index}"
-                result[rule_id] = rule
-            return result
-
-        return {}
-
-    def add_node(self, node: SiteNode) -> None:
-        self.add_nodes([node])
-
-    def add_nodes(self, nodes: Iterable[SiteNode]) -> None:
-        nodes = list(nodes)
-        if not nodes:
-            return
-
-        node_ids = [node.node_id for node in nodes]
-        duplicated = {
-            node_id
-            for node_id in node_ids
-            if node_ids.count(node_id) > 1
-        }
-
-        if duplicated:
-            raise ValueError(
-                f"Duplicated site IDs in batch: {sorted(duplicated)}"
-            )
-
-        conflicts = set(self.nodes).intersection(node_ids)
-        if conflicts:
-            raise ValueError(f"Sites already exist: {sorted(conflicts)}")
-
-        for node in nodes:
-            self.nodes[node.node_id] = node
-
-    def add_records(
-        self,
-        records: Iterable[Mapping[str, Any]] | Any,
-        *,
-        defaults: Mapping[str, Any] | None = None,
-        overrides_by_id: Mapping[str, Mapping[str, Any]] | None = None,
-        id_prefix: str = "site",
-        resolve: bool = True,
-        validate: bool = False,
-        tolerance_m: float = 1.0,
-    ) -> list[SiteNode]:
-        normalized_records = self._records(records)
-        defaults = dict(defaults or {})
-        overrides_by_id = dict(overrides_by_id or {})
-
-        nodes = []
-        used_ids = set()
-        generated_count = 0
-
-        for record in normalized_records:
-            site_id = self._record_site_id(record)
-            if site_id is None:
-                generated_count += 1
-                site_id = f"{id_prefix}_{generated_count}"
-
-            site_id = self._clean_id(site_id)
-            if site_id in used_ids:
-                raise ValueError(f"Duplicated site ID: {site_id}")
-            used_ids.add(site_id)
-
-            merged = {}
-            merged.update(defaults)
-            merged.update(record)
-            merged.update(overrides_by_id.get(site_id, {}))
-
-            device_profile = optional_value(merged, "device_profile")
-            if not is_blank(device_profile):
-                node = self._node_from_profile_record(
-                    site_id,
-                    merged,
-                    str(device_profile),
-                    resolve=resolve,
-                    validate=validate,
-                    tolerance_m=tolerance_m,
-                )
-            else:
-                node = self._node_from_record(
-                    site_id,
-                    merged,
-                    resolve=resolve,
-                    validate=validate,
-                    tolerance_m=tolerance_m,
-                )
-            nodes.append(node)
-
-        self.add_nodes(nodes)
-        return nodes
+    def to_config_dict(self, *, include_sites: bool = True) -> dict[str, Any]:
+        """Return the backing scenario as a plain configuration dictionary."""
+        return self.scenario.to_config_dict(include_sites=include_sites)
 
     def rpl_nodes(self) -> list[RPLNode]:
+        """Return all concrete interfaces as RPL nodes."""
         nodes = []
         for node in self.nodes.values():
             nodes.extend(node.rpl_nodes())
         return nodes
+
+    def node_by_site(self) -> dict[str, SiteNode]:
+        """Return concrete site nodes keyed by site id."""
+        return dict(self.nodes)
 
     def set_candidate_edges(
         self,
@@ -364,6 +150,7 @@ class GraphPlanner:
         attrs_by_edge: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
         default_attrs: Mapping[str, Any] | None = None,
     ) -> list[tuple[str, str]]:
+        """Replace the current candidate graph with explicit interface edges."""
         self.candidate_edges = []
         self.candidate_edge_attrs = {}
         return self.add_candidate_edges(
@@ -379,14 +166,11 @@ class GraphPlanner:
         attrs_by_edge: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
         default_attrs: Mapping[str, Any] | None = None,
     ) -> list[tuple[str, str]]:
+        """Add candidate edges without duplicating undirected pairs."""
         rpl_by_id = {node.node_id: node for node in self.rpl_nodes()}
         attrs_by_edge = attrs_by_edge or {}
         default_attrs = dict(default_attrs or {})
-
-        edge_keys = {
-            frozenset(edge)
-            for edge in self.candidate_edges
-        }
+        edge_keys = {frozenset(edge) for edge in self.candidate_edges}
 
         for edge in edges:
             if not isinstance(edge, tuple) or len(edge) != 2:
@@ -406,20 +190,37 @@ class GraphPlanner:
             attrs.update(attrs_by_edge.get((src, dst), {}))
             attrs.update(attrs_by_edge.get((dst, src), {}))
 
-            self.candidate_edges.append((src, dst))
-            self.candidate_edge_attrs[(src, dst)] = attrs
+            stored_edge = (src, dst)
+            self.candidate_edges.append(stored_edge)
+            self.candidate_edge_attrs[stored_edge] = attrs
             edge_keys.add(key)
 
+        self._clear_results()
         return list(self.candidate_edges)
 
-    def build_candidate_edges_from_rules(self) -> list[tuple[str, str]]:
+    def build_candidate_edges_from_rules(
+        self,
+        *,
+        preserve_existing: bool = True,
+    ) -> list[tuple[str, str]]:
+        """
+        Build candidate edges from scenario connectivity rules.
+
+        Manual candidate edges loaded from the scenario are kept by default.
+        Generated edges are not written back to ``PlanningScenario`` because
+        they are computational state, not scenario input.
+        """
         if not self.connectivity_rules:
             raise RuntimeError("No connectivity rules were configured")
 
         rpl_nodes = self.rpl_nodes()
-        edge_keys = set()
-        edges = []
-        edge_attrs = {}
+        edges = list(self.candidate_edges) if preserve_existing else []
+        edge_attrs = (
+            {edge: dict(self._edge_attrs(*edge)) for edge in edges}
+            if preserve_existing
+            else {}
+        )
+        edge_keys = {frozenset(edge) for edge in edges}
 
         def add_edge(
             left: RPLNode,
@@ -450,17 +251,15 @@ class GraphPlanner:
                 raise ValueError(f"Unknown connectivity rule kind: {kind}")
 
             tech = str(required_value(rule, "tech"))
-            source_selector = str(rule.get("source", "any")).lower()
-            destination_selector = str(rule.get("destination", "any")).lower()
             source_nodes = self._select_rule_nodes(
                 rpl_nodes,
                 tech=tech,
-                selector=source_selector,
+                selector=str(rule.get("source", "any")).lower(),
             )
             destination_nodes = self._select_rule_nodes(
                 rpl_nodes,
                 tech=tech,
-                selector=destination_selector,
+                selector=str(rule.get("destination", "any")).lower(),
             )
             degree = (
                 int(rule["degree"])
@@ -493,7 +292,7 @@ class GraphPlanner:
                 if degree is not None:
                     candidates = candidates[:degree]
 
-                for _, destination in candidates:
+                for distance_m, destination in candidates:
                     add_edge(
                         source,
                         destination,
@@ -501,17 +300,20 @@ class GraphPlanner:
                             "kind": "rf",
                             "rule": rule_id,
                             "tech": tech,
+                            "distance_m": distance_m,
                         },
                     )
 
         self.candidate_edges = edges
         self.candidate_edge_attrs = edge_attrs
+        self._clear_results()
         return list(self.candidate_edges)
 
     def candidate_graph(
         self,
         candidate_edges: Iterable[tuple[str, str]] | None = None,
     ):
+        """Return a NetworkX graph containing the candidate edges."""
         import networkx as nx
 
         rpl_nodes = self.rpl_nodes()
@@ -541,27 +343,33 @@ class GraphPlanner:
                 raise KeyError(f"Unknown candidate edge source: {src}")
             if dst not in graph:
                 raise KeyError(f"Unknown candidate edge destination: {dst}")
-            attrs = self._edge_attrs(src, dst)
-            graph.add_edge(src, dst, **attrs)
+            graph.add_edge(src, dst, **self._edge_attrs(src, dst))
 
         return graph
 
-    def node_by_site(self) -> dict[str, SiteNode]:
-        return dict(self.nodes)
-
     def compile_metric_specs_by_tech(
         self,
-        metric_specs_by_tech: Mapping[str, str | Callable[[Mapping[str, Any]], float]],
+        metric_specs_by_tech: Mapping[
+            str,
+            str | Mapping[str, Any] | Callable[[Mapping[str, Any]], float],
+        ],
     ) -> dict[str, Callable[[Mapping[str, Any]], float]]:
+        """Compile metric formulas/resources keyed by interface technology."""
         compiled = {}
-
         for tech, spec in metric_specs_by_tech.items():
             if callable(spec):
-                compiled[tech] = spec
+                compiled[str(tech)] = spec
                 continue
 
-            spec_text = self._metric_spec_text(spec)
-            compiled[tech] = mc.compile_metric_spec(spec_text)
+            if isinstance(spec, Mapping):
+                spec = spec.get("spec", spec.get("formula"))
+                if spec is None:
+                    raise ValueError(
+                        f"Metric profile {tech!r} requires 'spec' or 'formula'"
+                    )
+
+            spec_text = self._metric_spec_text(str(spec))
+            compiled[str(tech)] = mc.compile_metric_spec(spec_text)
 
         self.metric_functions_by_tech = compiled
         return dict(compiled)
@@ -571,9 +379,13 @@ class GraphPlanner:
         geo,
         candidate_edges: Iterable[tuple[str, str]] | None = None,
         *,
-        metric_specs_by_tech: Mapping[str, str | Callable[[Mapping[str, Any]], float]] | None = None,
+        metric_specs_by_tech: Mapping[
+            str,
+            str | Mapping[str, Any] | Callable[[Mapping[str, Any]], float],
+        ] | None = None,
         manage_geo: bool = False,
     ) -> dict[tuple[str, str], float]:
+        """Extract geo features and compute one metric per candidate edge."""
         if metric_specs_by_tech is not None:
             self.compile_metric_specs_by_tech(metric_specs_by_tech)
 
@@ -590,7 +402,6 @@ class GraphPlanner:
 
         rpl_by_id = {node.node_id: node for node in self.rpl_nodes()}
         node_by_site = self.node_by_site()
-
         edge_metrics = {}
         edge_features = {}
 
@@ -654,7 +465,6 @@ class GraphPlanner:
 
                 src_site = node_by_site[src_node.extra["site_id"]].site
                 dst_site = node_by_site[dst_node.extra["site_id"]].site
-
                 features = await geo.get_features(
                     src_site.geo_pos,
                     dst_site.geo_pos,
@@ -671,9 +481,7 @@ class GraphPlanner:
                     dst_node,
                     features,
                 )
-
-                metric = float(metric_function(metric_record))
-                edge_metrics[(src, dst)] = metric
+                edge_metrics[(src, dst)] = float(metric_function(metric_record))
                 edge_features[(src, dst)] = metric_record
 
         finally:
@@ -685,260 +493,128 @@ class GraphPlanner:
         self.edge_features = edge_features
         return dict(edge_metrics)
 
-    def _metric_record(
-        self,
-        src_node: RPLNode,
-        dst_node: RPLNode,
-        features: Mapping[str, Any],
-    ) -> dict[str, Any]:
-        src_antenna = self.antenna_catalog[src_node.extra["antenna_id"]]
-        dst_antenna = self.antenna_catalog[dst_node.extra["antenna_id"]]
-
-        return {
-            "tx": self._metric_terminal_record(
-                src_node,
-                src_antenna,
-                include_power=True,
-            ),
-            "rx": self._metric_terminal_record(
-                dst_node,
-                dst_antenna,
-                include_power=False,
-            ),
-            "features": dict(features),
-        }
-
-    @staticmethod
-    def _metric_terminal_record(
-        node: RPLNode,
-        antenna: AntennaSpec,
-        *,
-        include_power: bool,
-    ) -> dict[str, Any]:
-        record = {
-            "ant_gain": float(antenna.gain_dbi),
-            "ant_height": float(node.extra["mount_height_m"]),
-            "ant_type": str(antenna.kind),
-        }
-
-        if antenna.model is not None:
-            record["ant_name"] = str(antenna.model)
-
-        if include_power:
-            record["pw"] = float(node.extra["tx_power_dbm"])
-
-        return record
-
     def run_rpl(
         self,
         edge_metrics: Mapping[tuple[str, str], float] | None = None,
     ) -> GeoRPL:
+        """Run RPL over the current metric graph."""
         if edge_metrics is None:
             edge_metrics = self.edge_metrics
-
         if not edge_metrics:
             raise RuntimeError("No edge metrics were computed")
 
+        self.edge_metrics = {
+            (str(src), str(dst)): float(metric)
+            for (src, dst), metric in edge_metrics.items()
+        }
+
         rpl = GeoRPL()
         rpl.set_nodes(self.rpl_nodes())
-        rpl.set_edge_metrics(edge_metrics)
+        rpl.set_edge_metrics(self.edge_metrics)
         rpl.run_RPL()
 
         self.rpl = rpl
         return rpl
 
     def rpl_result_counts(self) -> dict[str, int]:
+        """Return node/edge counts for the last RPL result."""
         if self.rpl is None:
             raise RuntimeError("RPL was not run")
-
         return {
             "nodes": self.rpl.G_res.number_of_nodes(),
             "edges": self.rpl.G_res.number_of_edges(),
         }
 
-    def _node_from_profile_record(
+    def to_result_dict(
         self,
-        site_id: str,
-        record: Mapping[str, Any],
-        profile_id: str,
         *,
-        resolve: bool,
-        validate: bool,
-        tolerance_m: float,
-    ) -> SiteNode:
-        if profile_id not in self.device_profiles:
-            raise ValueError(f"Unknown device profile: {profile_id}")
+        include_candidates: bool = True,
+        include_metrics: bool = True,
+        include_features: bool = False,
+    ) -> dict[str, Any]:
+        """
+        Serialize the current graph-planning execution as JSON-ready data.
 
-        profile = self.device_profiles[profile_id]
-        connected = parse_bool(profile.get("connected"), False)
-        can_route = parse_bool(profile.get("can_route"), False)
-        rank = float(profile.get("rank", 0.0 if connected else inf))
-        mount_height_m = optional_float(
-            first_value(
-                record,
-                "mount_height_m",
-                "ant_h",
-                "antenna_height_m",
-            )
-        )
-        if mount_height_m is None:
-            mount_height_m = optional_float(profile.get("mount_height_m"))
-
-        site = Site(
-            site_id=site_id,
-            lat=optional_float(optional_value(record, "lat")),
-            lon=optional_float(optional_value(record, "lon")),
-            x=optional_float(optional_value(record, "x")),
-            y=optional_float(optional_value(record, "y")),
-            kind=str(record.get("kind", profile.get("kind", "field"))),
-            extra={
-                key: value
-                for key, value in record.items()
-                if key not in self.DEFAULT_RECORD_KEYS
+        The returned object is execution output, not scenario input. It can
+        include candidate edges, computed metric records and the final RPL
+        planned graph. Expensive raw feature payloads are excluded by default.
+        """
+        result: dict[str, Any] = {
+            "working_crs": self.working_crs,
+            "counts": {
+                "sites": len(self.nodes),
+                "rpl_nodes": len(self.rpl_nodes()),
+                "candidate_edges": len(self.candidate_edges),
+                "metric_edges": len(self.edge_metrics),
+                "planned_nodes": (
+                    self.rpl.G_res.number_of_nodes()
+                    if self.rpl is not None
+                    else 0
+                ),
+                "planned_edges": (
+                    self.rpl.G_res.number_of_edges()
+                    if self.rpl is not None
+                    else 0
+                ),
             },
-        )
+            "rpl_nodes": self._rpl_node_records(self.rpl_nodes()),
+        }
 
-        device_id = make_device_id(site_id, 0)
-        device = Device(
-            device_id=device_id,
-            site_id=site_id,
-            connected=connected,
-            can_route=can_route,
-            rank=rank,
-            mount_height_m=mount_height_m,
-            extra={"device_profile": profile_id},
-        )
+        if include_candidates:
+            result["candidate_edges"] = [
+                self._edge_record(src, dst)
+                for src, dst in self.candidate_edges
+            ]
 
-        interfaces = []
-        for interface_index, interface_profile_id in enumerate(
-            profile.get("interfaces", [])
-        ):
-            if not isinstance(interface_profile_id, str):
-                raise TypeError(
-                    f"Device profile {profile_id!r} interfaces must be "
-                    "profile names"
-                )
-            if interface_profile_id not in self.interface_profiles:
-                raise ValueError(
-                    f"Unknown interface profile: {interface_profile_id}"
-                )
+        if include_metrics:
+            result["metric_edges"] = [
+                self._edge_record(src, dst, metric=metric)
+                for (src, dst), metric in self.edge_metrics.items()
+            ]
 
-            interface_profile = self.interface_profiles[interface_profile_id]
-            antenna_id = str(required_value(interface_profile, "antenna_id"))
-            if antenna_id not in self.antenna_catalog:
-                raise ValueError(
-                    f"Unknown antenna_id for interface profile "
-                    f"{interface_profile_id}: {antenna_id}"
-                )
+        if include_features:
+            result["edge_features"] = [
+                {
+                    "src": src,
+                    "dst": dst,
+                    "features": self._json_value(features),
+                }
+                for (src, dst), features in self.edge_features.items()
+            ]
 
-            interfaces.append(
-                RadioInterface(
-                    interface_id=make_interface_id(
-                        site_id,
-                        0,
-                        interface_index,
-                    ),
-                    device_id=device_id,
-                    site_id=site_id,
-                    tech=str(required_value(interface_profile, "tech")),
-                    freq_mhz=float(
-                        required_value(interface_profile, "freq_mhz")
-                    ),
-                    tx_power_dbm=float(
-                        required_value(interface_profile, "tx_power_dbm")
-                    ),
-                    antenna_id=antenna_id,
-                    can_relay=parse_bool(
-                        interface_profile.get("can_relay"),
-                        False,
-                    ),
-                    medium=str(interface_profile.get("medium", "rf")),
-                    extra={"interface_profile": interface_profile_id},
-                )
-            )
+        if self.rpl is not None:
+            result["planned_nodes"] = self._graph_node_records(self.rpl.G_res)
+            result["planned_edges"] = self._graph_edge_records(self.rpl.G_res)
+        else:
+            result["planned_nodes"] = []
+            result["planned_edges"] = []
 
-        if not interfaces:
-            raise ValueError(
-                f"Device profile {profile_id!r} requires at least one "
-                "interface"
-            )
+        return self._json_value(result)
 
-        node = SiteNode(
-            site=site,
-            devices=[device],
-            interfaces=interfaces,
-        )
-
-        if resolve:
-            node.resolve_position(
-                self.working_crs,
-                validate=validate,
-                tolerance_m=tolerance_m,
-            )
-
-        return node
-
-    def _node_from_record(
+    def save_results(
         self,
-        site_id: str,
-        record: Mapping[str, Any],
+        path: str | Path,
         *,
-        resolve: bool,
-        validate: bool,
-        tolerance_m: float,
-    ) -> SiteNode:
-        connected = parse_bool(
-            optional_value(record, "connected"),
-            False,
+        include_candidates: bool = True,
+        include_metrics: bool = True,
+        include_features: bool = False,
+    ) -> Path:
+        """Write ``to_result_dict`` output as an indented JSON file."""
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps(
+                self.to_result_dict(
+                    include_candidates=include_candidates,
+                    include_metrics=include_metrics,
+                    include_features=include_features,
+                ),
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
         )
-        can_route = parse_bool(optional_value(record, "can_route"), False)
-        can_relay = parse_bool(
-            optional_value(record, "can_relay"),
-            connected,
-        )
-        rank = float(optional_value(record, "rank", 0.0 if connected else inf))
-        mount_height_m = optional_float(
-            first_value(
-                record,
-                "mount_height_m",
-                "ant_h",
-                "antenna_height_m",
-            )
-        )
-
-        node = FieldSite.with_default_interface(
-            site_id=site_id,
-            lat=optional_float(optional_value(record, "lat")),
-            lon=optional_float(optional_value(record, "lon")),
-            x=optional_float(optional_value(record, "x")),
-            y=optional_float(optional_value(record, "y")),
-            tech=str(required_value(record, "tech")),
-            freq_mhz=float(required_value(record, "freq_mhz")),
-            tx_power_dbm=float(required_value(record, "tx_power_dbm")),
-            mount_height_m=mount_height_m,
-            antenna_id=str(required_value(record, "antenna_id")),
-            connected=connected,
-            can_route=can_route,
-            can_relay=can_relay,
-            rank=rank,
-            working_crs=self.working_crs,
-            resolve=resolve,
-            validate=validate,
-            tolerance_m=tolerance_m,
-            extra={
-                key: value
-                for key, value in record.items()
-                if key not in self.DEFAULT_RECORD_KEYS
-            },
-        )
-
-        if node.interfaces[0].antenna_id not in self.antenna_catalog:
-            raise ValueError(
-                f"Unknown antenna_id for {site_id}: "
-                f"{node.interfaces[0].antenna_id}"
-            )
-
-        return node
+        return path
 
     def _add_internal_edges_from_rule(
         self,
@@ -967,10 +643,7 @@ class GraphPlanner:
                 continue
 
             can_route = any(
-                parse_bool(
-                    node.extra.get("device_can_route"),
-                    False,
-                )
+                parse_bool(node.extra.get("device_can_route"), False)
                 for node in nodes
             )
             if enabled_when_can_route and not can_route:
@@ -998,6 +671,213 @@ class GraphPlanner:
             return dict(attrs)
 
         return {}
+
+    def _clear_results(self) -> None:
+        self.edge_metrics = {}
+        self.edge_features = {}
+        self.rpl = None
+
+    def _edge_record(
+        self,
+        src: str,
+        dst: str,
+        *,
+        metric: float | None = None,
+    ) -> dict[str, Any]:
+        rpl_by_id = {node.node_id: node for node in self.rpl_nodes()}
+        src_node = rpl_by_id[src]
+        dst_node = rpl_by_id[dst]
+        record = {
+            "src": src,
+            "dst": dst,
+            "src_site": src_node.extra.get("site_id"),
+            "dst_site": dst_node.extra.get("site_id"),
+            "src_tech": src_node.extra.get("tech"),
+            "dst_tech": dst_node.extra.get("tech"),
+            "src_freq_mhz": src_node.extra.get("freq_mhz"),
+            "dst_freq_mhz": dst_node.extra.get("freq_mhz"),
+            "src_max_links": src_node.extra.get("max_links"),
+            "dst_max_links": dst_node.extra.get("max_links"),
+            "src_mount_height_m": src_node.extra.get("mount_height_m"),
+            "dst_mount_height_m": dst_node.extra.get("mount_height_m"),
+            **self._edge_attrs(src, dst),
+        }
+        if metric is not None:
+            record["metric"] = metric
+        return record
+
+    @staticmethod
+    def _rpl_node_records(nodes: Iterable[RPLNode]) -> list[dict[str, Any]]:
+        records = []
+        for node in nodes:
+            x = y = None
+            if node.pos_utm is not None:
+                x, y = node.pos_utm
+            records.append(
+                {
+                    "node_id": node.node_id,
+                    "site_id": node.extra.get("site_id"),
+                    "device_id": node.extra.get("device_id"),
+                    "tech": node.extra.get("tech"),
+                    "freq_mhz": node.extra.get("freq_mhz"),
+                    "tx_power_dbm": node.extra.get("tx_power_dbm"),
+                    "antenna_id": node.extra.get("antenna_id"),
+                    "mount_height_m": node.extra.get("mount_height_m"),
+                    "max_links": node.extra.get("max_links"),
+                    "connected": node.connected,
+                    "rpl_relay": node.rpl_relay,
+                    "rank": node.rank,
+                    "x": x,
+                    "y": y,
+                }
+            )
+        return records
+
+    @staticmethod
+    def _graph_node_records(graph) -> list[dict[str, Any]]:
+        records = []
+        for node_id, attrs in graph.nodes(data=True):
+            extra = attrs.get("extra", {})
+            parent = attrs.get("parent")
+            parent_extra = graph.nodes[parent].get("extra", {}) if parent else {}
+            pos = attrs.get("pos")
+            x = y = None
+            if pos is not None:
+                x, y = pos
+            records.append(
+                {
+                    "node_index": attrs.get("node_index"),
+                    "node_id": node_id,
+                    "site_id": extra.get("site_id"),
+                    "device_id": extra.get("device_id"),
+                    "tech": extra.get("tech"),
+                    "parent": parent,
+                    "parent_site_id": parent_extra.get("site_id"),
+                    "connected": attrs.get("connected"),
+                    "rpl_relay": attrs.get("rpl_relay"),
+                    "rank": attrs.get("rank"),
+                    "x": x,
+                    "y": y,
+                }
+            )
+        records.sort(
+            key=lambda row: (
+                row["node_index"] is None,
+                row["node_index"],
+            )
+        )
+        return records
+
+    @staticmethod
+    def _graph_edge_records(graph) -> list[dict[str, Any]]:
+        records = []
+        for src, dst, attrs in graph.edges(data=True):
+            records.append(
+                {
+                    "src": src,
+                    "dst": dst,
+                    "metric": attrs.get("metric"),
+                    **{
+                        key: value
+                        for key, value in attrs.items()
+                        if key != "metric"
+                    },
+                }
+            )
+        return records
+
+    def _metric_record(
+        self,
+        src_node: RPLNode,
+        dst_node: RPLNode,
+        features: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        src_antenna = self.antenna_catalog[src_node.extra["antenna_id"]]
+        dst_antenna = self.antenna_catalog[dst_node.extra["antenna_id"]]
+
+        return {
+            "tx": self._metric_terminal_record(
+                src_node,
+                dst_node,
+                src_antenna,
+                include_power=True,
+            ),
+            "rx": self._metric_terminal_record(
+                dst_node,
+                src_node,
+                dst_antenna,
+                include_power=False,
+            ),
+            "features": dict(features),
+        }
+
+    def _metric_terminal_record(
+        self,
+        node: RPLNode,
+        peer_node: RPLNode,
+        antenna: AntennaSpec,
+        *,
+        include_power: bool,
+    ) -> dict[str, Any]:
+        ant_gain = self._link_antenna_gain(node, peer_node, antenna)
+        record = {
+            "ant_gain": ant_gain,
+            "ant_height": float(node.extra["mount_height_m"]),
+            "ant_type": str(antenna.kind),
+        }
+
+        if antenna.model_id is not None:
+            record["ant_model_id"] = str(antenna.model_id)
+
+        if antenna.description is not None:
+            record["ant_name"] = str(antenna.description)
+
+        if include_power:
+            record["pw"] = float(node.extra["tx_power_dbm"])
+
+        return record
+
+    def _link_antenna_gain(
+        self,
+        node: RPLNode,
+        peer_node: RPLNode,
+        antenna: AntennaSpec,
+    ) -> float:
+        if antenna.model_id is None:
+            return float(antenna.gain_dbi)
+
+        if node.pos_utm is None:
+            raise ValueError(f"Missing position for node {node.node_id}")
+        if peer_node.pos_utm is None:
+            raise ValueError(f"Missing position for node {peer_node.node_id}")
+
+        return self.antenna_planner.link_gain_dbi(
+            antenna.model_id,
+            frequency_mhz=float(node.extra["freq_mhz"]),
+            src_pos=node.pos_utm,
+            dst_pos=peer_node.pos_utm,
+            src_height_m=float(node.extra["mount_height_m"]),
+            dst_height_m=float(peer_node.extra["mount_height_m"]),
+            azimuth_deg=(
+                float(antenna.azimuth_deg)
+                if antenna.azimuth_deg is not None
+                else 0.0
+            ),
+            downtilt_deg=(
+                float(antenna.downtilt_deg)
+                if antenna.downtilt_deg is not None
+                else 0.0
+            ),
+            modifier={
+                key: value
+                for key, value in {
+                    "shadow_azimuth_deg": antenna.shadow_azimuth_deg,
+                    "shadow_width_deg": antenna.shadow_width_deg,
+                    "shadow_loss_db": antenna.shadow_loss_db,
+                }.items()
+                if value is not None
+            },
+        )
 
     @staticmethod
     def _select_rule_nodes(
@@ -1036,30 +916,6 @@ class GraphPlanner:
         return selected
 
     @staticmethod
-    def _antenna_from_config(config: Mapping[str, Any]) -> AntennaSpec:
-        config = dict(config)
-        known_keys = {
-            "kind",
-            "model",
-            "gain_dbi",
-            "height_m",
-            "azimuth_deg",
-            "beamwidth_deg",
-            "max_links",
-        }
-        kwargs = {
-            key: config[key]
-            for key in known_keys
-            if key in config
-        }
-        kwargs["extra"] = {
-            key: value
-            for key, value in config.items()
-            if key not in known_keys
-        }
-        return AntennaSpec(**kwargs)
-
-    @staticmethod
     def _distance_m(left: RPLNode, right: RPLNode) -> float:
         if left.pos_utm is None:
             raise ValueError(f"Missing position for node {left.node_id}")
@@ -1092,32 +948,31 @@ class GraphPlanner:
         )
 
     @staticmethod
-    def _records(records: Iterable[Mapping[str, Any]] | Any) -> list[dict[str, Any]]:
-        if hasattr(records, "to_dict"):
-            records = records.to_dict("records")
-
-        return [
-            dict(record)
-            if isinstance(record, Mapping)
-            else dict(record._asdict())
-            if hasattr(record, "_asdict")
-            else dict(vars(record))
-            for record in records
-        ]
-
-    @staticmethod
-    def _record_site_id(record: Mapping[str, Any]) -> str | None:
-        for key in ("site_id", "position_id", "id", "name"):
-            value = record.get(key)
-            if not is_blank(value):
-                return str(value).strip()
-        return None
-
-    @staticmethod
     def _clean_id(value: Any) -> str:
         value = str(value).strip()
         if not value:
             raise ValueError("ID cannot be empty")
         return value
 
-
+    @staticmethod
+    def _json_value(value: Any) -> Any:
+        if isinstance(value, Mapping):
+            return {
+                str(key): GraphPlanner._json_value(item)
+                for key, item in value.items()
+            }
+        if isinstance(value, tuple):
+            return [GraphPlanner._json_value(item) for item in value]
+        if isinstance(value, list):
+            return [GraphPlanner._json_value(item) for item in value]
+        if isinstance(value, bool) or value is None or isinstance(value, str):
+            return value
+        if isinstance(value, int):
+            return value
+        if isinstance(value, float):
+            return value if isfinite(value) else None
+        if hasattr(value, "item"):
+            return GraphPlanner._json_value(value.item())
+        if hasattr(value, "tolist"):
+            return GraphPlanner._json_value(value.tolist())
+        return str(value)

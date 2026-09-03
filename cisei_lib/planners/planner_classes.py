@@ -280,23 +280,31 @@ class Site:
 @dataclass(slots=True)
 class AntennaSpec:
     kind: str = "omni"
-    model: str | None = None
+    model_id: str | None = None
+    description: str | None = None
     gain_dbi: float = 0.0
     height_m: float = 7.0
     azimuth_deg: float | None = None
+    downtilt_deg: float | None = None
     beamwidth_deg: float | None = None
-    max_links: int | None = None
+    shadow_azimuth_deg: float | None = None
+    shadow_width_deg: float | None = None
+    shadow_loss_db: float | None = None
     extra: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         data = {
             "kind": self.kind,
-            "model": self.model,
+            "model_id": self.model_id,
+            "description": self.description,
             "gain_dbi": self.gain_dbi,
             "height_m": self.height_m,
             "azimuth_deg": self.azimuth_deg,
+            "downtilt_deg": self.downtilt_deg,
             "beamwidth_deg": self.beamwidth_deg,
-            "max_links": self.max_links,
+            "shadow_azimuth_deg": self.shadow_azimuth_deg,
+            "shadow_width_deg": self.shadow_width_deg,
+            "shadow_loss_db": self.shadow_loss_db,
         }
         data.update(self.extra)
         return data
@@ -344,6 +352,7 @@ class RadioInterface:
     antenna_id: str
     can_relay: bool = True
     medium: str = "rf"
+    max_links: float = inf
     extra: dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -380,6 +389,7 @@ class RadioInterface:
             "antenna_id": self.antenna_id,
             "interface_can_relay": self.can_relay,
             "medium": self.medium,
+            "max_links": self.max_links,
         }
 
         if device is not None:
@@ -412,6 +422,7 @@ class RadioInterface:
             "antenna_id": self.antenna_id,
             "can_relay": self.can_relay,
             "medium": self.medium,
+            "max_links": self.max_links if isfinite(self.max_links) else None,
         }
         data.update(self.extra)
         return data
@@ -426,6 +437,7 @@ class RadioInterfacePattern:
     antenna_id: str = "default_omni"
     can_relay: bool = True
     medium: str = "rf"
+    max_links: float = inf
     extra: dict[str, Any] = field(default_factory=dict)
 
     def instantiate(
@@ -447,6 +459,7 @@ class RadioInterfacePattern:
             antenna_id=self.antenna_id,
             can_relay=self.can_relay,
             medium=self.medium,
+            max_links=self.max_links,
             extra=deepcopy(self.extra),
         )
 

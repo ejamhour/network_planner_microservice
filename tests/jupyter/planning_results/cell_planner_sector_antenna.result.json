@@ -1,0 +1,2424 @@
+{
+  "working_crs": "EPSG:31982",
+  "counts": {
+    "sites": 13,
+    "rpl_nodes": 16,
+    "candidate_edges": 21,
+    "metric_edges": 21,
+    "planned_nodes": 13,
+    "planned_edges": 11
+  },
+  "rpl_nodes": [
+    {
+      "node_id": "copel:d0:i0",
+      "site_id": "copel",
+      "device_id": "copel:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 667013.2504672334,
+      "y": 7186095.482576881
+    },
+    {
+      "node_id": "tenis:d0:i0",
+      "site_id": "tenis",
+      "device_id": "tenis:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 671759.5598058328,
+      "y": 7186852.495730838
+    },
+    {
+      "node_id": "praca_29:d0:i0",
+      "site_id": "praca_29",
+      "device_id": "praca_29:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 672408.065399558,
+      "y": 7186592.998072113
+    },
+    {
+      "node_id": "torre:d0:i0",
+      "site_id": "torre",
+      "device_id": "torre:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 43.0,
+      "antenna_id": "lte_sector_0",
+      "mount_height_m": 100.0,
+      "max_links": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 671574.0311870619,
+      "y": 7187056.955815288
+    },
+    {
+      "node_id": "torre:d0:i1",
+      "site_id": "torre",
+      "device_id": "torre:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 43.0,
+      "antenna_id": "lte_sector_120",
+      "mount_height_m": 100.0,
+      "max_links": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 671574.0311870619,
+      "y": 7187056.955815288
+    },
+    {
+      "node_id": "torre:d0:i2",
+      "site_id": "torre",
+      "device_id": "torre:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 43.0,
+      "antenna_id": "lte_sector_240",
+      "mount_height_m": 100.0,
+      "max_links": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 671574.0311870619,
+      "y": 7187056.955815288
+    },
+    {
+      "node_id": "woodland:d0:i0",
+      "site_id": "woodland",
+      "device_id": "woodland:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 667873.3846436178,
+      "y": 7186765.675679
+    },
+    {
+      "node_id": "deneka:d0:i0",
+      "site_id": "deneka",
+      "device_id": "deneka:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 668396.5734885709,
+      "y": 7187052.709074611
+    },
+    {
+      "node_id": "cemiterio:d0:i0",
+      "site_id": "cemiterio",
+      "device_id": "cemiterio:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 669636.4883426565,
+      "y": 7187394.358460179
+    },
+    {
+      "node_id": "saturno:d0:i0",
+      "site_id": "saturno",
+      "device_id": "saturno:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 666638.395067889,
+      "y": 7186638.9775878955
+    },
+    {
+      "node_id": "decatlon:d0:i0",
+      "site_id": "decatlon",
+      "device_id": "decatlon:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 668708.8556795348,
+      "y": 7186524.997916049
+    },
+    {
+      "node_id": "shopping:d0:i0",
+      "site_id": "shopping",
+      "device_id": "shopping:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 669172.0398926331,
+      "y": 7185805.13321075
+    },
+    {
+      "node_id": "barigui:d0:i0",
+      "site_id": "barigui",
+      "device_id": "barigui:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 669825.8875152272,
+      "y": 7186489.104059376
+    },
+    {
+      "node_id": "guaira:d0:i0",
+      "site_id": "guaira",
+      "device_id": "guaira:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "lte_client_omni",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 674430.3328632102,
+      "y": 7186550.168629295
+    },
+    {
+      "node_id": "itallia:d0:i0",
+      "site_id": "itallia",
+      "device_id": "itallia:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 43.0,
+      "antenna_id": "lte_sector_120",
+      "mount_height_m": 30.0,
+      "max_links": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 674356.8640077149,
+      "y": 7186285.146462698
+    },
+    {
+      "node_id": "itallia:d0:i1",
+      "site_id": "itallia",
+      "device_id": "itallia:d0",
+      "tech": "lte",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 43.0,
+      "antenna_id": "lte_sector_240",
+      "mount_height_m": 30.0,
+      "max_links": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 674356.8640077149,
+      "y": 7186285.146462698
+    }
+  ],
+  "candidate_edges": [
+    {
+      "src": "torre:d0:i1",
+      "dst": "tenis:d0:i0",
+      "src_site": "torre",
+      "dst_site": "tenis",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 276.0883817122872,
+      "bearing_deg": 137.77916323378548
+    },
+    {
+      "src": "torre:d0:i1",
+      "dst": "praca_29:d0:i0",
+      "src_site": "torre",
+      "dst_site": "praca_29",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 954.3950204534734,
+      "bearing_deg": 119.08637492927875
+    },
+    {
+      "src": "torre:d0:i1",
+      "dst": "guaira:d0:i0",
+      "src_site": "torre",
+      "dst_site": "guaira",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2900.912359423226,
+      "bearing_deg": 100.06115624503718
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "barigui:d0:i0",
+      "src_site": "torre",
+      "dst_site": "barigui",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 1838.0592792585903,
+      "bearing_deg": 252.004581970152
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "cemiterio:d0:i0",
+      "src_site": "torre",
+      "dst_site": "cemiterio",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 1966.7009988011828,
+      "bearing_deg": 279.87839775533456
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "shopping:d0:i0",
+      "src_site": "torre",
+      "dst_site": "shopping",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2708.6199459769186,
+      "bearing_deg": 242.473261131012
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "decatlon:d0:i0",
+      "src_site": "torre",
+      "dst_site": "decatlon",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2914.139649278278,
+      "bearing_deg": 259.48204036767606
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "deneka:d0:i0",
+      "src_site": "torre",
+      "dst_site": "deneka",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 3177.4605364199942,
+      "bearing_deg": 269.92342300174863
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "woodland:d0:i0",
+      "src_site": "torre",
+      "dst_site": "woodland",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 3712.092261420917,
+      "bearing_deg": 265.49949318835024
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "copel:d0:i0",
+      "src_site": "torre",
+      "dst_site": "copel",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4661.024733096143,
+      "bearing_deg": 258.0955976815241
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "saturno:d0:i0",
+      "src_site": "torre",
+      "dst_site": "saturno",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4953.3029081067325,
+      "bearing_deg": 265.15941151355986
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "praca_29:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "praca_29",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 1972.964426585974,
+      "bearing_deg": 278.97683087346655
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "tenis:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "tenis",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2658.5474058541276,
+      "bearing_deg": 282.32201218303885
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "barigui:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "barigui",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4535.564648058608,
+      "bearing_deg": 272.5773751366464
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "cemiterio:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "cemiterio",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4848.948099807967,
+      "bearing_deg": 283.2236737168673
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "shopping:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "shopping",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 5206.996622466621,
+      "bearing_deg": 264.71060967228436
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "decatlon:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "decatlon",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 5653.098866539157,
+      "bearing_deg": 272.4316932657139
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "deneka:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "deneka",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 6009.51041564997,
+      "bearing_deg": 277.3381282270117
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "woodland:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "woodland",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 6501.262415284706,
+      "bearing_deg": 274.2387808711337
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "copel:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "copel",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 7346.0623616688035,
+      "bearing_deg": 268.52054783732245
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "saturno:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "saturno",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 7726.57487119719,
+      "bearing_deg": 272.6247234914877
+    }
+  ],
+  "metric_edges": [
+    {
+      "src": "torre:d0:i1",
+      "dst": "tenis:d0:i0",
+      "src_site": "torre",
+      "dst_site": "tenis",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 276.0883817122872,
+      "bearing_deg": 137.77916323378548,
+      "metric": 1.0
+    },
+    {
+      "src": "torre:d0:i1",
+      "dst": "praca_29:d0:i0",
+      "src_site": "torre",
+      "dst_site": "praca_29",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 954.3950204534734,
+      "bearing_deg": 119.08637492927875,
+      "metric": 1.0
+    },
+    {
+      "src": "torre:d0:i1",
+      "dst": "guaira:d0:i0",
+      "src_site": "torre",
+      "dst_site": "guaira",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2900.912359423226,
+      "bearing_deg": 100.06115624503718,
+      "metric": 4.424564720781856
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "barigui:d0:i0",
+      "src_site": "torre",
+      "dst_site": "barigui",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 1838.0592792585903,
+      "bearing_deg": 252.004581970152,
+      "metric": 1.0
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "cemiterio:d0:i0",
+      "src_site": "torre",
+      "dst_site": "cemiterio",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 1966.7009988011828,
+      "bearing_deg": 279.87839775533456,
+      "metric": 1.0
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "shopping:d0:i0",
+      "src_site": "torre",
+      "dst_site": "shopping",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2708.6199459769186,
+      "bearing_deg": 242.473261131012,
+      "metric": 1.4939321169697986
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "decatlon:d0:i0",
+      "src_site": "torre",
+      "dst_site": "decatlon",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2914.139649278278,
+      "bearing_deg": 259.48204036767606,
+      "metric": 1.4688713232019446
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "deneka:d0:i0",
+      "src_site": "torre",
+      "dst_site": "deneka",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 3177.4605364199942,
+      "bearing_deg": 269.92342300174863,
+      "metric": 1.8681473341448098
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "woodland:d0:i0",
+      "src_site": "torre",
+      "dst_site": "woodland",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 3712.092261420917,
+      "bearing_deg": 265.49949318835024,
+      "metric": 10.425350820044244
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "copel:d0:i0",
+      "src_site": "torre",
+      "dst_site": "copel",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4661.024733096143,
+      "bearing_deg": 258.0955976815241,
+      "metric": 1.0
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "saturno:d0:i0",
+      "src_site": "torre",
+      "dst_site": "saturno",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4953.3029081067325,
+      "bearing_deg": 265.15941151355986,
+      "metric": 2.604777876287603
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "praca_29:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "praca_29",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 1972.964426585974,
+      "bearing_deg": 278.97683087346655,
+      "metric": 13.220191745743758
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "tenis:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "tenis",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 2658.5474058541276,
+      "bearing_deg": 282.32201218303885,
+      "metric": 8.282159042098844
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "barigui:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "barigui",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4535.564648058608,
+      "bearing_deg": 272.5773751366464,
+      "metric": 157.63651089508718
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "cemiterio:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "cemiterio",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 4848.948099807967,
+      "bearing_deg": 283.2236737168673,
+      "metric": 47.98309098742193
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "shopping:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "shopping",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 5206.996622466621,
+      "bearing_deg": 264.71060967228436,
+      "metric": 70.74964699565332
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "decatlon:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "decatlon",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 5653.098866539157,
+      "bearing_deg": 272.4316932657139,
+      "metric": 49.558573205602045
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "deneka:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "deneka",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 6009.51041564997,
+      "bearing_deg": 277.3381282270117,
+      "metric": 21.619935446228425
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "woodland:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "woodland",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 6501.262415284706,
+      "bearing_deg": 274.2387808711337,
+      "metric": 78.64556029495402
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "copel:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "copel",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 7346.0623616688035,
+      "bearing_deg": 268.52054783732245,
+      "metric": 26.5008187250408
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "saturno:d0:i0",
+      "src_site": "itallia",
+      "dst_site": "saturno",
+      "src_tech": "lte",
+      "dst_tech": "lte",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 30.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "tech": "lte",
+      "rule": "cell_primary",
+      "distance_m": 7726.57487119719,
+      "bearing_deg": 272.6247234914877,
+      "metric": 24.498535561526033
+    }
+  ],
+  "edge_features": [
+    {
+      "src": "torre:d0:i1",
+      "dst": "tenis:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 5.521471547625485,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 120 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": -5.2128379552551145,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 85.5,
+          "dist_m": 276.1,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.32,
+          "tx_near_terminal_clearance_m": 83.88,
+          "rx_near_terminal_clearance_m": 17.67,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i1",
+      "dst": "praca_29:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 10.565560728040507,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 120 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 5.531282471424078,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 95.36,
+          "dist_m": 954.43,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 62.5
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.13,
+          "tx_near_terminal_clearance_m": 97.4,
+          "rx_near_terminal_clearance_m": 10.01,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i1",
+      "dst": "guaira:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 9.51303670418844,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 120 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.252518646159071,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 101.13,
+          "dist_m": 2901.0,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 52.07,
+            "fresnel": 164.76,
+            "boundary": 358.9
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.05,
+          "tx_near_terminal_clearance_m": 97.38,
+          "rx_near_terminal_clearance_m": 9.08,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "barigui:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 10.045372361299554,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 6.76314663989489,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 99.29,
+          "dist_m": 1838.13,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.08,
+          "tx_near_terminal_clearance_m": 94.22,
+          "rx_near_terminal_clearance_m": 10.92,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "cemiterio:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 6.14593128923681,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 6.850455443794068,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 99.62,
+          "dist_m": 1966.78,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 3.12
+          },
+          "vegetation": {
+            "core": 80,
+            "fresnel": 66.25,
+            "boundary": 55.62
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.06,
+          "tx_near_terminal_clearance_m": 96.29,
+          "rx_near_terminal_clearance_m": 5.77,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "shopping:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 11.100667230135583,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.19239927631638,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 100.91,
+          "dist_m": 2708.73,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 15.14,
+            "boundary": 140.06
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.05,
+          "tx_near_terminal_clearance_m": 95.93,
+          "rx_near_terminal_clearance_m": 8.26,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "decatlon:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 9.556774660296007,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.256362751460876,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 101.14,
+          "dist_m": 2914.26,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 1.88
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 13.37,
+            "boundary": 74.3
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.04,
+          "tx_near_terminal_clearance_m": 94.42,
+          "rx_near_terminal_clearance_m": 9.87,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "deneka:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 8.621518658565128,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.3262345277961645,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 101.72,
+          "dist_m": 3177.6,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 61.29,
+            "boundary": 165.71
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.03,
+          "tx_near_terminal_clearance_m": 98.82,
+          "rx_near_terminal_clearance_m": 9.87,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "woodland:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 9.075418430014212,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.437625083049236,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 103.07,
+          "dist_m": 3712.26,
+          "delta_diffra": 20.07,
+          "terrain": {
+            "core": 60,
+            "fresnel": 68.75,
+            "boundary": 86.25
+          },
+          "vegetation": {
+            "core": 90,
+            "fresnel": 83.75,
+            "boundary": 74.38
+          },
+          "buildings": {
+            "core": 11.61,
+            "fresnel": 34.83,
+            "boundary": 47.43
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 1.41,
+              "d_norm": 0.96
+            }
+          ],
+          "max_obstruction_angle_rad": 0.02,
+          "tx_rx_elevation_angle_rad": -0.02,
+          "tx_near_terminal_clearance_m": 98.97,
+          "rx_near_terminal_clearance_m": 7.05,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "copel:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 9.813966668706398,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.572436854261449,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 105.05,
+          "dist_m": 4661.24,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 85.66
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.02,
+          "tx_near_terminal_clearance_m": 95.57,
+          "rx_near_terminal_clearance_m": 13.85,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "saturno:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 9.174645239151753,
+          "ant_height": 100.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.603559084158456,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 105.57,
+          "dist_m": 4953.53,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 7.5,
+            "boundary": 43.12
+          },
+          "buildings": {
+            "core": 37.8,
+            "fresnel": 68.93,
+            "boundary": 135.46
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.02,
+          "tx_near_terminal_clearance_m": 99.33,
+          "rx_near_terminal_clearance_m": 9.21,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "praca_29:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 6.780397169482502,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.791738392062234,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 99.63,
+          "dist_m": 1973.02,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 70.62
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 170.65,
+            "fresnel": 1078.49,
+            "boundary": 1753.32
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 0.35,
+              "d_norm": 0.54
+            },
+            {
+              "v_v": 0.0,
+              "d_norm": 0.66
+            }
+          ],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": -0.01,
+          "tx_near_terminal_clearance_m": 28.72,
+          "rx_near_terminal_clearance_m": 8.25,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "tenis:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 5.886534965334038,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.87122786617384,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 100.85,
+          "dist_m": 2658.63,
+          "delta_diffra": 0,
+          "terrain": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 64.1,
+            "fresnel": 480.24,
+            "boundary": 1473.72
+          },
+          "terrain_peaks_vv": [],
+          "max_obstruction_angle_rad": 0,
+          "tx_rx_elevation_angle_rad": 0.01,
+          "tx_near_terminal_clearance_m": 29.44,
+          "rx_near_terminal_clearance_m": 7.99,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "barigui:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 8.62375297806348,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.965901696891869,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 104.81,
+          "dist_m": 4535.72,
+          "delta_diffra": 31.79,
+          "terrain": {
+            "core": 1730,
+            "fresnel": 1722.5,
+            "boundary": 1902.5
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 407.63,
+            "fresnel": 2464.1,
+            "boundary": 4223.99
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 2.66,
+              "d_norm": 0.61
+            },
+            {
+              "v_v": 0.21,
+              "d_norm": 0.25
+            }
+          ],
+          "max_obstruction_angle_rad": 0.03,
+          "tx_rx_elevation_angle_rad": -0.01,
+          "tx_near_terminal_clearance_m": 28.6,
+          "rx_near_terminal_clearance_m": 7.27,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "cemiterio:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 5.679090137008734,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.974568223351372,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 105.39,
+          "dist_m": 4849.12,
+          "delta_diffra": 22.9,
+          "terrain": {
+            "core": 820,
+            "fresnel": 790,
+            "boundary": 1108.12
+          },
+          "vegetation": {
+            "core": 140,
+            "fresnel": 113.75,
+            "boundary": 100.62
+          },
+          "buildings": {
+            "core": 720.59,
+            "fresnel": 3604.52,
+            "boundary": 2732.47
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 1.7,
+              "d_norm": 0.55
+            },
+            {
+              "v_v": 0.65,
+              "d_norm": 0.23
+            },
+            {
+              "v_v": 0.62,
+              "d_norm": 0.97
+            }
+          ],
+          "max_obstruction_angle_rad": 0.01,
+          "tx_rx_elevation_angle_rad": 0.0,
+          "tx_near_terminal_clearance_m": 26.54,
+          "rx_near_terminal_clearance_m": 6.69,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "shopping:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 9.371269424923304,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.983193167796834,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 106.01,
+          "dist_m": 5207.18,
+          "delta_diffra": 25.97,
+          "terrain": {
+            "core": 1480,
+            "fresnel": 1362.5,
+            "boundary": 1313.12
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 344.86,
+            "fresnel": 2162.69,
+            "boundary": 4059.61
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 2.02,
+              "d_norm": 0.58
+            },
+            {
+              "v_v": 0.22,
+              "d_norm": 0.97
+            }
+          ],
+          "max_obstruction_angle_rad": 0.01,
+          "tx_rx_elevation_angle_rad": -0.0,
+          "tx_near_terminal_clearance_m": 27.65,
+          "rx_near_terminal_clearance_m": 7.28,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "decatlon:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 8.66232215870668,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.9924106238401365,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 106.72,
+          "dist_m": 5653.31,
+          "delta_diffra": 23.67,
+          "terrain": {
+            "core": 820,
+            "fresnel": 855,
+            "boundary": 943.75
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 997.11,
+            "fresnel": 3749.59,
+            "boundary": 3525.22
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 1.71,
+              "d_norm": 0.49
+            }
+          ],
+          "max_obstruction_angle_rad": 0.01,
+          "tx_rx_elevation_angle_rad": -0.0,
+          "tx_near_terminal_clearance_m": 28.91,
+          "rx_near_terminal_clearance_m": 8.25,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "deneka:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 7.318836085035256,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 7.998791461431198,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 107.25,
+          "dist_m": 6009.73,
+          "delta_diffra": 14.62,
+          "terrain": {
+            "core": 70,
+            "fresnel": 388.75,
+            "boundary": 797.5
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 50,
+            "boundary": 60
+          },
+          "buildings": {
+            "core": 506.44,
+            "fresnel": 2983.0,
+            "boundary": 3272.02
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 1.04,
+              "d_norm": 0.47
+            },
+            {
+              "v_v": 0.91,
+              "d_norm": 0.83
+            },
+            {
+              "v_v": 0.62,
+              "d_norm": 0.87
+            }
+          ],
+          "max_obstruction_angle_rad": 0.0,
+          "tx_rx_elevation_angle_rad": 0.0,
+          "tx_near_terminal_clearance_m": 27.51,
+          "rx_near_terminal_clearance_m": 8.75,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "woodland:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 8.180246413593165,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 8.006446754478121,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 107.94,
+          "dist_m": 6501.51,
+          "delta_diffra": 23.95,
+          "terrain": {
+            "core": 300,
+            "fresnel": 407.5,
+            "boundary": 626.88
+          },
+          "vegetation": {
+            "core": 40,
+            "fresnel": 52.5,
+            "boundary": 58.75
+          },
+          "buildings": {
+            "core": 296.21,
+            "fresnel": 2371.82,
+            "boundary": 3130.32
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 2.09,
+              "d_norm": 0.98
+            },
+            {
+              "v_v": 1.04,
+              "d_norm": 0.42
+            },
+            {
+              "v_v": 0.46,
+              "d_norm": 0.53
+            }
+          ],
+          "max_obstruction_angle_rad": 0.05,
+          "tx_rx_elevation_angle_rad": 0.0,
+          "tx_near_terminal_clearance_m": 29.2,
+          "rx_near_terminal_clearance_m": 5.58,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "copel:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 9.033487171454116,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 8.017205338173708,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 109.0,
+          "dist_m": 7346.36,
+          "delta_diffra": 18.12,
+          "terrain": {
+            "core": 400,
+            "fresnel": 705,
+            "boundary": 1173.75
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 0,
+            "boundary": 0
+          },
+          "buildings": {
+            "core": 359.73,
+            "fresnel": 2817.6,
+            "boundary": 3540.83
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 1.34,
+              "d_norm": 0.36
+            },
+            {
+              "v_v": 1.01,
+              "d_norm": 0.82
+            },
+            {
+              "v_v": 0.48,
+              "d_norm": 0.52
+            }
+          ],
+          "max_obstruction_angle_rad": 0.0,
+          "tx_rx_elevation_angle_rad": 0.0,
+          "tx_near_terminal_clearance_m": 28.75,
+          "rx_near_terminal_clearance_m": 12.89,
+          "freq_mhz": 915.0
+        }
+      }
+    },
+    {
+      "src": "itallia:d0:i1",
+      "dst": "saturno:d0:i0",
+      "features": {
+        "tx": {
+          "ant_gain": 8.633281167781364,
+          "ant_height": 30.0,
+          "ant_type": "sector",
+          "ant_model_id": "commscope_rv_65s_fvb",
+          "ant_name": "CommScope RV-65S-FVB sector at 240 deg",
+          "pw": 43.0
+        },
+        "rx": {
+          "ant_gain": 8.021282722285974,
+          "ant_height": 7.0,
+          "ant_type": "omni",
+          "ant_model_id": "pctel_boa9028",
+          "ant_name": "Library-backed client omni antenna"
+        },
+        "features": {
+          "fspl": 109.44,
+          "dist_m": 7726.89,
+          "delta_diffra": 14.81,
+          "terrain": {
+            "core": 130,
+            "fresnel": 441.25,
+            "boundary": 778.12
+          },
+          "vegetation": {
+            "core": 0,
+            "fresnel": 2.5,
+            "boundary": 10
+          },
+          "buildings": {
+            "core": 824.47,
+            "fresnel": 3904.66,
+            "boundary": 3850.86
+          },
+          "terrain_peaks_vv": [
+            {
+              "v_v": 1.06,
+              "d_norm": 0.36
+            },
+            {
+              "v_v": 0.85,
+              "d_norm": 0.83
+            },
+            {
+              "v_v": 0.5,
+              "d_norm": 0.46
+            }
+          ],
+          "max_obstruction_angle_rad": 0.0,
+          "tx_rx_elevation_angle_rad": 0.0,
+          "tx_near_terminal_clearance_m": 29.18,
+          "rx_near_terminal_clearance_m": 8.46,
+          "freq_mhz": 915.0
+        }
+      }
+    }
+  ],
+  "planned_nodes": [
+    {
+      "node_index": 0,
+      "node_id": "copel:d0:i0",
+      "site_id": "copel",
+      "device_id": "copel:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.0,
+      "x": 667013.2504672334,
+      "y": 7186095.482576881
+    },
+    {
+      "node_index": 1,
+      "node_id": "tenis:d0:i0",
+      "site_id": "tenis",
+      "device_id": "tenis:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i1",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.0,
+      "x": 671759.5598058328,
+      "y": 7186852.495730838
+    },
+    {
+      "node_index": 2,
+      "node_id": "praca_29:d0:i0",
+      "site_id": "praca_29",
+      "device_id": "praca_29:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i1",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.0,
+      "x": 672408.065399558,
+      "y": 7186592.998072113
+    },
+    {
+      "node_index": 4,
+      "node_id": "torre:d0:i1",
+      "site_id": "torre",
+      "device_id": "torre:d0",
+      "tech": "lte",
+      "parent": null,
+      "parent_site_id": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 671574.0311870619,
+      "y": 7187056.955815288
+    },
+    {
+      "node_index": 5,
+      "node_id": "torre:d0:i2",
+      "site_id": "torre",
+      "device_id": "torre:d0",
+      "tech": "lte",
+      "parent": null,
+      "parent_site_id": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 671574.0311870619,
+      "y": 7187056.955815288
+    },
+    {
+      "node_index": 6,
+      "node_id": "woodland:d0:i0",
+      "site_id": "woodland",
+      "device_id": "woodland:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 10.425350820044244,
+      "x": 667873.3846436178,
+      "y": 7186765.675679
+    },
+    {
+      "node_index": 7,
+      "node_id": "deneka:d0:i0",
+      "site_id": "deneka",
+      "device_id": "deneka:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.8681473341448098,
+      "x": 668396.5734885709,
+      "y": 7187052.709074611
+    },
+    {
+      "node_index": 8,
+      "node_id": "cemiterio:d0:i0",
+      "site_id": "cemiterio",
+      "device_id": "cemiterio:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.0,
+      "x": 669636.4883426565,
+      "y": 7187394.358460179
+    },
+    {
+      "node_index": 9,
+      "node_id": "saturno:d0:i0",
+      "site_id": "saturno",
+      "device_id": "saturno:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 2.604777876287603,
+      "x": 666638.395067889,
+      "y": 7186638.9775878955
+    },
+    {
+      "node_index": 10,
+      "node_id": "decatlon:d0:i0",
+      "site_id": "decatlon",
+      "device_id": "decatlon:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.4688713232019446,
+      "x": 668708.8556795348,
+      "y": 7186524.997916049
+    },
+    {
+      "node_index": 11,
+      "node_id": "shopping:d0:i0",
+      "site_id": "shopping",
+      "device_id": "shopping:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.4939321169697986,
+      "x": 669172.0398926331,
+      "y": 7185805.13321075
+    },
+    {
+      "node_index": 12,
+      "node_id": "barigui:d0:i0",
+      "site_id": "barigui",
+      "device_id": "barigui:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i2",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 1.0,
+      "x": 669825.8875152272,
+      "y": 7186489.104059376
+    },
+    {
+      "node_index": 13,
+      "node_id": "guaira:d0:i0",
+      "site_id": "guaira",
+      "device_id": "guaira:d0",
+      "tech": "lte",
+      "parent": "torre:d0:i1",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 4.424564720781856,
+      "x": 674430.3328632102,
+      "y": 7186550.168629295
+    }
+  ],
+  "planned_edges": [
+    {
+      "src": "copel:d0:i0",
+      "dst": "torre:d0:i2",
+      "metric": 1.0
+    },
+    {
+      "src": "tenis:d0:i0",
+      "dst": "torre:d0:i1",
+      "metric": 1.0
+    },
+    {
+      "src": "praca_29:d0:i0",
+      "dst": "torre:d0:i1",
+      "metric": 1.0
+    },
+    {
+      "src": "torre:d0:i1",
+      "dst": "guaira:d0:i0",
+      "metric": 4.424564720781856
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "woodland:d0:i0",
+      "metric": 10.425350820044244
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "deneka:d0:i0",
+      "metric": 1.8681473341448098
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "cemiterio:d0:i0",
+      "metric": 1.0
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "saturno:d0:i0",
+      "metric": 2.604777876287603
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "decatlon:d0:i0",
+      "metric": 1.4688713232019446
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "shopping:d0:i0",
+      "metric": 1.4939321169697986
+    },
+    {
+      "src": "torre:d0:i2",
+      "dst": "barigui:d0:i0",
+      "metric": 1.0
+    }
+  ]
+}

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
 from math import atan2, degrees, inf, sqrt
-from pathlib import Path
 from typing import Any
 
 from cisei_lib.planners.graph_planner import GraphPlanner
@@ -18,133 +17,43 @@ class CellPlanner:
     tower selection and relay recovery are intentionally left as later stages.
 
     Typical usage:
-    1. Build the planner from a scenario or TOML bundle.
-    2. Load point records with ``add_sites``.
-    3. Build the geometric candidate graph with ``build_primary_candidates``.
-    4. Optionally inspect/adjust sectors with ``sector_candidate_table``,
+    1. Build the planner from a complete ``PlanningScenario``.
+    2. Build the geometric candidate graph with ``build_primary_candidates``.
+    3. Optionally inspect/adjust sectors with ``sector_candidate_table``,
        ``suggest_sector_rotation`` and ``prune_empty_sectors``.
-    5. Compute edge metrics with ``compute_metrics``.
-    6. Run RPL with ``run_rpl`` and inspect service with ``service_table``.
+    4. Compute edge metrics with ``compute_metrics``.
+    5. Run RPL with ``run_rpl`` and inspect service with ``service_table``.
 
     The wrapped GraphPlanner remains the source of truth for sites, devices,
     interfaces, candidate edges, metrics and RPL state. CellPlanner only adds
     cell-specific construction policy such as sector-aware edge selection.
     """
 
+    # Construction -----------------------------------------------------------
+
     def __init__(
         self,
-        graph: GraphPlanner,
+        scenario: PlanningScenario | GraphPlanner,
         *,
-        cell_site_ids: Iterable[str],
         primary_tech: str = "lte",
-        cell_profile: str = "lte_root",
-        client_profile: str = "lte_leaf",
     ) -> None:
         """
-        Create a cell planner around an already configured GraphPlanner.
+        Create a cell planner around a complete planning scenario.
 
-        ``cell_site_ids`` identifies the sites that are already connected to
-        the backbone. Those sites receive ``cell_profile`` when records are
-        loaded; all other sites receive ``client_profile`` unless explicitly
-        overridden.
+        ``scenario`` may be a ``PlanningScenario`` or an already initialized
+        ``GraphPlanner``. The scenario is expected to include site instances
+        with their final ``device_profile`` assignments. CellPlanner does not
+        load TOML, read CSV files or assign profiles.
         """
-        self.graph = graph
-        self.cell_site_ids = {self._clean_id(site_id) for site_id in cell_site_ids}
+        self.graph = (
+            scenario
+            if isinstance(scenario, GraphPlanner)
+            else GraphPlanner(scenario)
+        )
         self.primary_tech = primary_tech
-        self.cell_profile = cell_profile
-        self.client_profile = client_profile
         self.sector_rotation_by_site: dict[str, float] = {}
 
-    @classmethod
-    def from_toml(
-        cls,
-        path: str | Path,
-        *,
-        cell_site_ids: Iterable[str],
-        working_crs: str | None = None,
-        primary_tech: str = "lte",
-        cell_profile: str = "lte_root",
-        client_profile: str = "lte_leaf",
-    ) -> "CellPlanner":
-        """
-        Load a scenario from TOML and wrap it in a GraphPlanner.
-
-        If the TOML declares a companion instance CSV, it is loaded by
-        ``PlanningScenario.from_toml``. Point records can still be supplied
-        later with ``add_sites`` when the TOML only contains profiles.
-        """
-        scenario = PlanningScenario.from_toml(
-            path,
-            working_crs=working_crs,
-        )
-        return cls(
-            GraphPlanner.from_scenario(scenario),
-            cell_site_ids=cell_site_ids,
-            primary_tech=primary_tech,
-            cell_profile=cell_profile,
-            client_profile=client_profile,
-        )
-
-    def add_sites(
-        self,
-        records: Iterable[Mapping[str, Any]] | Any,
-        *,
-        defaults: Mapping[str, Any] | None = None,
-        overrides_by_id: Mapping[str, Mapping[str, Any]] | None = None,
-        resolve: bool = True,
-        validate: bool = False,
-        tolerance_m: float = 1.0,
-    ):
-        """
-        Instantiate sites/devices/interfaces from point records.
-
-        Records can be a list of dictionaries or a DataFrame-like object. Cell
-        sites are assigned ``cell_profile`` and every other site is assigned
-        ``client_profile``. Use ``overrides_by_id`` for intentional exceptions,
-        such as giving one tower a two-sector profile.
-
-        With ``resolve=True``, geographic/UTM coordinates are completed by
-        GraphPlanner according to the configured working CRS.
-        """
-        records = self._records(records)
-        overrides = {
-            self._record_site_id(record): {"device_profile": self.client_profile}
-            for record in records
-        }
-        overrides = {
-            site_id: value
-            for site_id, value in overrides.items()
-            if site_id is not None
-        }
-
-        for site_id in self.cell_site_ids:
-            overrides[site_id] = {"device_profile": self.cell_profile}
-
-        for site_id, override in dict(overrides_by_id or {}).items():
-            clean_id = self._clean_id(site_id)
-            merged = dict(overrides.get(clean_id, {}))
-            merged.update(override)
-            overrides[clean_id] = merged
-
-        instance_records = []
-        for record in records:
-            site_id = self._record_site_id(record)
-            merged = dict(defaults or {})
-            merged.update(record)
-            if site_id in overrides:
-                merged.update(overrides[site_id])
-            instance_records.append(merged)
-
-        nodes = self.graph.scenario.add_node_instances(
-            instance_records,
-            resolve=resolve,
-            validate=validate,
-            tolerance_m=tolerance_m,
-            update=False,
-        )
-        self.graph.nodes = self.graph.scenario.site_nodes
-        self.graph._clear_results()
-        return nodes
+    # Candidate graph construction -----------------------------------------
 
     def build_primary_candidates(
         self,
@@ -172,12 +81,12 @@ class CellPlanner:
 
         sources = [
             node
-            for node in self.graph.rpl_nodes()
+            for node in self.graph.rpl_nodes
             if node.connected and node.extra.get("tech") == self.primary_tech
         ]
         destinations = [
             node
-            for node in self.graph.rpl_nodes()
+            for node in self.graph.rpl_nodes
             if not node.connected and node.extra.get("tech") == self.primary_tech
         ]
 
@@ -217,10 +126,73 @@ class CellPlanner:
 
         return self.graph.set_candidate_edges(edges, attrs_by_edge=attrs)
 
+    # Sector tuning ----------------------------------------------------------
+
+    def tune_sectors(
+        self,
+        *,
+        site_ids: Iterable[str] | None = None,
+        apply_rotation: bool = False,
+        prune_empty: bool = False,
+        step_deg: float = 5.0,
+        uncovered_weight: float = 10.0,
+        imbalance_weight: float = 1.0,
+        sector_aware: bool = True,
+        limit_m: float | None = None,
+        degree: int | None = None,
+    ) -> dict[str, Any]:
+        """
+        Run the standard pre-metric sector tuning workflow.
+
+        The method is designed for notebooks and API handlers that need a
+        compact, repeatable tuning step before expensive geo/metric evaluation.
+        It computes a rotation suggestion, optionally applies that rotation,
+        reports empty sectors, optionally prunes them, rebuilds candidates when
+        a mutation is applied, and returns the final sector report.
+
+        ``site_ids`` filters the operation to selected cell sites. It does not
+        define which sites are cells. Cell sites are always inferred from the
+        scenario's connected primary-tech interfaces.
+
+        ``sector_aware``, ``limit_m`` and ``degree`` are passed to
+        ``build_primary_candidates`` when the candidate graph must be rebuilt.
+        """
+        rotation = self.suggest_sector_rotation(
+            site_ids=site_ids,
+            step_deg=step_deg,
+            uncovered_weight=uncovered_weight,
+            imbalance_weight=imbalance_weight,
+            apply=apply_rotation,
+        )
+
+        if apply_rotation:
+            self.build_primary_candidates(
+                sector_aware=sector_aware,
+                limit_m=limit_m,
+                degree=degree,
+            )
+
+        prune = self.prune_empty_sectors(site_ids=site_ids, apply=False)
+        if prune_empty:
+            self.prune_empty_sectors(site_ids=site_ids, apply=True)
+            self.build_primary_candidates(
+                sector_aware=sector_aware,
+                limit_m=limit_m,
+                degree=degree,
+            )
+            prune = self.prune_empty_sectors(site_ids=site_ids, apply=False)
+
+        return {
+            "rotation": rotation,
+            "prune": prune,
+            "sectors": self.sector_candidate_table(),
+            "candidate_edges": len(self.graph.candidate_edges),
+        }
+
     def suggest_sector_rotation(
         self,
         *,
-        cell_site_ids: Iterable[str] | None = None,
+        site_ids: Iterable[str] | None = None,
         step_deg: float = 5.0,
         uncovered_weight: float = 10.0,
         imbalance_weight: float = 1.0,
@@ -228,6 +200,10 @@ class CellPlanner:
     ):
         """
         Search a common azimuth rotation for each selected cell site's sectors.
+
+        ``site_ids`` is an optional operation filter. It does not define which
+        sites are cells; cell sites come from the scenario's connected
+        primary-tech interfaces.
 
         The score is:
         ``uncovered_weight * uncovered_ratio + imbalance_weight * imbalance_ratio``.
@@ -248,7 +224,7 @@ class CellPlanner:
             raise ValueError("imbalance_weight must be >= 0")
 
         rows = []
-        for site_id in self._selected_cell_site_ids(cell_site_ids):
+        for site_id in self._selected_site_ids(site_ids):
             sectors = self._cell_sector_nodes(site_id)
             if len(sectors) < 2:
                 continue
@@ -315,7 +291,7 @@ class CellPlanner:
     def prune_empty_sectors(
         self,
         *,
-        cell_site_ids: Iterable[str] | None = None,
+        site_ids: Iterable[str] | None = None,
         apply: bool = False,
     ):
         """
@@ -325,9 +301,12 @@ class CellPlanner:
         ``build_primary_candidates`` first, then inspect this report. With
         ``apply=True``, empty sector interfaces are removed from their device
         definitions and stale candidate/metric/RPL state is cleared.
+
+        ``site_ids`` is an optional operation filter. It does not define which
+        sites are cells.
         """
         candidate_by_source = self._candidate_edges_by_source()
-        selected_site_ids = set(self._selected_cell_site_ids(cell_site_ids))
+        selected_site_ids = set(self._selected_site_ids(site_ids))
 
         rows = []
         sector_node_ids = []
@@ -403,26 +382,31 @@ class CellPlanner:
         site. Rebuild the candidate graph after changing rotations.
         """
         for site_id, rotation in rotations_by_site.items():
-            self.sector_rotation_by_site[self._clean_id(site_id)] = (
+            self.sector_rotation_by_site[GraphPlanner._clean_id(site_id)] = (
                 float(rotation) % 360.0
             )
 
     def clear_sector_rotations(
         self,
-        cell_site_ids: Iterable[str] | None = None,
+        site_ids: Iterable[str] | None = None,
     ) -> None:
         """
         Clear manually or automatically applied sector rotations.
 
-        With no arguments all rotations are cleared. With ``cell_site_ids``,
-        only those sites are reset. Rebuild candidates after clearing.
+        With no arguments all rotations are cleared. With ``site_ids``, only
+        those sites are reset. Rebuild candidates after clearing.
         """
-        if cell_site_ids is None:
+        if site_ids is None:
             self.sector_rotation_by_site.clear()
             return
 
-        for site_id in cell_site_ids:
-            self.sector_rotation_by_site.pop(self._clean_id(site_id), None)
+        for site_id in site_ids:
+            self.sector_rotation_by_site.pop(
+                GraphPlanner._clean_id(site_id),
+                None,
+            )
+
+    # Reports ----------------------------------------------------------------
 
     def sector_candidate_table(self):
         """
@@ -444,6 +428,21 @@ class CellPlanner:
                     "cell_site_id": site_id,
                     "sector_node_id": sector.node_id,
                     "antenna_id": sector.extra.get("antenna_id"),
+                    "antenna_kind": (
+                        antenna.kind if antenna is not None else None
+                    ),
+                    "antenna_model_id": (
+                        antenna.model_id if antenna is not None else None
+                    ),
+                    "antenna_description": (
+                        antenna.description if antenna is not None else None
+                    ),
+                    "antenna_gain_dbi": (
+                        antenna.gain_dbi if antenna is not None else None
+                    ),
+                    "antenna_height_m": (
+                        antenna.height_m if antenna is not None else None
+                    ),
                     "azimuth_deg": self._effective_azimuth(sector),
                     "base_azimuth_deg": (
                         antenna.azimuth_deg if antenna is not None else None
@@ -452,6 +451,8 @@ class CellPlanner:
                     "beamwidth_deg": (
                         antenna.beamwidth_deg if antenna is not None else None
                     ),
+                    "freq_mhz": sector.extra.get("freq_mhz"),
+                    "tx_power_dbm": sector.extra.get("tx_power_dbm"),
                     "candidate_clients": len(candidates),
                     "candidate_sites": [
                         edge["dst_site"]
@@ -462,7 +463,15 @@ class CellPlanner:
 
         return self._table(rows)
 
-    async def compute_metrics(self, geo, *, manage_geo: bool = False):
+    # Execution --------------------------------------------------------------
+
+    async def compute_metrics(
+        self,
+        geo,
+        *,
+        metric_specs_by_tech: Mapping[str, Any] | None = None,
+        manage_geo: bool = False,
+    ):
         """
         Compute edge metrics for the current candidate graph.
 
@@ -472,6 +481,7 @@ class CellPlanner:
         """
         return await self.graph.compute_edge_metrics(
             geo,
+            metric_specs_by_tech=metric_specs_by_tech,
             manage_geo=manage_geo,
         )
 
@@ -495,7 +505,7 @@ class CellPlanner:
         rpl = self.graph.rpl
         graph = rpl.G_res if rpl is not None else None
 
-        for node in self.graph.rpl_nodes():
+        for node in self.graph.rpl_nodes:
             if node.connected or node.extra.get("tech") != self.primary_tech:
                 continue
 
@@ -532,7 +542,16 @@ class CellPlanner:
 
         return self._table(rows)
 
+    # Internal sector helpers ------------------------------------------------
+
     def _inside_antenna(self, node, bearing_deg: float) -> bool:
+        """
+        Return whether a bearing is accepted by a cell interface.
+
+        Non-sector antennas accept every bearing. Sector antennas use their
+        effective azimuth, including any site rotation, and beamwidth as a
+        geometric pre-filter before expensive geo feature extraction.
+        """
         # Only sector antennas constrain candidate visibility for now.
         antenna_id = node.extra.get("antenna_id")
         antenna = self.graph.antenna_catalog.get(antenna_id)
@@ -545,6 +564,13 @@ class CellPlanner:
         return delta <= antenna.beamwidth_deg / 2.0
 
     def _effective_azimuth(self, node) -> float | None:
+        """
+        Return the antenna azimuth after applying the site rotation offset.
+
+        The base azimuth lives in the antenna profile. CellPlanner stores
+        rotations separately so sectors can be tuned without rewriting the
+        scenario definition.
+        """
         antenna_id = node.extra.get("antenna_id")
         antenna = self.graph.antenna_catalog.get(antenna_id)
         if antenna is None or antenna.azimuth_deg is None:
@@ -554,29 +580,66 @@ class CellPlanner:
         rotation = self.sector_rotation_by_site.get(site_id, 0.0)
         return (float(antenna.azimuth_deg) + rotation) % 360.0
 
-    def _selected_cell_site_ids(
+    def _selected_site_ids(
         self,
-        cell_site_ids: Iterable[str] | None,
+        site_ids: Iterable[str] | None,
     ) -> list[str]:
-        if cell_site_ids is None:
-            return sorted(self.cell_site_ids)
-        return sorted(self._clean_id(site_id) for site_id in cell_site_ids)
+        """
+        Normalize an optional operation filter to cleaned cell site ids.
+
+        With no explicit selection, all cell sites inferred from the scenario
+        are returned.
+        """
+        if site_ids is None:
+            return sorted(self._infer_cell_site_ids())
+        return sorted(GraphPlanner._clean_id(site_id) for site_id in site_ids)
+
+    def _infer_cell_site_ids(self) -> set[str]:
+        """
+        Infer cell sites from connected interfaces using the primary technology.
+
+        A site is considered a cell site when at least one interface node is
+        connected and uses ``self.primary_tech``.
+        """
+        return {
+            str(node.extra.get("site_id"))
+            for node in self.graph.rpl_nodes
+            if node.connected
+            and node.extra.get("tech") == self.primary_tech
+            and node.extra.get("site_id") is not None
+        }
 
     def _primary_cell_nodes(self):
+        """
+        Return connected RPL interface nodes using the primary technology.
+
+        These nodes are candidate sources for direct cell service.
+        """
         return [
             node
-            for node in self.graph.rpl_nodes()
+            for node in self.graph.rpl_nodes
             if node.connected and node.extra.get("tech") == self.primary_tech
         ]
 
     def _primary_client_nodes(self):
+        """
+        Return unconnected RPL interface nodes using the primary technology.
+
+        These nodes are candidate destinations for direct cell service.
+        """
         return [
             node
-            for node in self.graph.rpl_nodes()
+            for node in self.graph.rpl_nodes
             if not node.connected and node.extra.get("tech") == self.primary_tech
         ]
 
     def _cell_sector_nodes(self, site_id: str):
+        """
+        Return primary connected interfaces belonging to one cell site.
+
+        The method does not require ``kind == "sector"`` because fallback tests
+        may use omni interfaces in a cell profile.
+        """
         return [
             node
             for node in self._primary_cell_nodes()
@@ -592,6 +655,13 @@ class CellPlanner:
         uncovered_weight: float,
         imbalance_weight: float,
     ) -> dict[str, Any]:
+        """
+        Score one common sector rotation against all primary client nodes.
+
+        Coverage is based on geometry and interface compatibility. The score
+        combines uncovered-client ratio and sector-load imbalance using the
+        weights supplied by ``suggest_sector_rotation``.
+        """
         loads = [0 for _ in sectors]
         covered_clients = set()
         azimuths = []
@@ -636,12 +706,20 @@ class CellPlanner:
             "empty_sectors": empty,
         }
 
+    # Internal geometry and statistics helpers -------------------------------
+
     @staticmethod
     def _bearing_inside(
         azimuth_deg: float | None,
         beamwidth_deg: float | None,
         bearing_deg: float,
     ) -> bool:
+        """
+        Return whether ``bearing_deg`` falls inside an azimuth/beamwidth sector.
+
+        Missing azimuth or beamwidth means the interface is unconstrained for
+        candidate selection.
+        """
         if azimuth_deg is None or beamwidth_deg is None:
             return True
 
@@ -650,6 +728,9 @@ class CellPlanner:
 
     @staticmethod
     def _stdev(values: list[int]) -> float:
+        """
+        Return the population standard deviation for sector load counts.
+        """
         if not values:
             return 0.0
 
@@ -657,8 +738,14 @@ class CellPlanner:
         return sqrt(sum((value - mean) ** 2 for value in values) / len(values))
 
     def _candidate_edges_by_source(self) -> dict[str, list[dict[str, Any]]]:
+        """
+        Group current candidate edges by source node id for sector reports.
+
+        Each grouped edge includes the destination site id plus the edge
+        attributes stored by GraphPlanner.
+        """
         by_source: dict[str, list[dict[str, Any]]] = {}
-        rpl_by_id = {node.node_id: node for node in self.graph.rpl_nodes()}
+        rpl_by_id = {node.node_id: node for node in self.graph.rpl_nodes}
 
         for src, dst in self.graph.candidate_edges:
             attrs = self.graph._edge_attrs(src, dst)
@@ -678,6 +765,12 @@ class CellPlanner:
         source_pos: tuple[float, float] | None,
         destination_pos: tuple[float, float] | None,
     ) -> float:
+        """
+        Return azimuth bearing in degrees from source to destination.
+
+        Positions are projected ``(x, y)`` coordinates in the planner working
+        CRS. The convention is 0 degrees north and positive clockwise.
+        """
         if source_pos is None or destination_pos is None:
             raise ValueError("Projected positions are required")
 
@@ -688,34 +781,13 @@ class CellPlanner:
 
         return (degrees(atan2(dx, dy)) + 360.0) % 360.0
 
-    @staticmethod
-    def _record_site_id(record: Mapping[str, Any]) -> str | None:
-        for key in ("site_id", "position_id", "id", "name"):
-            value = record.get(key)
-            if value is not None and str(value).strip():
-                return CellPlanner._clean_id(value)
-        return None
-
-    @staticmethod
-    def _records(records: Iterable[Mapping[str, Any]] | Any) -> list[dict[str, Any]]:
-        if hasattr(records, "to_dict"):
-            records = records.to_dict("records")
-
-        return [
-            dict(record)
-            if isinstance(record, Mapping)
-            else dict(record._asdict())
-            if hasattr(record, "_asdict")
-            else dict(vars(record))
-            for record in records
-        ]
-
-    @staticmethod
-    def _clean_id(value: Any) -> str:
-        return str(value).strip().replace(" ", "_")
+    # Internal record adapters -----------------------------------------------
 
     @staticmethod
     def _table(rows: list[dict[str, Any]]):
+        """
+        Return a pandas DataFrame when pandas is available, else raw rows.
+        """
         try:
             import pandas as pd
         except ImportError:

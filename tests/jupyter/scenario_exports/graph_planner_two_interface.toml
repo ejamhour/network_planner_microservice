@@ -3,21 +3,21 @@ working_crs = "EPSG:31982"
 
 [antennas.lte_tower_omni]
 kind = "omni"
-description = "lte_tower_omni"
-gain_dbi = 14.0
+description = "LTE tower omni antenna"
 height_m = 7.0
+gain_dbi = 14.0
 
 [antennas.lte_leaf_omni]
 kind = "omni"
-description = "lte_leaf_omni"
-gain_dbi = 6.0
+description = "LTE leaf omni antenna"
 height_m = 7.0
+gain_dbi = 6.0
 
 [antennas.n2n_omni]
 kind = "omni"
-description = "n2n_omni"
-gain_dbi = 3.0
+description = "Node-to-node omni antenna"
 height_m = 7.0
+gain_dbi = 3.0
 
 [interfaces.lte_tower]
 tech = "lte"
@@ -31,13 +31,6 @@ tech = "lte"
 freq_mhz = 400.0
 tx_power_dbm = 20.0
 antenna_id = "lte_leaf_omni"
-can_relay = false
-
-[interfaces.n2n_leaf]
-tech = "n2n"
-freq_mhz = 915.0
-tx_power_dbm = 20.0
-antenna_id = "n2n_omni"
 can_relay = false
 
 [interfaces.n2n_relay]

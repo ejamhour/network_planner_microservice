@@ -1,0 +1,59 @@
+[scenario]
+working_crs = "EPSG:31982"
+
+[antennas.tower_pctel_boa9028]
+kind = "omni"
+model_id = "pctel_boa9028"
+description = "Library-backed PCTEL BOA9028 at the connected site"
+height_m = 7.0
+azimuth_deg = 0.0
+downtilt_deg = 0.0
+
+[antennas.leaf_pctel_boa9028]
+kind = "omni"
+model_id = "pctel_boa9028"
+description = "Library-backed PCTEL BOA9028 at the field site"
+height_m = 7.0
+azimuth_deg = 0.0
+downtilt_deg = 0.0
+
+[interfaces.tower_915_library]
+tech = "antenna_test"
+freq_mhz = 915.0
+tx_power_dbm = 30.0
+antenna_id = "tower_pctel_boa9028"
+can_relay = false
+
+[interfaces.leaf_915_library]
+tech = "antenna_test"
+freq_mhz = 915.0
+tx_power_dbm = 20.0
+antenna_id = "leaf_pctel_boa9028"
+can_relay = false
+
+[devices.connected_antenna_test_site]
+kind = "tower"
+connected = true
+can_route = true
+rank = 0.0
+interfaces = ["tower_915_library"]
+
+[devices.field_antenna_test_site]
+kind = "field"
+connected = false
+can_route = false
+interfaces = ["leaf_915_library"]
+
+[metrics.antenna_test]
+spec = "default"
+
+[instances]
+source = "graph_planner_antenna_function_test.nodes.csv"
+format = "csv"
+profile_column = "device_profile"
+
+[[net.connectivity]]
+kind = "rf"
+tech = "antenna_test"
+source = "connected"
+destination = "unconnected"

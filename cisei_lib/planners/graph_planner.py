@@ -70,7 +70,18 @@ class GraphPlanner:
     features, compiled metric functions and the RPL result.
     """
 
+    # Construction and state -------------------------------------------------
+
     def __init__(self, scenario: PlanningScenario) -> None:
+        """
+        Initialize a planner from a prepared ``PlanningScenario``.
+
+        The constructor validates scenario cross references, copies scenario
+        input into computational state, compiles metric specs when they are
+        already present, and prepares an ``AntennaPlanner`` for dynamic
+        library-backed antenna gain. It does not build edges, call the geo
+        service, or run RPL.
+        """
         if not isinstance(scenario, PlanningScenario):
             raise TypeError("GraphPlanner requires a PlanningScenario instance")
 
@@ -84,6 +95,7 @@ class GraphPlanner:
         self.working_crs = scenario.working_crs
         self.antenna_catalog: dict[str, AntennaSpec] = scenario.antenna_profiles
         self.nodes: dict[str, SiteNode] = scenario.site_nodes
+        self.rpl_nodes: list[RPLNode] = self._build_rpl_nodes()
         self.connectivity_rules: dict[str, dict[str, Any]] = (
             scenario.connectivity_rules
         )
@@ -106,42 +118,7 @@ class GraphPlanner:
         if scenario.metric_specs_by_tech:
             self.compile_metric_specs_by_tech(scenario.metric_specs_by_tech)
 
-    @classmethod
-    def from_scenario(cls, scenario: PlanningScenario) -> "GraphPlanner":
-        """Create a graph planner from an already prepared scenario."""
-        return cls(scenario)
-
-    @classmethod
-    def from_toml(
-        cls,
-        path: str | Path,
-        *,
-        working_crs: str | None = None,
-        load_instances: bool = True,
-    ) -> "GraphPlanner":
-        """Load a ``PlanningScenario`` from TOML and create a graph planner."""
-        return cls(
-            PlanningScenario.from_toml(
-                path,
-                working_crs=working_crs,
-                load_instances=load_instances,
-            )
-        )
-
-    def to_config_dict(self, *, include_sites: bool = True) -> dict[str, Any]:
-        """Return the backing scenario as a plain configuration dictionary."""
-        return self.scenario.to_config_dict(include_sites=include_sites)
-
-    def rpl_nodes(self) -> list[RPLNode]:
-        """Return all concrete interfaces as RPL nodes."""
-        nodes = []
-        for node in self.nodes.values():
-            nodes.extend(node.rpl_nodes())
-        return nodes
-
-    def node_by_site(self) -> dict[str, SiteNode]:
-        """Return concrete site nodes keyed by site id."""
-        return dict(self.nodes)
+    # Candidate graph construction ------------------------------------------
 
     def set_candidate_edges(
         self,
@@ -150,7 +127,13 @@ class GraphPlanner:
         attrs_by_edge: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
         default_attrs: Mapping[str, Any] | None = None,
     ) -> list[tuple[str, str]]:
-        """Replace the current candidate graph with explicit interface edges."""
+        """
+        Replace the current candidate graph with explicit interface edges.
+
+        Parameters are interface node ids such as ``"torre:d0:i0"``. Existing
+        generated/manual edges in the planner are discarded, then the supplied
+        edges are validated and added through ``add_candidate_edges``.
+        """
         self.candidate_edges = []
         self.candidate_edge_attrs = {}
         return self.add_candidate_edges(
@@ -166,8 +149,15 @@ class GraphPlanner:
         attrs_by_edge: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
         default_attrs: Mapping[str, Any] | None = None,
     ) -> list[tuple[str, str]]:
-        """Add candidate edges without duplicating undirected pairs."""
-        rpl_by_id = {node.node_id: node for node in self.rpl_nodes()}
+        """
+        Add candidate edges without duplicating undirected pairs.
+
+        ``default_attrs`` are copied to every edge. ``attrs_by_edge`` may add
+        or override attributes for specific ``(src, dst)`` or ``(dst, src)``
+        pairs. Adding candidates clears prior metrics and RPL results because
+        they no longer describe the active candidate graph.
+        """
+        rpl_by_id = {node.node_id: node for node in self.rpl_nodes}
         attrs_by_edge = attrs_by_edge or {}
         default_attrs = dict(default_attrs or {})
         edge_keys = {frozenset(edge) for edge in self.candidate_edges}
@@ -209,11 +199,17 @@ class GraphPlanner:
         Manual candidate edges loaded from the scenario are kept by default.
         Generated edges are not written back to ``PlanningScenario`` because
         they are computational state, not scenario input.
+
+        Supported rule kinds:
+        - ``rf``: connect compatible interfaces using the rule selectors,
+          optional distance ``limit`` and optional nearest-neighbor ``degree``.
+        - ``internal``: connect interfaces installed in the same routing-capable
+          device, normally with metric zero.
         """
         if not self.connectivity_rules:
             raise RuntimeError("No connectivity rules were configured")
 
-        rpl_nodes = self.rpl_nodes()
+        rpl_nodes = self.rpl_nodes
         edges = list(self.candidate_edges) if preserve_existing else []
         edge_attrs = (
             {edge: dict(self._edge_attrs(*edge)) for edge in edges}
@@ -313,10 +309,16 @@ class GraphPlanner:
         self,
         candidate_edges: Iterable[tuple[str, str]] | None = None,
     ):
-        """Return a NetworkX graph containing the candidate edges."""
+        """
+        Return a NetworkX graph containing the candidate edges.
+
+        The graph is intended for inspection/visualization before metric
+        computation. Nodes include stable ``node_index`` labels, interface
+        metadata in ``extra`` and projected coordinates in ``pos``.
+        """
         import networkx as nx
 
-        rpl_nodes = self.rpl_nodes()
+        rpl_nodes = self.rpl_nodes
         if candidate_edges is None:
             candidate_edges = (
                 self.candidate_edges
@@ -347,6 +349,8 @@ class GraphPlanner:
 
         return graph
 
+    # Metric computation -----------------------------------------------------
+
     def compile_metric_specs_by_tech(
         self,
         metric_specs_by_tech: Mapping[
@@ -354,7 +358,13 @@ class GraphPlanner:
             str | Mapping[str, Any] | Callable[[Mapping[str, Any]], float],
         ],
     ) -> dict[str, Callable[[Mapping[str, Any]], float]]:
-        """Compile metric formulas/resources keyed by interface technology."""
+        """
+        Compile metric formulas/resources keyed by interface technology.
+
+        Values may be callables, inline metric specs/formulas, or mappings with
+        ``spec``/``formula``. Short names such as ``"default"`` are loaded from
+        ``cisei_lib/resources/metrics/<name>_metric.toml``.
+        """
         compiled = {}
         for tech, spec in metric_specs_by_tech.items():
             if callable(spec):
@@ -385,7 +395,19 @@ class GraphPlanner:
         ] | None = None,
         manage_geo: bool = False,
     ) -> dict[tuple[str, str], float]:
-        """Extract geo features and compute one metric per candidate edge."""
+        """
+        Extract geo features and compute one metric per candidate edge.
+
+        For RF edges this method validates compatible technology/frequency,
+        calls the supplied geo service, builds the metric input record, applies
+        the compiled metric for that technology and stores both final scalar
+        metrics and the expanded metric records. Internal edges use their rule
+        metric directly and do not call the geo service.
+
+        Set ``manage_geo=True`` when this method should call ``geo.start()``
+        and ``geo.close()``. Leave it false when the caller manages a reused
+        ``AsyncGeoServicePool``.
+        """
         if metric_specs_by_tech is not None:
             self.compile_metric_specs_by_tech(metric_specs_by_tech)
 
@@ -400,8 +422,7 @@ class GraphPlanner:
             )
         candidate_edges = list(candidate_edges)
 
-        rpl_by_id = {node.node_id: node for node in self.rpl_nodes()}
-        node_by_site = self.node_by_site()
+        rpl_by_id = {node.node_id: node for node in self.rpl_nodes}
         edge_metrics = {}
         edge_features = {}
 
@@ -463,8 +484,8 @@ class GraphPlanner:
                 if dst_height is None:
                     raise ValueError(f"Missing mount height for interface {dst}")
 
-                src_site = node_by_site[src_node.extra["site_id"]].site
-                dst_site = node_by_site[dst_node.extra["site_id"]].site
+                src_site = self.nodes[src_node.extra["site_id"]].site
+                dst_site = self.nodes[dst_node.extra["site_id"]].site
                 features = await geo.get_features(
                     src_site.geo_pos,
                     dst_site.geo_pos,
@@ -493,11 +514,19 @@ class GraphPlanner:
         self.edge_features = edge_features
         return dict(edge_metrics)
 
+    # RPL execution ----------------------------------------------------------
+
     def run_rpl(
         self,
         edge_metrics: Mapping[tuple[str, str], float] | None = None,
     ) -> GeoRPL:
-        """Run RPL over the current metric graph."""
+        """
+        Run RPL over the current metric graph.
+
+        ``edge_metrics`` maps interface edge tuples to scalar costs. If omitted,
+        the method uses metrics previously produced by ``compute_edge_metrics``.
+        The resulting ``GeoRPL`` instance is stored on ``self.rpl``.
+        """
         if edge_metrics is None:
             edge_metrics = self.edge_metrics
         if not edge_metrics:
@@ -509,15 +538,21 @@ class GraphPlanner:
         }
 
         rpl = GeoRPL()
-        rpl.set_nodes(self.rpl_nodes())
+        rpl.set_nodes(self.rpl_nodes)
         rpl.set_edge_metrics(self.edge_metrics)
         rpl.run_RPL()
 
         self.rpl = rpl
         return rpl
 
+    # Result export ----------------------------------------------------------
+
     def rpl_result_counts(self) -> dict[str, int]:
-        """Return node/edge counts for the last RPL result."""
+        """
+        Return node/edge counts for the last RPL result.
+
+        Raises ``RuntimeError`` if RPL has not been run yet.
+        """
         if self.rpl is None:
             raise RuntimeError("RPL was not run")
         return {
@@ -538,12 +573,15 @@ class GraphPlanner:
         The returned object is execution output, not scenario input. It can
         include candidate edges, computed metric records and the final RPL
         planned graph. Expensive raw feature payloads are excluded by default.
+
+        The object is JSON-ready and is suitable for notebooks, API responses
+        and persisted planning artifacts.
         """
         result: dict[str, Any] = {
             "working_crs": self.working_crs,
             "counts": {
                 "sites": len(self.nodes),
-                "rpl_nodes": len(self.rpl_nodes()),
+                "rpl_nodes": len(self.rpl_nodes),
                 "candidate_edges": len(self.candidate_edges),
                 "metric_edges": len(self.edge_metrics),
                 "planned_nodes": (
@@ -557,7 +595,7 @@ class GraphPlanner:
                     else 0
                 ),
             },
-            "rpl_nodes": self._rpl_node_records(self.rpl_nodes()),
+            "rpl_nodes": self._rpl_node_records(self.rpl_nodes),
         }
 
         if include_candidates:
@@ -599,7 +637,12 @@ class GraphPlanner:
         include_metrics: bool = True,
         include_features: bool = False,
     ) -> Path:
-        """Write ``to_result_dict`` output as an indented JSON file."""
+        """
+        Write ``to_result_dict`` output as an indented JSON file.
+
+        Parent directories are created automatically. The returned path is the
+        file that was written.
+        """
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(
@@ -616,6 +659,8 @@ class GraphPlanner:
         )
         return path
 
+    # Internal candidate/state helpers --------------------------------------
+
     def _add_internal_edges_from_rule(
         self,
         rpl_nodes: list[RPLNode],
@@ -623,6 +668,13 @@ class GraphPlanner:
         rule: Mapping[str, Any],
         add_edge: Callable[[RPLNode, RPLNode, Mapping[str, Any]], None],
     ) -> None:
+        """
+        Add same-device interface edges for an ``internal`` connectivity rule.
+
+        This is an implementation helper for ``build_candidate_edges_from_rules``.
+        It groups RPL nodes by device id and connects every pair in a device
+        when routing is allowed by the rule and by the device metadata.
+        """
         enabled_when_can_route = parse_bool(
             rule.get("enabled_when_device_can_route"),
             True,
@@ -662,6 +714,12 @@ class GraphPlanner:
                     )
 
     def _edge_attrs(self, src: str, dst: str) -> dict[str, Any]:
+        """
+        Return candidate-edge attributes independent of stored edge direction.
+
+        Candidate edges are treated as undirected for lookup, so callers may
+        ask for ``(src, dst)`` or ``(dst, src)`` and receive the same attrs.
+        """
         attrs = self.candidate_edge_attrs.get((src, dst))
         if attrs is not None:
             return dict(attrs)
@@ -673,9 +731,30 @@ class GraphPlanner:
         return {}
 
     def _clear_results(self) -> None:
+        """
+        Drop computed metrics, features and RPL result after graph changes.
+
+        Candidate graph mutations invalidate all downstream execution state.
+        """
         self.edge_metrics = {}
         self.edge_features = {}
         self.rpl = None
+
+    def _build_rpl_nodes(self) -> list[RPLNode]:
+        """
+        Convert all site/device/interface instances into interface-level nodes.
+
+        This is the only place where GraphPlanner flattens the physical
+        scenario into the RPL representation. It is kept private because users
+        should inspect the resulting ``rpl_nodes`` attribute, not request a new
+        conversion during normal planning.
+        """
+        rpl_nodes = []
+        for site_node in self.nodes.values():
+            rpl_nodes.extend(site_node.rpl_nodes())
+        return rpl_nodes
+
+    # Internal result serialization helpers ---------------------------------
 
     def _edge_record(
         self,
@@ -684,7 +763,13 @@ class GraphPlanner:
         *,
         metric: float | None = None,
     ) -> dict[str, Any]:
-        rpl_by_id = {node.node_id: node for node in self.rpl_nodes()}
+        """
+        Build one JSON-ready edge record for result serialization.
+
+        The record combines endpoint interface metadata, candidate edge
+        attributes and optionally the computed metric.
+        """
+        rpl_by_id = {node.node_id: node for node in self.rpl_nodes}
         src_node = rpl_by_id[src]
         dst_node = rpl_by_id[dst]
         record = {
@@ -708,6 +793,12 @@ class GraphPlanner:
 
     @staticmethod
     def _rpl_node_records(nodes: Iterable[RPLNode]) -> list[dict[str, Any]]:
+        """
+        Convert RPL nodes to JSON-ready records.
+
+        These records describe interface-level planning nodes before or after
+        metric/RPL execution.
+        """
         records = []
         for node in nodes:
             x = y = None
@@ -735,6 +826,12 @@ class GraphPlanner:
 
     @staticmethod
     def _graph_node_records(graph) -> list[dict[str, Any]]:
+        """
+        Convert a NetworkX RPL graph node view to JSON-ready records.
+
+        Used for serializing the final planned graph. Parent information is
+        included when RPL has assigned it.
+        """
         records = []
         for node_id, attrs in graph.nodes(data=True):
             extra = attrs.get("extra", {})
@@ -770,6 +867,12 @@ class GraphPlanner:
 
     @staticmethod
     def _graph_edge_records(graph) -> list[dict[str, Any]]:
+        """
+        Convert a NetworkX RPL graph edge view to JSON-ready records.
+
+        Edge attributes are preserved, with ``metric`` promoted to a stable
+        top-level field in each record.
+        """
         records = []
         for src, dst, attrs in graph.edges(data=True):
             records.append(
@@ -786,12 +889,21 @@ class GraphPlanner:
             )
         return records
 
+    # Internal metric adapters ----------------------------------------------
+
     def _metric_record(
         self,
         src_node: RPLNode,
         dst_node: RPLNode,
         features: Mapping[str, Any],
     ) -> dict[str, Any]:
+        """
+        Build the record consumed by a compiled metric function.
+
+        This adapter combines the transmitting interface, receiving interface,
+        antenna profiles and geo feature output into the nested ``tx``/``rx``/
+        ``features`` shape expected by ``metric_compiler``.
+        """
         src_antenna = self.antenna_catalog[src_node.extra["antenna_id"]]
         dst_antenna = self.antenna_catalog[dst_node.extra["antenna_id"]]
 
@@ -819,6 +931,13 @@ class GraphPlanner:
         *,
         include_power: bool,
     ) -> dict[str, Any]:
+        """
+        Build the ``tx`` or ``rx`` terminal section of a metric record.
+
+        Dynamic antenna gain is evaluated here because gain depends on link
+        direction. If the antenna profile has ``model_id`` the library pattern
+        is used; otherwise the fixed ``gain_dbi`` fallback is used.
+        """
         ant_gain = self._link_antenna_gain(node, peer_node, antenna)
         record = {
             "ant_gain": ant_gain,
@@ -843,6 +962,13 @@ class GraphPlanner:
         peer_node: RPLNode,
         antenna: AntennaSpec,
     ) -> float:
+        """
+        Return antenna gain from one interface toward its peer.
+
+        ``model_id`` activates library-backed gain with azimuth, downtilt and
+        shadow parameters. Without ``model_id`` this returns the profile's
+        fixed ``gain_dbi``.
+        """
         if antenna.model_id is None:
             return float(antenna.gain_dbi)
 
@@ -879,6 +1005,8 @@ class GraphPlanner:
             },
         )
 
+    # Internal rule and value helpers ----------------------------------------
+
     @staticmethod
     def _select_rule_nodes(
         nodes: Iterable[RPLNode],
@@ -886,6 +1014,12 @@ class GraphPlanner:
         tech: str,
         selector: str,
     ) -> list[RPLNode]:
+        """
+        Select RPL interface nodes for one connectivity-rule endpoint.
+
+        ``selector`` may be ``any``, ``connected``, ``unconnected``, ``relay``
+        or ``non_relay``. The technology filter is always applied first.
+        """
         selector = selector.lower()
         if selector not in {
             "any",
@@ -917,6 +1051,11 @@ class GraphPlanner:
 
     @staticmethod
     def _distance_m(left: RPLNode, right: RPLNode) -> float:
+        """
+        Return projected Euclidean distance between two RPL nodes in meters.
+
+        Both nodes must already have ``pos_utm`` in the scenario working CRS.
+        """
         if left.pos_utm is None:
             raise ValueError(f"Missing position for node {left.node_id}")
         if right.pos_utm is None:
@@ -929,6 +1068,12 @@ class GraphPlanner:
 
     @staticmethod
     def _metric_spec_text(spec: str) -> str:
+        """
+        Resolve a metric spec name or inline spec to TOML/formula text.
+
+        Inline specs are returned unchanged. Otherwise ``spec`` is interpreted
+        as a resource name under ``cisei_lib/resources/metrics``.
+        """
         if "\n" in spec or "=" in spec or "{" in spec:
             return spec
 
@@ -940,6 +1085,13 @@ class GraphPlanner:
 
     @staticmethod
     def _compatible(left: RPLNode, right: RPLNode) -> bool:
+        """
+        Return true when two interface nodes may form a basic RF edge.
+
+        The generic planner only requires equal technology and equal frequency.
+        Specialized planners may apply stricter geometry, sector or capacity
+        rules before calling into the generic metric/RPL workflow.
+        """
         left_extra = left.extra
         right_extra = right.extra
         return (
@@ -949,6 +1101,11 @@ class GraphPlanner:
 
     @staticmethod
     def _clean_id(value: Any) -> str:
+        """
+        Normalize an identifier and reject blank values.
+
+        This is used for user-facing ids such as interface ids and rule ids.
+        """
         value = str(value).strip()
         if not value:
             raise ValueError("ID cannot be empty")
@@ -956,6 +1113,12 @@ class GraphPlanner:
 
     @staticmethod
     def _json_value(value: Any) -> Any:
+        """
+        Convert common Python/numpy values into JSON-compatible values.
+
+        Non-finite floats become ``None`` because JSON has no portable
+        representation for infinity or NaN.
+        """
         if isinstance(value, Mapping):
             return {
                 str(key): GraphPlanner._json_value(item)

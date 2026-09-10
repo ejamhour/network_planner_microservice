@@ -1158,6 +1158,19 @@ class PlanningScenario:
 
         return config
 
+    def to_json_dict(self, *, include_sites: bool = True) -> dict[str, Any]:
+        """
+        Export the scenario as a JSON-compatible configuration dictionary.
+
+        This is the preferred serializer for API clients. TOML can represent
+        non-finite values such as ``inf`` for an unplanned rank, but strict JSON
+        cannot. This method converts non-finite floats to ``None`` so remote
+        notebooks, MCP clients and HTTP libraries can send the scenario safely.
+        """
+        return self._json_value(
+            self.to_config_dict(include_sites=include_sites)
+        )
+
     def to_toml(
         self,
         path: str | Path | None = None,
@@ -1481,6 +1494,20 @@ class PlanningScenario:
         devices = []
         for device_config in devices_config:
             device_config = dict(device_config)
+            connected = PlanningScenario._bool_value(
+                device_config.get("connected"),
+                False,
+            )
+            can_route = PlanningScenario._bool_value(
+                device_config.get("can_route"),
+                False,
+            )
+            rank_value = device_config.get("rank")
+            rank = (
+                float(rank_value)
+                if not PlanningScenario._is_blank(rank_value)
+                else (0.0 if connected else inf)
+            )
             known_device_keys = {
                 "device_id",
                 "site_id",
@@ -1499,9 +1526,9 @@ class PlanningScenario:
                         device_config.get("site_id", site_id),
                         "site id",
                     ),
-                    connected=bool(device_config.get("connected", False)),
-                    can_route=bool(device_config.get("can_route", False)),
-                    rank=float(device_config.get("rank", float("inf"))),
+                    connected=connected,
+                    can_route=can_route,
+                    rank=rank,
                     mount_height_m=(
                         float(device_config["mount_height_m"])
                         if not PlanningScenario._is_blank(
@@ -1550,7 +1577,10 @@ class PlanningScenario:
                     freq_mhz=float(interface_config["freq_mhz"]),
                     tx_power_dbm=float(interface_config["tx_power_dbm"]),
                     antenna_id=str(interface_config["antenna_id"]),
-                    can_relay=bool(interface_config.get("can_relay", True)),
+                    can_relay=PlanningScenario._bool_value(
+                        interface_config.get("can_relay"),
+                        True,
+                    ),
                     medium=str(interface_config.get("medium", "rf")),
                     max_links=PlanningScenario._max_links_value(
                         interface_config.get("max_links")
@@ -1617,6 +1647,27 @@ class PlanningScenario:
         if isinstance(value, list):
             return [PlanningScenario._drop_none(item) for item in value]
         return value
+
+    @staticmethod
+    def _json_value(value: Any) -> Any:
+        if isinstance(value, Mapping):
+            return {
+                str(key): PlanningScenario._json_value(item)
+                for key, item in value.items()
+            }
+        if isinstance(value, tuple):
+            return [PlanningScenario._json_value(item) for item in value]
+        if isinstance(value, list):
+            return [PlanningScenario._json_value(item) for item in value]
+        if value is None or isinstance(value, (str, bool, int)):
+            return value
+        if isinstance(value, float):
+            return value if isfinite(value) else None
+        if hasattr(value, "item"):
+            return PlanningScenario._json_value(value.item())
+        if hasattr(value, "tolist"):
+            return PlanningScenario._json_value(value.tolist())
+        return str(value)
 
     @staticmethod
     def _records(records: Iterable[Mapping[str, Any]] | Any) -> list[dict[str, Any]]:

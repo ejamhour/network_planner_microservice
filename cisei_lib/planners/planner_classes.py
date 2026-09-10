@@ -297,7 +297,6 @@ class AntennaSpec:
             "kind": self.kind,
             "model_id": self.model_id,
             "description": self.description,
-            "gain_dbi": self.gain_dbi,
             "height_m": self.height_m,
             "azimuth_deg": self.azimuth_deg,
             "downtilt_deg": self.downtilt_deg,
@@ -306,6 +305,8 @@ class AntennaSpec:
             "shadow_width_deg": self.shadow_width_deg,
             "shadow_loss_db": self.shadow_loss_db,
         }
+        if self.model_id is None or self.gain_dbi != 0.0:
+            data["gain_dbi"] = self.gain_dbi
         data.update(self.extra)
         return data
 

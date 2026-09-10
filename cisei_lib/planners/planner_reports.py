@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from math import isfinite
 from typing import Any
 
 
@@ -94,7 +95,7 @@ def node_table(planner, kind: str = "rpl"):
         raise ValueError("kind must be 'rpl' or 'result'")
 
     rows = []
-    for node in planner.rpl_nodes():
+    for node in planner.rpl_nodes:
         x = None
         y = None
         if node.pos_utm is not None:
@@ -170,7 +171,7 @@ def node_index_table(planner, G=None):
 
 def edge_table(planner, kind: str = "candidate"):
     kind = kind.lower()
-    rpl_by_id = {node.node_id: node for node in planner.rpl_nodes()}
+    rpl_by_id = {node.node_id: node for node in planner.rpl_nodes}
     rows = []
 
     if kind == "candidate":
@@ -226,10 +227,208 @@ def edge_table(planner, kind: str = "candidate"):
     return _table(rows)
 
 
+def antenna_gain_table(planner):
+    """
+    Return one row per metric edge with the antenna gains used by the planner.
+
+    This report reads ``planner.edge_features`` already produced by
+    ``GraphPlanner.compute_edge_metrics``. It does not call the geo service or
+    recompute metrics. Interface metadata such as frequency and antenna ids are
+    joined from ``planner.rpl_nodes`` because the metric record keeps only the
+    normalized fields consumed by the metric compiler.
+    """
+    rpl_by_id = {node.node_id: node for node in planner.rpl_nodes}
+    rows = []
+
+    for (src, dst), record in planner.edge_features.items():
+        src_node = rpl_by_id[src]
+        dst_node = rpl_by_id[dst]
+        tx = record.get("tx", {})
+        rx = record.get("rx", {})
+        features = record.get("features", {})
+
+        rows.append(
+            {
+                "src": src,
+                "dst": dst,
+                "dist_m": features.get("dist_m"),
+                "src_site": src_node.extra.get("site_id"),
+                "dst_site": dst_node.extra.get("site_id"),
+                "src_tech": src_node.extra.get("tech"),
+                "dst_tech": dst_node.extra.get("tech"),
+                "src_freq_mhz": src_node.extra.get("freq_mhz"),
+                "dst_freq_mhz": dst_node.extra.get("freq_mhz"),
+                "tx_power_dbm": tx.get("pw"),
+                "tx_antenna_id": src_node.extra.get("antenna_id"),
+                "tx_model_id": tx.get("ant_model_id"),
+                "tx_antenna_name": tx.get("ant_name"),
+                "tx_type": tx.get("ant_type"),
+                "tx_height_m": tx.get("ant_height"),
+                "tx_gain_dbi": tx.get("ant_gain"),
+                "rx_antenna_id": dst_node.extra.get("antenna_id"),
+                "rx_model_id": rx.get("ant_model_id"),
+                "rx_antenna_name": rx.get("ant_name"),
+                "rx_type": rx.get("ant_type"),
+                "rx_height_m": rx.get("ant_height"),
+                "rx_gain_dbi": rx.get("ant_gain"),
+                "total_ant_gain_dbi": (
+                    tx.get("ant_gain", 0.0) + rx.get("ant_gain", 0.0)
+                ),
+                "metric": planner.edge_metrics.get((src, dst)),
+            }
+        )
+
+    return _table(rows)
+
+
+def planning_quality_table(
+    planner,
+    *,
+    rank_threshold: float,
+    G=None,
+):
+    """
+    Return a final planning success report based on node rank.
+
+    Connected nodes are treated as backbone/source nodes. Unconnected nodes
+    with a finite rank are classified as ``good`` when
+    ``rank <= rank_threshold`` and ``poor`` otherwise. Unconnected nodes without
+    finite rank are classified as ``unserved``.
+    """
+    if rank_threshold < 0:
+        raise ValueError("rank_threshold must be >= 0")
+    if planner.rpl is None:
+        raise RuntimeError("RPL was not run")
+
+    graph = G
+    if graph is None:
+        graph = planning_result_graph(planner, include_all_nodes=True)
+
+    rows = []
+    for node_id, attributes in graph.nodes(data=True):
+        extra = attributes.get("extra", {})
+        rank = attributes.get("rank")
+        connected = bool(attributes.get("connected"))
+        parent = attributes.get("parent")
+        finite_rank = rank is not None and isfinite(float(rank))
+
+        if connected:
+            quality = "connected"
+            planned = True
+        elif not finite_rank:
+            quality = "unserved"
+            planned = False
+        elif float(rank) <= rank_threshold:
+            quality = "good"
+            planned = True
+        else:
+            quality = "poor"
+            planned = True
+
+        rows.append(
+            {
+                "node_index": attributes.get("node_index"),
+                "node_id": node_id,
+                "site_id": extra.get("site_id"),
+                "device_id": extra.get("device_id"),
+                "tech": extra.get("tech"),
+                "connected": connected,
+                "planned": planned,
+                "quality": quality,
+                "rank": rank,
+                "rank_threshold": rank_threshold,
+                "parent": parent,
+                "parent_site_id": (
+                    graph.nodes[parent].get("extra", {}).get("site_id")
+                    if parent is not None and parent in graph
+                    else None
+                ),
+            }
+        )
+
+    return _table(rows)
+
+
+def planning_result_graph(planner, *, include_all_nodes: bool = True):
+    """
+    Return the final planned graph, optionally preserving unserved nodes.
+
+    ``RPL.G_res`` contains the selected result edges and served nodes. For a
+    final planning report, unserved interfaces must remain visible too. With
+    ``include_all_nodes=True``, this helper copies ``G_res`` and adds any node
+    from the full RPL graph that did not receive a planned edge.
+    """
+    if planner.rpl is None:
+        raise RuntimeError("RPL was not run")
+
+    graph = planner.rpl.G_res.copy()
+    if not include_all_nodes:
+        return graph
+
+    for node_id, attributes in planner.rpl.G.nodes(data=True):
+        if node_id not in graph:
+            graph.add_node(node_id, **attributes)
+
+    return graph
+
+
+def planning_quality_summary(
+    planner,
+    *,
+    rank_threshold: float,
+    G=None,
+) -> dict[str, Any]:
+    """
+    Return aggregate success counts for ``planning_quality_table``.
+    """
+    table = planning_quality_table(
+        planner,
+        rank_threshold=rank_threshold,
+        G=G,
+    )
+    try:
+        counts = table["quality"].value_counts().to_dict()
+        total_targets = int((table["quality"] != "connected").sum())
+        good_targets = int((table["quality"] == "good").sum())
+        unserved_targets = int((table["quality"] == "unserved").sum())
+        poor_targets = int((table["quality"] == "poor").sum())
+    except TypeError:
+        counts = {}
+        total_targets = 0
+        good_targets = 0
+        poor_targets = 0
+        unserved_targets = 0
+        for row in table:
+            quality = row["quality"]
+            counts[quality] = counts.get(quality, 0) + 1
+            if quality != "connected":
+                total_targets += 1
+            if quality == "good":
+                good_targets += 1
+            elif quality == "poor":
+                poor_targets += 1
+            elif quality == "unserved":
+                unserved_targets += 1
+
+    return {
+        "rank_threshold": rank_threshold,
+        "success": total_targets > 0
+        and poor_targets == 0
+        and unserved_targets == 0,
+        "total_targets": total_targets,
+        "good_targets": good_targets,
+        "poor_targets": poor_targets,
+        "unserved_targets": unserved_targets,
+        "counts": counts,
+    }
+
+
 def draw_network_graph(
     G,
     *,
     label_mode: str | None | bool = "index",
+    color_mode: str = "role",
+    rank_threshold: float | None = None,
     figsize=(10, 7),
     positions=None,
     pos_attr: str = "pos",
@@ -264,14 +463,14 @@ def draw_network_graph(
             "'none', None, or a callable"
         )
 
-    colors = []
-    for _, attributes in G.nodes(data=True):
-        if attributes.get("connected"):
-            colors.append("gray")
-        elif attributes.get("rpl_relay"):
-            colors.append("lightgreen")
-        else:
-            colors.append("lightblue")
+    colors = [
+        _node_color(
+            attributes,
+            color_mode=color_mode,
+            rank_threshold=rank_threshold,
+        )
+        for _, attributes in G.nodes(data=True)
+    ]
 
     if positions is None:
         positions = nx.get_node_attributes(G, pos_attr)
@@ -330,6 +529,36 @@ def _spread_same_positions(positions, *, radius: float):
             )
 
     return display_positions
+
+
+def _node_color(
+    attributes: dict[str, Any],
+    *,
+    color_mode: str,
+    rank_threshold: float | None,
+) -> str:
+    color_mode = color_mode.lower()
+    if color_mode == "role":
+        if attributes.get("connected"):
+            return "gray"
+        if attributes.get("rpl_relay"):
+            return "lightgreen"
+        return "lightblue"
+
+    if color_mode != "rank_quality":
+        raise ValueError("color_mode must be 'role' or 'rank_quality'")
+
+    if attributes.get("connected"):
+        return "gray"
+
+    rank = attributes.get("rank")
+    if rank is None or not isfinite(float(rank)):
+        return "tomato"
+
+    if rank_threshold is None:
+        return "lightgreen"
+
+    return "lightgreen" if float(rank) <= rank_threshold else "gold"
 
 
 def _table(rows: list[dict[str, Any]]):

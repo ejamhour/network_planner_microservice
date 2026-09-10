@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.routes_geo_info import router as geo_info_router
 from app.routes_auto import router as auto_router
+from app.routes_planning import router as planning_router
 from app.session import UserRuntime
 
 
@@ -18,8 +18,8 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-app.include_router(geo_info_router)
 app.include_router(auto_router)
+app.include_router(planning_router)
 
 # --------------------------------------------------------------
 # Home

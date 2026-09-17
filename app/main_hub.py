@@ -9,7 +9,10 @@ import secrets
 from contextlib import asynccontextmanager
 import httpx
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
+
+from app.routes_sdk import router as sdk_router
 
 # Configuration
 MAX_IDLE_SECONDS = 600  # 10 minutes
@@ -152,6 +155,8 @@ async def proxy_request(worker_port: int, path: str, request: Request):
 #----------------------------------------------
 
 hub_app = FastAPI(lifespan=lifespan)
+hub_app.include_router(sdk_router)
+hub_app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 
 @hub_app.post("/register")
 async def register_user(user_id: str):

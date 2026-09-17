@@ -1,0 +1,7 @@
+Metadata-Version: 2.4
+Name: cisei-planning-sdk
+Version: 0.1.9
+Summary: Notebook client SDK for the CISEI planning microservice
+Requires-Python: >=3.10
+Requires-Dist: requests>=2.28.0
+Requires-Dist: tomlkit>=0.12.0

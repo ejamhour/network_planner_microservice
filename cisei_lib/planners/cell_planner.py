@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
-from math import atan2, degrees, inf, sqrt
+from math import atan2, degrees, sqrt
 from typing import Any
 
+from cisei_lib.planners.cell_planning_solution import CellPlanningSolution
 from cisei_lib.planners.graph_planner import GraphPlanner
 from cisei_lib.planners.planning_scenario import PlanningScenario
 
@@ -500,47 +501,20 @@ class CellPlanner:
 
         The table reports each client interface, whether it was served, its
         selected parent interface/site, the selected edge metric and final rank.
+        This is a compatibility wrapper around ``CellPlanningSolution``; final
+        result interpretation belongs to solution classes.
         """
-        rows = []
-        rpl = self.graph.rpl
-        graph = rpl.G_res if rpl is not None else None
-
-        for node in self.graph.rpl_nodes:
-            if node.connected or node.extra.get("tech") != self.primary_tech:
-                continue
-
-            parent = None
-            metric = None
-            rank = inf
-            if graph is not None and node.node_id in graph:
-                data = graph.nodes[node.node_id]
-                parent = data.get("parent")
-                rank = data.get("rank", inf)
-                if parent is not None and graph.has_edge(node.node_id, parent):
-                    metric = graph.edges[node.node_id, parent].get("metric")
-
-            parent_site_id = None
-            parent_tech = None
-            if parent is not None and graph is not None and parent in graph:
-                parent_extra = graph.nodes[parent].get("extra", {})
-                parent_site_id = parent_extra.get("site_id")
-                parent_tech = parent_extra.get("tech")
-
-            rows.append(
-                {
-                    "site_id": node.extra.get("site_id"),
-                    "node_id": node.node_id,
-                    "tech": node.extra.get("tech"),
-                    "served": parent is not None,
-                    "parent": parent,
-                    "parent_site_id": parent_site_id,
-                    "parent_tech": parent_tech,
-                    "metric": metric,
-                    "rank": rank,
-                }
-            )
-
-        return self._table(rows)
+        if self.graph.rpl is None:
+            raise RuntimeError("RPL was not run")
+        result = self.graph.to_result_dict(
+            include_candidates=False,
+            include_metrics=True,
+            include_features=False,
+        )
+        solution = CellPlanningSolution.from_result(result)
+        return self._table(
+            solution.service_table(primary_tech=self.primary_tech)
+        )
 
     # Internal sector helpers ------------------------------------------------
 

@@ -1,0 +1,48 @@
+{
+  "format": "cisei-feature-cache",
+  "version": 1,
+  "entries": [
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.423532434217368,
+          -49.29399235240344
+        ],
+        "rx": [
+          -25.42777449459199,
+          -49.2655361005508
+        ],
+        "tx_ha": 100.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 101.13,
+        "dist_m": 2901.0,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 52.07,
+          "fresnel": 164.76,
+          "boundary": 358.9
+        },
+        "terrain_peaks_vv": [],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": -0.05,
+        "tx_near_terminal_clearance_m": 97.38,
+        "rx_near_terminal_clearance_m": 9.08
+      }
+    }
+  ]
+}

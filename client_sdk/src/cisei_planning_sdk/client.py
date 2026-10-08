@@ -6,8 +6,10 @@ from uuid import uuid4
 
 import requests
 
-from cisei_planning_sdk.bundle import load_scenario_bundle
+from cisei_planning_sdk.local_io import load_scenario_bundle
+from cisei_planning_sdk.workspace import init_workspace
 from cisei_planning_sdk.session import ScenarioSession
+from cisei_planning_sdk.project import PlanningProject
 
 
 class PlanningClient:
@@ -24,18 +26,31 @@ class PlanningClient:
         self,
         base_url: str,
         *,
+        workspace: str | Path | None = None,
         user_id: str | None = None,
         token: str | None = None,
         auto_register: bool = True,
         timeout: float = 120.0,
     ) -> None:
         self.base_url = base_url.rstrip("/")
+        self.workspace = _find_workspace(workspace)
+        self.project: PlanningProject | None = None
         self.user_id = user_id or f"notebook-{uuid4().hex[:12]}"
         self.token = token
         self.timeout = timeout
         self.session = requests.Session()
         if auto_register and self.token is None:
             self.connect()
+
+    def init_workspace(self, path: str | Path | None = None) -> Path:
+        """Download examples into this client's workspace without overwriting files."""
+        self.workspace = init_workspace(
+            path if path is not None else self.workspace,
+            base_url=self.base_url,
+            timeout=self.timeout,
+        )
+        self.project = None
+        return self.workspace
 
     def connect(self, *, reset: bool = True) -> "PlanningClient":
         """
@@ -77,6 +92,8 @@ class PlanningClient:
             devices and interfaces. It does not build candidate edges, compute
             metrics, solve, or evaluate.
         """
+        if self.project is None:
+            raise RuntimeError("No active project. Open a project before defining a scenario.")
         scenario_json = self._scenario_json(scenario)
         response = self._request(
             "post",
@@ -95,7 +112,67 @@ class PlanningClient:
             summary=data.get("summary", {}),
             validation_errors=data.get("validation_errors", []),
             scenario=data.get("scenario"),
+            project=self.project,
         )
+
+    def open_project(
+        self,
+        project: str | Path | PlanningProject,
+        *,
+        planner: str = "graph",
+        name: str | None = None,
+    ) -> ScenarioSession:
+        """Define a project's scenario and import its raw feature cache if present.
+
+        The project must be inside this client's ``workspace/projects``
+        directory and contain ``scenario.toml``. A successful open makes it
+        the active client project. Opening another project replaces that active
+        reference; each returned session retains the project it opened.
+        """
+        if not isinstance(project, PlanningProject):
+            project = PlanningProject(project)
+
+        projects_root = (self.workspace / "projects").resolve()
+        if not project.path.is_relative_to(projects_root):
+            raise ValueError(
+                f"Project must be inside the workspace projects directory: {projects_root}"
+            )
+        if not project.scenario_path.is_file():
+            raise FileNotFoundError(f"Project scenario not found: {project.scenario_path}")
+
+        cache = project.load_features() if project.features_path.exists() else None
+        previous_project = self.project
+        self.project = project
+        try:
+            scenario = self.define_scenario(
+                name=name or project.name,
+                scenario=project.scenario_path,
+                planner=planner,
+            )
+            if cache is not None:
+                scenario.import_feature_cache(cache)
+            return scenario
+        except Exception:
+            self.project = previous_project
+            raise
+
+    def antenna_path(self, path: str | Path) -> Path:
+        """Resolve a shared antenna-library file using workspace conventions."""
+        return self._library_path(path, "antennas")
+
+    def metric_path(self, path: str | Path) -> Path:
+        """Resolve a shared metric file using workspace conventions."""
+        return self._library_path(path, "metrics")
+
+    def _library_path(self, path: str | Path, directory: str) -> Path:
+        candidate = Path(path).expanduser()
+        if candidate.is_absolute():
+            return candidate.resolve()
+        if len(candidate.parts) == 1:
+            return (self.workspace / directory / candidate).resolve()
+        if candidate.parts[0] == directory:
+            return (self.workspace / candidate).resolve()
+        return candidate.resolve()
 
     def evaluate_result(
         self,
@@ -186,3 +263,29 @@ def _json_value(value: Any) -> Any:
     if isinstance(value, float):
         return value if value == value and value not in {float("inf"), float("-inf")} else None
     return value
+
+
+def _find_workspace(path: str | Path | None) -> Path:
+    """Resolve an existing workspace without creating one implicitly."""
+    if path is not None:
+        candidates = [Path(path).expanduser().resolve()]
+    else:
+        current = Path.cwd().resolve()
+        candidates = [current]
+        if current.name == "notebooks":
+            candidates.append(current.parent)
+        candidates.append(current / "cisei_workspace")
+
+    checked: list[Path] = []
+    for candidate in candidates:
+        if candidate in checked:
+            continue
+        checked.append(candidate)
+        if candidate.is_dir() and (candidate / "projects").is_dir():
+            return candidate
+
+    locations = ", ".join(str(candidate) for candidate in checked)
+    raise FileNotFoundError(
+        "Planning workspace not found. Initialize one first or pass workspace=. "
+        f"Checked: {locations}"
+    )

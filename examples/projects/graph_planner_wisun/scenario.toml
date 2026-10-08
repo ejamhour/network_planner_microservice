@@ -1,0 +1,70 @@
+ [scenario]
+working_crs = "EPSG:31982"
+
+[antennas.wisun_gateway_omni]
+kind = "omni"
+description = "Wi-SUN gateway omnidirectional antenna"
+height_m = 7.0
+gain_dbi = 6.0
+
+[antennas.wisun_node_omni]
+kind = "omni"
+description = "Wi-SUN node omnidirectional antenna"
+height_m = 7.0
+gain_dbi = 3.0
+
+[interfaces.wisun_gateway]
+tech = "wisun"
+freq_mhz = 915.0
+tx_power_dbm = 30.0
+antenna_id = "wisun_gateway_omni"
+can_relay = true
+
+[interfaces.wisun_node]
+tech = "wisun"
+freq_mhz = 915.0
+tx_power_dbm = 23.0
+antenna_id = "wisun_node_omni"
+can_relay = true
+
+[interfaces.wisun_leaf]
+tech = "wisun"
+freq_mhz = 915.0
+tx_power_dbm = 20.0
+antenna_id = "wisun_node_omni"
+can_relay = false
+
+[devices.wisun_gateway]
+kind = "gateway"
+connected = true
+can_route = true
+rank = 0.0
+interfaces = ["wisun_gateway"]
+
+[devices.wisun_router]
+kind = "router"
+connected = false
+can_route = true
+interfaces = ["wisun_node"]
+
+[devices.wisun_leaf]
+kind = "leaf"
+connected = false
+can_route = false
+interfaces = ["wisun_leaf"]
+
+[metrics.wisun]
+spec = "default"
+
+[instances]
+source = "nodes.csv"
+format = "csv"
+profile_column = "device_profile"
+
+[[net.connectivity]]
+kind = "rf"
+tech = "wisun"
+source = "relay"
+destination = "any"
+degree = 3
+limit = 3000.0

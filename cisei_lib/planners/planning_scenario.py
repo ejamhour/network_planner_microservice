@@ -114,6 +114,7 @@ class PlanningScenario:
         self.site_nodes: dict[str, SiteNode] = {}
         self.connectivity_rules: dict[str, dict[str, Any]] = {}
         self.metric_specs_by_tech: dict[str, Any] = {}
+        self.antenna_library: dict[str, Any] = {"antennas": []}
         self.candidate_edges: list[tuple[str, str]] = []
         self.candidate_edge_attrs: dict[tuple[str, str], dict[str, Any]] = {}
         self.instance_source: dict[str, Any] = {}
@@ -146,6 +147,11 @@ class PlanningScenario:
         scenario = cls(
             working_crs=working_crs or scenario_config.get("working_crs")
         )
+
+        if "antenna_library" in config:
+            from cisei_lib.planners.antenna_planner import antenna_models_from_config
+            antenna_models_from_config(config["antenna_library"])
+            scenario.antenna_library = deepcopy(config["antenna_library"])
 
         for profile_id, antenna_config in config.get("antennas", {}).items():
             scenario.add_antenna_profile(
@@ -1115,6 +1121,8 @@ class PlanningScenario:
             connectivity rules and manual candidate edges are exported.
         """
         config: dict[str, Any] = {}
+        if self.antenna_library["antennas"]:
+            config["antenna_library"] = deepcopy(self.antenna_library)
         if self.working_crs is not None:
             config["scenario"] = {"working_crs": self.working_crs}
 

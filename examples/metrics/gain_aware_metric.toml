@@ -1,0 +1,6 @@
+# Demonstration cost, not a calibrated RF link-budget model.
+version = 1
+result = "metric"
+
+[expressions]
+metric = "1.0 + features.dist_m / 1000.0 + 20.0 / (1.0 + max(0.0, tx.ant_gain + rx.ant_gain))"

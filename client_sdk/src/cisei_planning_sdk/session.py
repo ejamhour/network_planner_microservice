@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
+
+from cisei_planning_sdk.local_io import load_antenna_library, load_metric_spec
 
 
 @dataclass
@@ -39,11 +42,108 @@ class ScenarioSession:
     solution: dict[str, Any] | None = None
     evaluation: dict[str, Any] | None = None
     result: dict[str, Any] | None = None
+    project: Any = None
+
+    def link(self, geo: Any, src_interface: str, dst_interface: str) -> Any:
+        """Prepare two compatible interfaces in an explicitly supplied features client.
+
+        Reads the current server scenario. Uses device mount heights and interface
+        frequency exactly as planning extraction does. Does not alter planning
+        metrics or register/close the caller's features session.
+        """
+        from cisei_planning_sdk.link_browser import prepare_link
+        return prepare_link(self, geo, src_interface, dst_interface)
+
+    def browse_links(self, geo: Any, edges: list[dict[str, Any]]) -> Any:
+        """Browse candidate_edges or planned_edges using the same interface resolver."""
+        from cisei_planning_sdk.link_browser import LinkBrowser
+        return LinkBrowser(self, geo, edges)
+
+    def show_link_browser(self, geo: Any, edges: list[dict[str, Any]]) -> Any:
+        """Open a notebook panel for selecting and inspecting candidate or solution links.
+
+        Provides a link list, Previous/Next buttons and inspection choices.
+        Prepares the first link and shows its profile. Does not change planning
+        metrics or own/register the supplied features session. Requires the
+        notebook extra. The returned panel exposes its selected link as current.
+        """
+        from cisei_planning_sdk.link_panel import LinkInspectionPanel
+        panel = LinkInspectionPanel(self, geo, edges)
+        panel.show()
+        return panel
+
+    def get_candidate_links(self) -> list[dict[str, Any]]:
+        """Retrieve existing geographic candidates, excluding internal connections.
+
+        Does not build candidates, compute metrics, or contact features.
+        """
+        from copy import deepcopy
+        return deepcopy([edge for edge in self.get_candidate_edges()["candidate_edges"]
+                         if edge.get("kind") != "internal"])
+
+    def get_solution_links(self) -> list[dict[str, Any]]:
+        """Retrieve existing geographic solution links, excluding internal connections.
+
+        Requires a saved solution; does not solve or contact features.
+        """
+        from copy import deepcopy
+        solution = self.get_solution()["planned_edges"]
+        internal = {frozenset((edge["src"], edge["dst"]))
+                    for edge in self.get_candidate_edges()["candidate_edges"]
+                    if edge.get("kind") == "internal"}
+        return deepcopy([edge for edge in solution if edge.get("kind") != "internal"
+                         and frozenset((edge["src"], edge["dst"])) not in internal])
+
+    def import_feature_cache(self, document: dict[str, Any]) -> dict[str, Any]:
+        """Upload raw feature records, without modifying any metric or solution."""
+        return self.client._request("post", f"/planning/scenarios/{self.scenario_id}/features/cache",
+                                    json=document)["data"]
+
+    def export_feature_cache(self) -> dict[str, Any]:
+        """Retrieve portable raw features independently of the planning result."""
+        return self.client._request("get", f"/planning/scenarios/{self.scenario_id}/features/cache")["data"]
+
+    def save_feature_cache(self) -> Path:
+        if self.project is None:
+            raise ValueError("Open a project before saving its feature cache")
+        return self.project.save_features(self.export_feature_cache())
 
     @property
     def ok(self) -> bool:
         """Return true when the server accepted the scenario without errors."""
         return not self.validation_errors
+
+    def upload_configuration(
+        self,
+        *,
+        antenna_library: str | Path | dict[str, Any] | None = None,
+        antennas: dict[str, dict[str, Any]] | None = None,
+        metrics: dict[str, str | Path | dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        """Upload scenario-local antenna models/profiles and metric specifications.
+
+        ``antenna_library`` accepts a YAML/JSON file or parsed library document.
+        ``antennas`` maps scenario profile ids to profile settings (including
+        ``model_id``). ``metrics`` maps technologies to local TOML file paths
+        or inline ``{"spec": ...}`` / ``{"formula": ...}`` dictionaries.
+        Files are read locally; only their contents reach the API. On success,
+        rebuild candidates, recompute metrics and solve again.
+        """
+        library = (load_antenna_library(self.client.antenna_path(antenna_library))
+                   if isinstance(antenna_library, (str, Path)) else antenna_library)
+        specs = {tech: load_metric_spec(self.client.metric_path(value))
+                 if isinstance(value, (str, Path)) else value
+                 for tech, value in (metrics or {}).items()}
+        payload = self.client._request(
+            "post", f"/planning/scenarios/{self.scenario_id}/configuration",
+            json={"antenna_library": library, "antennas": antennas or {}, "metrics": specs},
+        )
+        data = payload["data"]
+        self.scenario = data["scenario"]
+        self.summary = data["summary"]
+        self.validation_errors = data["validation_errors"]
+        self.candidate_edges = self.metrics = self.solution = self.evaluation = self.result = None
+        return data
 
     def refresh(self) -> "ScenarioSession":
         """
@@ -151,6 +251,8 @@ class ScenarioSession:
             },
         )
         self.metrics = payload["data"]
+        if self.project is not None:
+            self.save_feature_cache()
         return self.metrics
 
     def get_metrics(
@@ -172,6 +274,15 @@ class ScenarioSession:
         )
         self.metrics = payload["data"]
         return self.metrics
+
+    def show_metrics(self) -> None:
+        """Show the saved link metrics as a notebook table.
+
+        Reloads metrics without computing them. The data remains available in
+        self.metrics. Requires the notebook extra.
+        """
+        from cisei_planning_sdk.visualization import show_metrics
+        show_metrics(self.get_metrics())
 
     def solve(self) -> dict[str, Any]:
         """
@@ -232,6 +343,24 @@ class ScenarioSession:
         )
         self.metrics = payload["data"]
         return self.metrics
+
+    def show_evaluation(
+        self,
+        *,
+        rank_threshold: float,
+        primary_tech: str = "lte",
+        solution_kind: str | None = None,
+    ) -> None:
+        """Evaluate the saved solution and show all quality tables in Jupyter.
+
+        The report remains available in self.evaluation. Does not solve or save;
+        use save_result(rank_threshold=...) to persist the evaluated result.
+        Requires the notebook extra.
+        """
+        from cisei_planning_sdk.visualization import show_evaluation
+        report = self.evaluate(rank_threshold=rank_threshold,
+                               primary_tech=primary_tech, solution_kind=solution_kind)
+        show_evaluation(report)
 
     def evaluate(
         self,
@@ -300,6 +429,32 @@ class ScenarioSession:
             params=params,
         )
         self.result = payload["data"]
+        return self.result
+
+    def save_result(
+        self,
+        *,
+        include_features: bool = False,
+        rank_threshold: float | None = None,
+        primary_tech: str = "lte",
+        solution_kind: str | None = None,
+    ) -> Path:
+        """Export the live result into the active project's ``result.json``."""
+        if self.project is None:
+            raise ValueError("Open a project before saving its result")
+        result = self.export_result(
+            include_features=include_features,
+            rank_threshold=rank_threshold,
+            primary_tech=primary_tech,
+            solution_kind=solution_kind,
+        )
+        return self.project.save_result(result)
+
+    def load_result(self) -> dict[str, Any]:
+        """Load the active project's saved ``result.json``."""
+        if self.project is None:
+            raise ValueError("Open a project before loading its result")
+        self.result = self.project.load_result()
         return self.result
 
     def export_scenario(self) -> dict[str, Any]:

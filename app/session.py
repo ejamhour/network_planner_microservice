@@ -21,6 +21,7 @@ class UserRuntime:
     def __init__(self):
         self.planning_scenarios = {}
         self.planning_planners = {}
+        self.feature_caches = {}
         self.geo_pools: dict[tuple[Any, ...], AsyncGeoServicePool] = {}
 
     async def get_geo_pool(

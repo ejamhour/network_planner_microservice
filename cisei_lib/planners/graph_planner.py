@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import cisei_lib.planners.metric_compiler as mc
-from cisei_lib.planners.antenna_planner import AntennaPlanner
+from cisei_lib.planners.antenna_planner import AntennaPlanner, antenna_models_from_config
 from cisei_lib.planners.geo_rpl_agnostic import GeoRPL
 from cisei_lib.planners.planner_classes import AntennaSpec, RPLNode, SiteNode
 from cisei_lib.planners.planning_scenario import PlanningScenario
@@ -113,6 +113,7 @@ class GraphPlanner:
             Callable[[Mapping[str, Any]], float],
         ] = {}
         self.antenna_planner = AntennaPlanner()
+        self.antenna_planner.models.update(antenna_models_from_config(scenario.antenna_library))
         self.rpl: GeoRPL | None = None
 
         if scenario.metric_specs_by_tech:

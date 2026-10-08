@@ -21,3 +21,19 @@ __pycache__/
 *.log
 .env
 .venv/
+
+# Local credentials, caches and generated files
+.env.*
+!.env.example
+.Trash-*/
+.codex_tmp/
+.pytest_cache/
+.ipynb_checkpoints/
+pytest-cache-files-*/
+tmp/
+home/
+release/
+dist/
+build/
+*.egg-info/
+tests/jupyter/cisei_workspace/

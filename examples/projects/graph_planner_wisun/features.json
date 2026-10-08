@@ -1,0 +1,1136 @@
+{
+  "format": "cisei-feature-cache",
+  "version": 1,
+  "entries": [
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.43273083515008,
+          -49.339207159685344
+        ],
+        "rx": [
+          -25.427866914897244,
+          -49.34300062825045
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 92.75,
+        "dist_m": 660.27,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 5,
+          "boundary": 73.75
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 0,
+          "fresnel": 18.59,
+          "boundary": 66.82
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 0.38,
+            "d_norm": 0.37
+          }
+        ],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.0,
+        "tx_near_terminal_clearance_m": 5.23,
+        "rx_near_terminal_clearance_m": 5.4
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.43273083515008,
+          -49.339207159685344
+        ],
+        "rx": [
+          -25.42658426446721,
+          -49.33074015773234
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 96.25,
+        "dist_m": 1090.47,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 17.39,
+          "fresnel": 76.55,
+          "boundary": 338.92
+        },
+        "terrain_peaks_vv": [],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.0,
+        "tx_near_terminal_clearance_m": 10.66,
+        "rx_near_terminal_clearance_m": 10.9
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.43273083515008,
+          -49.339207159685344
+        ],
+        "rx": [
+          -25.423934116093907,
+          -49.32557536250079
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 98.83,
+        "dist_m": 1682.31,
+        "delta_diffra": 26.52,
+        "terrain": {
+          "core": 160,
+          "fresnel": 191.25,
+          "boundary": 274.38
+        },
+        "vegetation": {
+          "core": 170,
+          "fresnel": 147.5,
+          "boundary": 118.12
+        },
+        "buildings": {
+          "core": 10.03,
+          "fresnel": 394.8,
+          "boundary": 742.19
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 2.11,
+            "d_norm": 0.74
+          }
+        ],
+        "max_obstruction_angle_rad": 0.03,
+        "tx_rx_elevation_angle_rad": 0.0,
+        "tx_near_terminal_clearance_m": 10.69,
+        "rx_near_terminal_clearance_m": 4.32
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.425356577135183,
+          -49.29212222420152
+        ],
+        "rx": [
+          -25.423532434217368,
+          -49.29399235240344
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 100.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 85.5,
+        "dist_m": 276.1,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "terrain_peaks_vv": [],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.32,
+        "tx_near_terminal_clearance_m": 25.23,
+        "rx_near_terminal_clearance_m": 90.1
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.425356577135183,
+          -49.29212222420152
+        ],
+        "rx": [
+          -25.42762385746652,
+          -49.28564299624496
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 93.16,
+        "dist_m": 698.52,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 12.5
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 25.16,
+          "fresnel": 228.7,
+          "boundary": 588.4
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 0.13,
+            "d_norm": 0.47
+          }
+        ],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": -0.04,
+        "tx_near_terminal_clearance_m": 5.98,
+        "rx_near_terminal_clearance_m": 8.14
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.425356577135183,
+          -49.29212222420152
+        ],
+        "rx": [
+          -25.428858965702883,
+          -49.31129716330312
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 99.62,
+        "dist_m": 1967.6,
+        "delta_diffra": 22.0,
+        "terrain": {
+          "core": 280,
+          "fresnel": 275,
+          "boundary": 371.25
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 109.66,
+          "fresnel": 664.17,
+          "boundary": 658.17
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 1.64,
+            "d_norm": 0.4
+          },
+          {
+            "v_v": 0.61,
+            "d_norm": 0.54
+          },
+          {
+            "v_v": 0.17,
+            "d_norm": 0.1
+          }
+        ],
+        "max_obstruction_angle_rad": 0.01,
+        "tx_rx_elevation_angle_rad": -0.03,
+        "tx_near_terminal_clearance_m": 7.07,
+        "rx_near_terminal_clearance_m": 8.19
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42762385746652,
+          -49.28564299624496
+        ],
+        "rx": [
+          -25.423532434217368,
+          -49.29399235240344
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 100.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 95.36,
+        "dist_m": 954.43,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 62.5
+        },
+        "terrain_peaks_vv": [],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.13,
+        "tx_near_terminal_clearance_m": 12.8,
+        "rx_near_terminal_clearance_m": 95.58
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42762385746652,
+          -49.28564299624496
+        ],
+        "rx": [
+          -25.43017531546412,
+          -49.266232140399694
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 30.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 99.63,
+        "dist_m": 1973.02,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 71.88
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 179.44,
+          "fresnel": 1048.17,
+          "boundary": 1787.09
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 0.35,
+            "d_norm": 0.45
+          },
+          {
+            "v_v": 0.01,
+            "d_norm": 0.33
+          }
+        ],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.01,
+        "tx_near_terminal_clearance_m": 8.38,
+        "rx_near_terminal_clearance_m": 28.76
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.423532434217368,
+          -49.29399235240344
+        ],
+        "rx": [
+          -25.428858965702883,
+          -49.31129716330312
+        ],
+        "tx_ha": 100.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 99.29,
+        "dist_m": 1838.13,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "terrain_peaks_vv": [],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": -0.08,
+        "tx_near_terminal_clearance_m": 94.22,
+        "rx_near_terminal_clearance_m": 10.92
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42070918830469,
+          -49.31329361366074
+        ],
+        "rx": [
+          -25.428858965702883,
+          -49.31129716330312
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 95.15,
+        "dist_m": 924.9,
+        "delta_diffra": 33.89,
+        "terrain": {
+          "core": 590,
+          "fresnel": 575,
+          "boundary": 530
+        },
+        "vegetation": {
+          "core": 20,
+          "fresnel": 23.75,
+          "boundary": 46.25
+        },
+        "buildings": {
+          "core": 0,
+          "fresnel": 13.43,
+          "boundary": 37.91
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 3.79,
+            "d_norm": 0.23
+          }
+        ],
+        "max_obstruction_angle_rad": 0.1,
+        "tx_rx_elevation_angle_rad": -0.04,
+        "tx_near_terminal_clearance_m": -0.86,
+        "rx_near_terminal_clearance_m": 8.12
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42070918830469,
+          -49.31329361366074
+        ],
+        "rx": [
+          -25.42866218833271,
+          -49.32240532765344
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 97.22,
+        "dist_m": 1271.39,
+        "delta_diffra": 36.24,
+        "terrain": {
+          "core": 1000,
+          "fresnel": 946.25,
+          "boundary": 911.25
+        },
+        "vegetation": {
+          "core": 30,
+          "fresnel": 12.5,
+          "boundary": 15
+        },
+        "buildings": {
+          "core": 12.69,
+          "fresnel": 121.97,
+          "boundary": 514.1
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 4.17,
+            "d_norm": 0.26
+          }
+        ],
+        "max_obstruction_angle_rad": 0.09,
+        "tx_rx_elevation_angle_rad": -0.01,
+        "tx_near_terminal_clearance_m": 0.49,
+        "rx_near_terminal_clearance_m": 2.27
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42070918830469,
+          -49.31329361366074
+        ],
+        "rx": [
+          -25.423934116093907,
+          -49.32557536250079
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 97.29,
+        "dist_m": 1286.18,
+        "delta_diffra": 32.42,
+        "terrain": {
+          "core": 590,
+          "fresnel": 588.75,
+          "boundary": 595.62
+        },
+        "vegetation": {
+          "core": 90,
+          "fresnel": 96.25,
+          "boundary": 84.38
+        },
+        "buildings": {
+          "core": 117.33,
+          "fresnel": 479.16,
+          "boundary": 510.65
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 3.11,
+            "d_norm": 0.42
+          },
+          {
+            "v_v": 1.48,
+            "d_norm": 0.8
+          }
+        ],
+        "max_obstruction_angle_rad": 0.04,
+        "tx_rx_elevation_angle_rad": 0.02,
+        "tx_near_terminal_clearance_m": 9.89,
+        "rx_near_terminal_clearance_m": 8.14
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.427866914897244,
+          -49.34300062825045
+        ],
+        "rx": [
+          -25.42658426446721,
+          -49.33074015773234
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 97.07,
+        "dist_m": 1241.54,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 35
+        },
+        "vegetation": {
+          "core": 50,
+          "fresnel": 75,
+          "boundary": 61.88
+        },
+        "buildings": {
+          "core": 14.71,
+          "fresnel": 186.86,
+          "boundary": 283.5
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 0.26,
+            "d_norm": 0.66
+          }
+        ],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": -0.01,
+        "tx_near_terminal_clearance_m": 8.23,
+        "rx_near_terminal_clearance_m": 10.55
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.427866914897244,
+          -49.34300062825045
+        ],
+        "rx": [
+          -25.423934116093907,
+          -49.32557536250079
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 99.2,
+        "dist_m": 1806.3,
+        "delta_diffra": 9.56,
+        "terrain": {
+          "core": 0,
+          "fresnel": 112.5,
+          "boundary": 183.12
+        },
+        "vegetation": {
+          "core": 290,
+          "fresnel": 256.25,
+          "boundary": 240
+        },
+        "buildings": {
+          "core": 35.49,
+          "fresnel": 205.46,
+          "boundary": 320.67
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 0.89,
+            "d_norm": 0.45
+          }
+        ],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.0,
+        "tx_near_terminal_clearance_m": 6.33,
+        "rx_near_terminal_clearance_m": 9.8
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42866218833271,
+          -49.32240532765344
+        ],
+        "rx": [
+          -25.423934116093907,
+          -49.32557536250079
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 92.2,
+        "dist_m": 613.22,
+        "delta_diffra": 25.83,
+        "terrain": {
+          "core": 120,
+          "fresnel": 113.75,
+          "boundary": 107.5
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 25.04,
+          "fresnel": 123.31,
+          "boundary": 213.06
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 2.38,
+            "d_norm": 0.09
+          }
+        ],
+        "max_obstruction_angle_rad": 0.1,
+        "tx_rx_elevation_angle_rad": 0.06,
+        "tx_near_terminal_clearance_m": -5.54,
+        "rx_near_terminal_clearance_m": 8.92
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42866218833271,
+          -49.32240532765344
+        ],
+        "rx": [
+          -25.435107506699588,
+          -49.31771087011032
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 94.61,
+        "dist_m": 856.05,
+        "delta_diffra": 27.21,
+        "terrain": {
+          "core": 350,
+          "fresnel": 358.75,
+          "boundary": 314.38
+        },
+        "vegetation": {
+          "core": 40,
+          "fresnel": 25,
+          "boundary": 21.88
+        },
+        "buildings": {
+          "core": 31.13,
+          "fresnel": 61.17,
+          "boundary": 260.23
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 2.03,
+            "d_norm": 0.54
+          },
+          {
+            "v_v": 0.16,
+            "d_norm": 0.25
+          }
+        ],
+        "max_obstruction_angle_rad": 0.03,
+        "tx_rx_elevation_angle_rad": -0.01,
+        "tx_near_terminal_clearance_m": 11.86,
+        "rx_near_terminal_clearance_m": 5.81
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42866218833271,
+          -49.32240532765344
+        ],
+        "rx": [
+          -25.42658426446721,
+          -49.33074015773234
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 94.72,
+        "dist_m": 869.49,
+        "delta_diffra": 27.49,
+        "terrain": {
+          "core": 290,
+          "fresnel": 298.75,
+          "boundary": 281.88
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 12.29,
+          "fresnel": 96.37,
+          "boundary": 244.21
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 2.38,
+            "d_norm": 0.84
+          },
+          {
+            "v_v": 0.74,
+            "d_norm": 0.06
+          }
+        ],
+        "max_obstruction_angle_rad": 0.06,
+        "tx_rx_elevation_angle_rad": 0.04,
+        "tx_near_terminal_clearance_m": 1.08,
+        "rx_near_terminal_clearance_m": 5.34
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.435107506699588,
+          -49.31771087011032
+        ],
+        "rx": [
+          -25.428858965702883,
+          -49.31129716330312
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 95.3,
+        "dist_m": 946.26,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 55.62
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 239.14
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 0.35,
+            "d_norm": 0.11
+          },
+          {
+            "v_v": 0.13,
+            "d_norm": 0.26
+          }
+        ],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": -0.02,
+        "tx_near_terminal_clearance_m": 4.83,
+        "rx_near_terminal_clearance_m": 7.84
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.435107506699588,
+          -49.31771087011032
+        ],
+        "rx": [
+          -25.423934116093907,
+          -49.32557536250079
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 98.08,
+        "dist_m": 1469.01,
+        "delta_diffra": 15.49,
+        "terrain": {
+          "core": 200,
+          "fresnel": 207.5,
+          "boundary": 230
+        },
+        "vegetation": {
+          "core": 40,
+          "fresnel": 25,
+          "boundary": 26.25
+        },
+        "buildings": {
+          "core": 84.6,
+          "fresnel": 350.15,
+          "boundary": 431.24
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 1.18,
+            "d_norm": 0.24
+          },
+          {
+            "v_v": 0.11,
+            "d_norm": 0.65
+          }
+        ],
+        "max_obstruction_angle_rad": 0.0,
+        "tx_rx_elevation_angle_rad": 0.03,
+        "tx_near_terminal_clearance_m": 4.61,
+        "rx_near_terminal_clearance_m": 8.73
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.428858965702883,
+          -49.31129716330312
+        ],
+        "rx": [
+          -25.42866218833271,
+          -49.32240532765344
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 96.41,
+        "dist_m": 1117.66,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 20,
+          "boundary": 45
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 67.95,
+          "fresnel": 211.73,
+          "boundary": 209.9
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 0.47,
+            "d_norm": 0.39
+          }
+        ],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.02,
+        "tx_near_terminal_clearance_m": 8.17,
+        "rx_near_terminal_clearance_m": 7.46
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42777449459199,
+          -49.2655361005508
+        ],
+        "rx": [
+          -25.43017531546412,
+          -49.266232140399694
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 30.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 85.46,
+        "dist_m": 275.02,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 54.06
+        },
+        "terrain_peaks_vv": [],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.07,
+        "tx_near_terminal_clearance_m": 16.23,
+        "rx_near_terminal_clearance_m": 25.87
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42777449459199,
+          -49.2655361005508
+        ],
+        "rx": [
+          -25.42762385746652,
+          -49.28564299624496
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 99.75,
+        "dist_m": 2022.78,
+        "delta_diffra": 24.71,
+        "terrain": {
+          "core": 750,
+          "fresnel": 705,
+          "boundary": 687.5
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 277.27,
+          "fresnel": 1267.37,
+          "boundary": 1463.07
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 1.94,
+            "d_norm": 0.54
+          }
+        ],
+        "max_obstruction_angle_rad": 0.01,
+        "tx_rx_elevation_angle_rad": 0.01,
+        "tx_near_terminal_clearance_m": 11.82,
+        "rx_near_terminal_clearance_m": 7.24
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.42777449459199,
+          -49.2655361005508
+        ],
+        "rx": [
+          -25.425356577135183,
+          -49.29212222420152
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 100.89,
+        "dist_m": 2687.91,
+        "delta_diffra": 17.15,
+        "terrain": {
+          "core": 290,
+          "fresnel": 345,
+          "boundary": 488.12
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 393.76,
+          "fresnel": 1592.76,
+          "boundary": 1422.5
+        },
+        "terrain_peaks_vv": [
+          {
+            "v_v": 1.25,
+            "d_norm": 0.4
+          }
+        ],
+        "max_obstruction_angle_rad": 0.0,
+        "tx_rx_elevation_angle_rad": 0.02,
+        "tx_near_terminal_clearance_m": 8.97,
+        "rx_near_terminal_clearance_m": 7.07
+      }
+    },
+    {
+      "source": "http://planning-service:8080",
+      "request": {
+        "tx": [
+          -25.43017531546412,
+          -49.266232140399694
+        ],
+        "rx": [
+          -25.425356577135183,
+          -49.29212222420152
+        ],
+        "tx_ha": 30.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 915.0,
+        "options": {}
+      },
+      "features": {
+        "fspl": 100.85,
+        "dist_m": 2658.63,
+        "delta_diffra": 0,
+        "terrain": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "vegetation": {
+          "core": 0,
+          "fresnel": 0,
+          "boundary": 0
+        },
+        "buildings": {
+          "core": 64.1,
+          "fresnel": 480.24,
+          "boundary": 1473.72
+        },
+        "terrain_peaks_vv": [],
+        "max_obstruction_angle_rad": 0,
+        "tx_rx_elevation_angle_rad": 0.01,
+        "tx_near_terminal_clearance_m": 29.44,
+        "rx_near_terminal_clearance_m": 7.99
+      }
+    }
+  ]
+}

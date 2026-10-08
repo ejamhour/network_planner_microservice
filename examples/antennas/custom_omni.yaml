@@ -1,0 +1,9 @@
+version: 1
+antennas:
+  - id: custom_omni
+    type: omni
+    model: Example constant-gain antenna
+    frequency_mhz: [902, 928]
+    patterns:
+      - frequency_mhz: 915
+        max_gain_dbi: 6.0

@@ -1,10 +1,18 @@
 #!/bin/bash
+# Local credentials are excluded from Git.
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$script_dir/.env" ]]; then
+    set -a
+    source "$script_dir/.env"
+    set +a
+fi
+
 # set_minio_env.sh
 # Apply environment variables for PlanApp development container
 
 export MINIO_ENDPOINT="https://s3.ciseiplan.netiswork.pro.br"
-export MINIO_ACCESS_KEY="admin"
-export MINIO_SECRET_KEY="Inicio@123"
+export MINIO_ACCESS_KEY
+export MINIO_SECRET_KEY
 export MINIO_BUCKET="planapp"
 
 export MINIO_HOME_FOLDER="home"

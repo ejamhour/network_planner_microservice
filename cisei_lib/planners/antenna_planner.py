@@ -424,6 +424,13 @@ def load_antenna_library(path: str | Path) -> dict[str, AntennaModel]:
         text = Path(path).read_text(encoding="utf-8")
 
     document = yaml.safe_load(text) or {}
+    return antenna_models_from_config(document)
+
+
+def antenna_models_from_config(document: Mapping[str, Any]) -> dict[str, AntennaModel]:
+    """Validate an in-memory library using the same parser as bundled YAML."""
+    if not isinstance(document, Mapping) or not isinstance(document.get("antennas"), list):
+        raise ValueError("Antenna library requires an 'antennas' list")
     models = {}
     for item in document.get("antennas", []):
         model = _model_from_config(item)

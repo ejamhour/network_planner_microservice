@@ -7,6 +7,7 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Query, Request
 from pydantic import BaseModel, Field
+from app.feature_cache import FeatureCache, CachedGeo
 
 from cisei_lib.planners import (
     CellPlanningSolution,
@@ -33,6 +34,14 @@ class DefineScenarioBody(ScenarioBody):
     """Define or replace a stored planning scenario."""
 
     scenario_id: str | None = None
+
+
+class ScenarioConfigurationBody(BaseModel):
+    """Scenario-local library, antenna profile and metric overrides."""
+
+    antenna_library: dict[str, Any] | None = None
+    antennas: dict[str, dict[str, Any]] = Field(default_factory=dict)
+    metrics: dict[str, str | dict[str, Any]] = Field(default_factory=dict)
 
 
 class CandidateEdgeBuildBody(BaseModel):
@@ -145,6 +154,8 @@ def define_scenario(request: Request, body: DefineScenarioBody):
         runtime = request.app.state.runtime
         runtime.planning_scenarios[scenario_id] = scenario
         runtime.planning_planners.pop(scenario_id, None)
+        if hasattr(runtime, "feature_caches"):
+            runtime.feature_caches.pop(scenario_id, None)
 
         return _ok(
             {
@@ -154,6 +165,66 @@ def define_scenario(request: Request, body: DefineScenarioBody):
                 "scenario": scenario.to_json_dict(include_sites=True),
             }
         )
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.post("/scenarios/{scenario_id}/configuration")
+def upload_configuration(request: Request, scenario_id: str, body: ScenarioConfigurationBody):
+    """Merge local overrides, validate, then clear all computed scenario state.
+
+    Antenna models merge by library id; profiles by profile id; metrics by tech.
+    Nothing is written to the shared server resource files. Rebuild candidates
+    and recompute metrics after a successful update.
+    """
+    try:
+        config = _stored_scenario(request, scenario_id).to_config_dict(include_sites=True)
+        if body.antenna_library is not None:
+            from cisei_lib.planners.antenna_planner import antenna_models_from_config
+            antenna_models_from_config(body.antenna_library)
+            models = {item["id"]: item for item in config.get("antenna_library", {}).get("antennas", [])}
+            models.update({item["id"]: item for item in body.antenna_library["antennas"]})
+            config["antenna_library"] = {"antennas": list(models.values())}
+        for profile_id, overrides in body.antennas.items():
+            config.setdefault("antennas", {}).setdefault(profile_id, {}).update(overrides)
+        config.setdefault("metrics", {}).update(body.metrics)
+        scenario = _scenario_from_dict(config)
+        # Validate and compile before replacing any live scenario state.
+        planner = GraphPlanner(scenario)
+        for antenna in scenario.antenna_profiles.values():
+            if antenna.model_id is not None:
+                planner.antenna_planner.model(antenna.model_id)
+        runtime = request.app.state.runtime
+        runtime.planning_scenarios[scenario_id] = scenario
+        runtime.planning_planners.pop(scenario_id, None)
+        return _ok({
+            "scenario_id": scenario_id,
+            "summary": _scenario_summary(scenario),
+            "validation_errors": [],
+            "scenario": scenario.to_json_dict(include_sites=True),
+            "requires_rebuild": True,
+        })
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.post("/scenarios/{scenario_id}/features/cache")
+def import_feature_cache(request: Request, scenario_id: str, body: dict[str, Any]):
+    try:
+        _stored_scenario(request, scenario_id)
+        cache = FeatureCache.from_document(body)
+        request.app.state.runtime.feature_caches[scenario_id] = cache
+        return _ok({"entries": len(cache.records)})
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.get("/scenarios/{scenario_id}/features/cache")
+def export_feature_cache(request: Request, scenario_id: str):
+    try:
+        _stored_scenario(request, scenario_id)
+        cache = request.app.state.runtime.feature_caches.get(scenario_id, FeatureCache())
+        return _ok(cache.export())
     except Exception as exc:
         return _error(exc)
 
@@ -204,6 +275,8 @@ def delete_scenario(request: Request, scenario_id: str):
     removed = scenario_id in runtime.planning_scenarios
     runtime.planning_scenarios.pop(scenario_id, None)
     runtime.planning_planners.pop(scenario_id, None)
+    if hasattr(runtime, "feature_caches"):
+        runtime.feature_caches.pop(scenario_id, None)
     return _ok({"scenario_id": scenario_id, "removed": removed})
 
 
@@ -327,6 +400,7 @@ async def compute_metrics(
             planner,
             body,
             runtime=request.app.state.runtime,
+            cache=request.app.state.runtime.feature_caches.setdefault(scenario_id, FeatureCache()),
         )
         return _metrics_response(planner, include_features=body.include_features)
     except Exception as exc:
@@ -553,6 +627,7 @@ async def _compute_or_assign_metrics(
     body: MetricComputeBody,
     *,
     runtime=None,
+    cache=None,
 ) -> None:
     if body.edge_metrics is not None:
         planner.edge_metrics = _edge_metric_mapping(body.edge_metrics)
@@ -563,7 +638,8 @@ async def _compute_or_assign_metrics(
             "Reusable runtime is required when edge_metrics are not supplied"
         )
 
-    geo = await runtime.get_geo_pool(
+    geo = CachedGeo(
+        runtime, cache if cache is not None else FeatureCache(),
         base_url=_geo_base_url(body.geo_base_url),
         user_prefix=body.geo_user_prefix,
         pool_size=body.geo_pool_size,
@@ -608,6 +684,8 @@ def _metrics_response(
 
 
 def _solution_response(planner: GraphPlanner):
+    if planner.rpl is None:
+        raise RuntimeError("No saved solution. Compute link metrics and run solve() before inspecting the solution.")
     result = planner.to_result_dict(
         include_candidates=False,
         include_metrics=False,
@@ -646,6 +724,8 @@ def _evaluation_payload(
     primary_tech: str,
     solution_kind: PlannerKind = "graph",
 ) -> dict[str, Any]:
+    if planner.rpl is None:
+        raise RuntimeError("No saved solution. Compute link metrics and run solve() before evaluating the network.")
     result = planner.to_result_dict(
         include_candidates=True,
         include_metrics=True,

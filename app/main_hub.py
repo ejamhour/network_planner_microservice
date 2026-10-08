@@ -1,4 +1,5 @@
 import asyncio
+import os
 import socket
 import secrets
 from typing import Dict
@@ -13,9 +14,10 @@ from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
 from app.routes_sdk import router as sdk_router
+from app.routes_examples import router as examples_router
 
 # Configuration
-MAX_IDLE_SECONDS = 600  # 10 minutes
+MAX_IDLE_SECONDS = int(os.getenv("PLANNING_MAX_IDLE_SECONDS", "3600"))
 
 STARTUP_LOCK = asyncio.Lock()
 
@@ -156,6 +158,7 @@ async def proxy_request(worker_port: int, path: str, request: Request):
 
 hub_app = FastAPI(lifespan=lifespan)
 hub_app.include_router(sdk_router)
+hub_app.include_router(examples_router)
 hub_app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 
 @hub_app.post("/register")

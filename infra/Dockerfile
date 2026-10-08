@@ -5,10 +5,10 @@ ENV PATH="/root/.local/bin:${PATH}"
 ENV PYTHONPATH="/workspaces/network_service" 
 ENV PYTHONUNBUFFERED=1
 
-# Instalação de dependências de sistema necessárias para GDAL [cite: 1]
+# System dependencies for GDAL
 RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ gcc libgdal-dev gdal-bin python3-dev \
-    && rm -rf /var/lib/apt/lists/* [cite: 1]
+    && rm -rf /var/lib/apt/lists/*
 
 # MATCH THIS TO devcontainer.json "workspaceFolder"
 WORKDIR /workspaces/network_service
@@ -24,6 +24,9 @@ RUN python3 -m pip install --upgrade pip && \
 
 # 3. Copy application code
 COPY app/ ./app/
+COPY examples/ ./examples/
+COPY client_sdk/ ./client_sdk/
+RUN python3 -m pip wheel --no-deps --wheel-dir dist ./client_sdk
 
 EXPOSE 8080
 

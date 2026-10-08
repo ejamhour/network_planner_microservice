@@ -1,11 +1,62 @@
 from __future__ import annotations
 
 import csv
+import json
 from math import isfinite
 from pathlib import Path
 from typing import Any
 
 import tomlkit
+import yaml
+
+
+def load_antenna_library(path: str | Path) -> dict[str, Any]:
+    """Read a local YAML or JSON antenna library for a scenario upload."""
+    document = yaml.safe_load(Path(path).expanduser().read_text(encoding="utf-8"))
+    if not isinstance(document, dict) or not isinstance(document.get("antennas"), list):
+        raise ValueError("Antenna library requires an 'antennas' list")
+    return _json_value(document)
+
+
+def load_metric_spec(path: str | Path) -> dict[str, str]:
+    """Embed local metric TOML as text; the service compiles the expression."""
+    text = Path(path).expanduser().read_text(encoding="utf-8")
+    tomlkit.parse(text)
+    return {"spec": text}
+
+
+def save_result(result: dict[str, Any], path: str | Path) -> Path:
+    """Save an exported result as UTF-8 JSON; return its local path.
+
+    Non-finite numbers are stored as null, matching SDK request serialization.
+    This does not export or modify any server-side scenario.
+    """
+    if not isinstance(result, dict):
+        raise TypeError("result must be a dictionary")
+    text = json.dumps(_json_value(result), ensure_ascii=False, indent=2, allow_nan=False)
+    path = Path(path).expanduser()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text + "\n", encoding="utf-8")
+    return path
+
+
+def load_result(path: str | Path) -> dict[str, Any]:
+    """Read a saved result without registering or contacting the service."""
+    result = json.loads(Path(path).expanduser().read_text(encoding="utf-8"))
+    if not isinstance(result, dict):
+        raise ValueError("A planning result must be a JSON object")
+    return result
+
+
+def save_scenario(config: dict[str, Any], path: str | Path) -> Path:
+    """Save a scenario dictionary as a local UTF-8 TOML file."""
+    if not isinstance(config, dict):
+        raise TypeError("config must be a dictionary")
+    text = tomlkit.dumps(_toml_value(config))
+    path = Path(path).expanduser()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.rstrip() + "\n", encoding="utf-8")
+    return path
 
 
 def load_scenario_bundle(path: str | Path) -> dict[str, Any]:
@@ -19,7 +70,7 @@ def load_scenario_bundle(path: str | Path) -> dict[str, Any]:
     The server receives a complete scenario dictionary with no local path
     dependency.
     """
-    path = Path(path)
+    path = Path(path).expanduser()
     config = tomlkit.parse(path.read_text(encoding="utf-8")).unwrap()
     config = _plain(config)
 
@@ -163,6 +214,22 @@ def _plain(value: Any) -> Any:
     if isinstance(value, list):
         return [_plain(item) for item in value]
     return value
+
+
+def _toml_value(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            str(key): _toml_value(item)
+            for key, item in value.items()
+            if item is not None
+        }
+    if isinstance(value, (list, tuple)):
+        if any(item is None for item in value):
+            raise ValueError("TOML arrays cannot contain null values")
+        return [_toml_value(item) for item in value]
+    if isinstance(value, (str, bool, int, float)):
+        return value
+    raise TypeError(f"Unsupported TOML value: {type(value).__name__}")
 
 
 def _first_present(record: dict[str, Any], *keys: str) -> Any:

@@ -1,0 +1,187 @@
+{
+  "working_crs": "EPSG:31982",
+  "counts": {
+    "sites": 2,
+    "rpl_nodes": 2,
+    "candidate_edges": 1,
+    "metric_edges": 1,
+    "planned_nodes": 2,
+    "planned_edges": 1
+  },
+  "rpl_nodes": [
+    {
+      "node_id": "torre:d0:i0",
+      "site_id": "torre",
+      "device_id": "torre:d0",
+      "tech": "antenna_test",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 30.0,
+      "antenna_id": "tower_pctel_boa9028",
+      "mount_height_m": 100.0,
+      "max_links": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 671574.0311870619,
+      "y": 7187056.955815288
+    },
+    {
+      "node_id": "guaira:d0:i0",
+      "site_id": "guaira",
+      "device_id": "guaira:d0",
+      "tech": "antenna_test",
+      "freq_mhz": 915.0,
+      "tx_power_dbm": 20.0,
+      "antenna_id": "leaf_pctel_boa9028",
+      "mount_height_m": 7.0,
+      "max_links": null,
+      "connected": false,
+      "rpl_relay": false,
+      "rank": null,
+      "x": 674430.3328632102,
+      "y": 7186550.168629295
+    }
+  ],
+  "candidate_edges": [
+    {
+      "src": "torre:d0:i0",
+      "dst": "guaira:d0:i0",
+      "src_site": "torre",
+      "dst_site": "guaira",
+      "src_tech": "antenna_test",
+      "dst_tech": "antenna_test",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "rule": "connectivity_0",
+      "tech": "antenna_test",
+      "distance_m": 2900.912359423226
+    }
+  ],
+  "metric_edges": [
+    {
+      "src": "torre:d0:i0",
+      "dst": "guaira:d0:i0",
+      "src_site": "torre",
+      "dst_site": "guaira",
+      "src_tech": "antenna_test",
+      "dst_tech": "antenna_test",
+      "src_freq_mhz": 915.0,
+      "dst_freq_mhz": 915.0,
+      "src_max_links": null,
+      "dst_max_links": null,
+      "src_mount_height_m": 100.0,
+      "dst_mount_height_m": 7.0,
+      "kind": "rf",
+      "rule": "connectivity_0",
+      "tech": "antenna_test",
+      "distance_m": 2900.912359423226,
+      "metric": 5.439461538461538
+    }
+  ],
+  "planned_nodes": [
+    {
+      "node_index": 0,
+      "node_id": "torre:d0:i0",
+      "site_id": "torre",
+      "device_id": "torre:d0",
+      "tech": "antenna_test",
+      "parent": null,
+      "parent_site_id": null,
+      "connected": true,
+      "rpl_relay": true,
+      "rank": 0.0,
+      "x": 671574.0311870619,
+      "y": 7187056.955815288
+    },
+    {
+      "node_index": 1,
+      "node_id": "guaira:d0:i0",
+      "site_id": "guaira",
+      "device_id": "guaira:d0",
+      "tech": "antenna_test",
+      "parent": "torre:d0:i0",
+      "parent_site_id": "torre",
+      "connected": false,
+      "rpl_relay": false,
+      "rank": 5.439461538461538,
+      "x": 674430.3328632102,
+      "y": 7186550.168629295
+    }
+  ],
+  "planned_edges": [
+    {
+      "src": "torre:d0:i0",
+      "dst": "guaira:d0:i0",
+      "metric": 5.439461538461538
+    }
+  ],
+  "evaluation": {
+    "quality_summary": {
+      "rank_threshold": 10.0,
+      "success": true,
+      "total_targets": 1,
+      "good_targets": 1,
+      "poor_targets": 0,
+      "unserved_targets": 0,
+      "counts": {
+        "connected": 1,
+        "good": 1
+      }
+    },
+    "quality": [
+      {
+        "node_index": 0,
+        "node_id": "torre:d0:i0",
+        "site_id": "torre",
+        "device_id": "torre:d0",
+        "tech": "antenna_test",
+        "connected": true,
+        "planned": true,
+        "quality": "connected",
+        "rank": 0.0,
+        "rank_threshold": 10.0,
+        "parent": null,
+        "parent_site_id": null
+      },
+      {
+        "node_index": 1,
+        "node_id": "guaira:d0:i0",
+        "site_id": "guaira",
+        "device_id": "guaira:d0",
+        "tech": "antenna_test",
+        "connected": false,
+        "planned": true,
+        "quality": "good",
+        "rank": 5.439461538461538,
+        "rank_threshold": 10.0,
+        "parent": "torre:d0:i0",
+        "parent_site_id": "torre"
+      }
+    ],
+    "service": [],
+    "result_edges": [
+      {
+        "src": "torre:d0:i0",
+        "dst": "guaira:d0:i0",
+        "kind": "rf",
+        "rule": "connectivity_0",
+        "src_site": "torre",
+        "dst_site": "guaira",
+        "src_tech": "antenna_test",
+        "dst_tech": "antenna_test",
+        "src_freq_mhz": 915.0,
+        "dst_freq_mhz": 915.0,
+        "src_max_links": null,
+        "dst_max_links": null,
+        "src_mount_height_m": 100.0,
+        "dst_mount_height_m": 7.0,
+        "metric": 5.439461538461538
+      }
+    ]
+  }
+}

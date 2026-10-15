@@ -13,7 +13,8 @@ from app.session import UserRuntime
 from cisei_planning_sdk import PlanningClient, PlanningProject, init_workspace
 
 
-def test_project_reuses_persisted_features_after_worker_restart(tmp_path):
+@pytest.mark.parametrize("batch_size", [None, 1])
+def test_project_reuses_persisted_features_after_worker_restart(tmp_path, batch_size):
     source = Path(__file__).resolve().parents[1] / "examples/projects/graph_planner_antenna_function_test"
     init_workspace(tmp_path)
     shutil.copytree(source, tmp_path / "projects/project")
@@ -50,7 +51,7 @@ def test_project_reuses_persisted_features_after_worker_restart(tmp_path):
             scenario.upload_configuration(metrics={"antenna_test": {"spec":
                 'version=1\nresult="metric"\n[expressions]\nmetric="2.0 + features.dist_m / 1000.0"'}})
             scenario.build_candidate_edges()
-            metrics = scenario.compute_metrics()
+            metrics = scenario.compute_metrics(batch_size=batch_size)
             assert metrics["metrics"][0]["metric"] == 3.0
             assert project.features_path.exists()
             assert scenario.export_feature_cache()["entries"]

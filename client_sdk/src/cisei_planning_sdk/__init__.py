@@ -5,7 +5,7 @@ from cisei_planning_sdk.workspace import init_workspace
 from cisei_planning_sdk.visualization import plot_network
 from cisei_planning_sdk.project import PlanningProject
 
-__version__ = "0.1.24"
+__version__ = "0.1.31"
 
 __all__ = ["PlanningClient", "ScenarioSession", "init_workspace", "load_scenario_bundle",
            "save_result", "load_result", "save_scenario", "plot_network", "PlanningProject",

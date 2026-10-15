@@ -35,6 +35,13 @@ The same client can open another project later. Copy a project directory to
 make an independent planning case.
 No project manifest or run directories are required.
 
+## LTE 450 simulation
+
+`notebooks/example_2_LTE_simulation.ipynb` uses the corrected COPEL dataset
+(86 clients and 5 cells) in `projects/example_2_LTE_simulation`. It adapts
+example 1 to 450 MHz with assumed fixed antenna gains and three sectors per
+cell. See the project README for radio assumptions and execution instructions.
+
 ## Preparation
 
 Download the script first, from the directory that will contain the workspace:
@@ -176,3 +183,79 @@ for sequential execution. Use `--base-url` when the planning service is not
 available at its container-network address, and `--geo-url` when the features
 service uses another address. The runner waits for every code cell and does not
 write cell outputs into the notebook files.
+
+## Features pool ownership
+
+Planning creates worker IDs using `<user_prefix>-<runtime_id>-pool-<number>-worker-<index>`.
+The runtime ID is unique to each planning worker lifetime; pool numbers increase
+within that runtime, including when connection parameters change. Concurrent
+requests with matching connection parameters reuse the same pool. No notebook
+change is required; `geo_user_prefix` remains a label.
+
+`GET /planning/status` includes each pool's runtime ID, pool number, owned worker
+IDs, and cleanup errors. Authentication tokens are not returned. Cleanup uses
+the credentials retained by each pool, attempts every owned worker, and retains
+failed workers for inspection and retry. Successful worker closures are not
+retried. Partial startup failures also clean up already registered workers.
+This cleanup still waits for active extractions; active cancellation is a
+separate planned change.
+
+## Batched metrics (SDK 0.1.25+)
+
+Use `scenario.compute_metrics(batch_size=20)` to compute bounded subsets of the
+full candidate graph. Each batch is a separate HTTP request. The SDK atomically
+saves the accumulated raw-feature cache before submitting another batch. A
+request or save failure stops the loop; earlier saved batches remain available.
+An optional `on_batch` callback receives `offset`, `next_offset`, `total_links`,
+and `complete` after the save. The API accepts `batch_size` and `batch_offset`
+on the metrics computation endpoint. Finish all batches before solving.
+
+Omitting `batch_size` retains the existing single-request workflow. Batching
+requires an open project and an updated network service as well as SDK 0.1.25+.
+Reopening the project imports saved features; calling compute again starts at
+offset zero and reuses those features, recalculating metrics without extracting
+cached links again. Recovery of an incomplete batch and active cancellation
+are separate changes. Keep one writer and an unchanged candidate graph during
+a batch sequence. Example 2 uses batches of 20 with checkpoint progress output.
+
+## Interactive network views (SDK 0.1.26+)
+
+Existing `plot_network(result, kind="candidate")` and `kind="final"` calls now
+show an offline HTML/SVG view embedded in Jupyter. Search or click an endpoint
+to filter connected links, click a link for saved metric/node details, and zoom
+or pan. Colocated sites share a marker listing all IDs. Candidate sector guides
+use antenna azimuth/beamwidth from updated server exports; their radius is a
+visual aid, not a coverage prediction. Older saved results remain usable, but
+cannot show sector orientation if antenna metadata is absent. Solution views
+retain unserved sites and expose saved routing, metrics, and evaluation data;
+no new feature extraction occurs from map interaction.
+
+```python
+view = plot_network(saved_result, kind="final")
+view.save_html(project.path / "network.html")
+```
+
+Use `display=False` to generate HTML without displaying it. Each notebook view
+runs in its own iframe; notebook outputs may need to be trusted to run scripts.
+The saved HTML can also be opened directly in a browser. Passing an explicit
+Matplotlib `ax` retains the previous static renderer; the default return type is
+now a `NetworkView`, rather than Matplotlib Axes. These views use projected x/y
+coordinates with north up; they do not load basemap tiles or external libraries.
+
+SDK 0.1.28 highlights solution sites with saved `quality="poor"` in magenta
+with an outer ring and a visible label. Unserved sites remain red. A site with
+multiple interfaces is flagged if any evaluated interface is poor. Colocated
+sites retain an orange marker outline. Use `scenario.save_result(rank_threshold=2)`
+(or another study threshold) before loading the saved solution for plotting;
+without an embedded evaluation the view reports that quality is unavailable,
+rather than guessing from individual link metrics.
+
+## Endpoint selection in link inspection (SDK 0.1.30+)
+
+`scenario.show_link_browser(geo, links)` now starts with links for the first
+source site. Type a site ID or choose one from the Endpoint dropdown; incoming
+and outgoing interface links are included. Commit a typed ID with Enter or by
+leaving the field. Clear the field to show all links. Previous/Next navigation
+stays inside the filtered list, with a visible filtered/total count. Changing
+an endpoint only filters the list; select a link or press Show to inspect it.
+No call-site change is required for candidate or solution browsers.

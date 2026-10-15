@@ -224,9 +224,15 @@ class ScenarioSession:
         geo_pool_size: int = 1,
         geo_timeout: float = 120.0,
         include_features: bool = False,
+        batch_size: int | None = None,
+        on_batch=None,
     ) -> dict[str, Any]:
         """
         Compute and save real edge metrics through the external features service.
+
+        With batch_size, each request processes a bounded subset and saves
+        the project cache before the next request. on_batch receives progress
+        after a successful save. Failures stop further batch submission.
 
         This is the normal production path after candidate edges have been
         built. The planning service delegates geo feature extraction to the
@@ -238,22 +244,41 @@ class ScenarioSession:
             worker. The reusable geo-service pool/cache owned by the worker is
             reused across calls with the same geo connection parameters.
         """
-        payload = self.client._request(
-            "post",
-            f"/planning/scenarios/{self.scenario_id}/metrics/compute",
-            json={
+        if batch_size is not None:
+            if isinstance(batch_size, bool) or not isinstance(batch_size, int) or batch_size < 1:
+                raise ValueError("batch_size must be a positive integer")
+            if self.project is None:
+                raise RuntimeError("Batch computation requires a project to save features")
+        offset = 0
+        while True:
+            body = {
                 "edge_metrics": None,
                 "include_features": include_features,
                 "geo_base_url": geo_base_url,
                 "geo_user_prefix": geo_user_prefix,
                 "geo_pool_size": geo_pool_size,
                 "geo_timeout": geo_timeout,
-            },
-        )
-        self.metrics = payload["data"]
-        if self.project is not None:
-            self.save_feature_cache()
-        return self.metrics
+            }
+            if batch_size is not None:
+                body.update(batch_size=batch_size, batch_offset=offset)
+            payload = self.client._request(
+                "post", f"/planning/scenarios/{self.scenario_id}/metrics/compute", json=body,
+            )
+            self.metrics = payload["data"]
+            if self.project is not None:
+                self.save_feature_cache()
+            if batch_size is None:
+                return self.metrics
+            progress = self.metrics.get("batch")
+            if progress is None:
+                raise RuntimeError("Server does not support batches; update the network service")
+            if on_batch is not None:
+                on_batch(dict(progress))
+            if progress["complete"]:
+                return self.metrics
+            if progress["next_offset"] <= offset:
+                raise RuntimeError("Batch computation made no progress")
+            offset = progress["next_offset"]
 
     def get_metrics(
         self,

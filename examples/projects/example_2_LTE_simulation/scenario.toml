@@ -1,0 +1,97 @@
+# LTE 450 simulation adapted from example 1.
+# Fixed antenna gains are simulation assumptions; no measured 450 MHz patterns.
+# Sector beamwidth controls candidate filtering; gain is constant within each sector.
+# Mounting heights come from nodes.csv; transmit powers are inherited from example 1.
+[scenario]
+working_crs = "EPSG:31982"
+
+[antennas.lte_sector_0]
+kind = "sector"
+gain_dbi = 11.0
+description = "Simulation sector at 0 deg; assumed fixed gain 11 dBi"
+height_m = 7.0
+azimuth_deg = 0.0
+downtilt_deg = 0.0
+beamwidth_deg = 120.0
+
+[antennas.lte_sector_120]
+kind = "sector"
+gain_dbi = 11.0
+description = "Simulation sector at 120 deg; assumed fixed gain 11 dBi"
+height_m = 7.0
+azimuth_deg = 120.0
+downtilt_deg = 0.0
+beamwidth_deg = 120.0
+
+[antennas.lte_sector_240]
+kind = "sector"
+gain_dbi = 11.0
+description = "Simulation sector at 240 deg; assumed fixed gain 11 dBi"
+height_m = 7.0
+azimuth_deg = 240.0
+downtilt_deg = 0.0
+beamwidth_deg = 120.0
+
+[antennas.lte_client_omni]
+kind = "omni"
+gain_dbi = 0.0
+description = "Simulation client omni; assumed fixed gain 0 dBi"
+height_m = 7.0
+azimuth_deg = 0.0
+downtilt_deg = 0.0
+
+[interfaces.lte_sector_0]
+tech = "lte"
+freq_mhz = 450.0
+tx_power_dbm = 43.0
+antenna_id = "lte_sector_0"
+can_relay = false
+
+[interfaces.lte_sector_120]
+tech = "lte"
+freq_mhz = 450.0
+tx_power_dbm = 43.0
+antenna_id = "lte_sector_120"
+can_relay = false
+
+[interfaces.lte_sector_240]
+tech = "lte"
+freq_mhz = 450.0
+tx_power_dbm = 43.0
+antenna_id = "lte_sector_240"
+can_relay = false
+
+[interfaces.lte_client]
+tech = "lte"
+freq_mhz = 450.0
+tx_power_dbm = 20.0
+antenna_id = "lte_client_omni"
+can_relay = false
+
+[devices.cell_sector_3x120]
+kind = "tower"
+connected = true
+can_route = true
+rank = 0.0
+interfaces = ["lte_sector_0", "lte_sector_120", "lte_sector_240"]
+
+[devices.cell_sector_2x120]
+kind = "tower"
+connected = true
+can_route = true
+rank = 0.0
+interfaces = ["lte_sector_120", "lte_sector_240"]
+
+[devices.lte_leaf]
+kind = "field"
+connected = false
+can_route = false
+interfaces = ["lte_client"]
+
+[metrics.lte]
+spec = "# Exploratory LTE 450 bidirectional link-budget score, not a calibrated coverage model.\n# Delta diffraction is terrain-only in the features engine (bare-earth DTM).\n# Clutter allowance is an assumed reserve; it is not building/foliage prediction.\n# Required receive powers must be replaced with equipment/service measurements.\n# Client power is explicit because the current metric record has no rx.pw.\nversion = 1\nresult = \"metric\"\n\n[expressions]\npath_loss_db = \"max(0.0, features.fspl) + max(0.0, features.delta_diffra)\"\nreserved_loss_db = \"params.system_loss_db + params.clutter_allowance_db + params.fade_margin_db\"\ndownlink_rx_dbm = \"tx.pw + tx.ant_gain + rx.ant_gain - path_loss_db - params.system_loss_db\"\nuplink_rx_dbm = \"params.client_tx_power_dbm + rx.ant_gain + tx.ant_gain - path_loss_db - params.system_loss_db\"\ndownlink_margin_db = \"downlink_rx_dbm - params.client_required_rx_dbm - params.clutter_allowance_db - params.fade_margin_db\"\nuplink_margin_db = \"uplink_rx_dbm - params.cell_required_rx_dbm - params.clutter_allowance_db - params.fade_margin_db\"\nlimiting_margin_db = \"min(downlink_margin_db, uplink_margin_db)\"\n# Cost 2 = zero reserved margin; cost 1 = at least 10 dB remaining.\n# Positive costs remain compatible with routing. Poor links are not pruned.\nmetric = \"max(1.0, 2.0 - limiting_margin_db / params.db_per_cost)\"\n\n[parameters]\nclient_tx_power_dbm = 20.0\nclient_required_rx_dbm = -110.0\ncell_required_rx_dbm = -115.0\nsystem_loss_db = 3.0\nclutter_allowance_db = 6.0\nfade_margin_db = 10.0\ndb_per_cost = 10.0\n"
+
+[instances]
+source = "nodes.csv"
+format = "csv"
+profile_column = "device_profile"

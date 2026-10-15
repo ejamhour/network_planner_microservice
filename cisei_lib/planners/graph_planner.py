@@ -395,6 +395,7 @@ class GraphPlanner:
             str | Mapping[str, Any] | Callable[[Mapping[str, Any]], float],
         ] | None = None,
         manage_geo: bool = False,
+        accumulate: bool = False,
     ) -> dict[tuple[str, str], float]:
         """
         Extract geo features and compute one metric per candidate edge.
@@ -510,9 +511,13 @@ class GraphPlanner:
             if manage_geo:
                 await geo.close()
 
-        self.candidate_edges = candidate_edges
-        self.edge_metrics = edge_metrics
-        self.edge_features = edge_features
+        if accumulate:
+            self.edge_metrics.update(edge_metrics)
+            self.edge_features.update(edge_features)
+        else:
+            self.candidate_edges = candidate_edges
+            self.edge_metrics = edge_metrics
+            self.edge_features = edge_features
         return dict(edge_metrics)
 
     # RPL execution ----------------------------------------------------------
@@ -597,6 +602,7 @@ class GraphPlanner:
                 ),
             },
             "rpl_nodes": self._rpl_node_records(self.rpl_nodes),
+            "antennas": {key: antenna.to_dict() for key, antenna in self.antenna_catalog.items()},
         }
 
         if include_candidates:

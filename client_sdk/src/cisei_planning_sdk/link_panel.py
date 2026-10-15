@@ -30,10 +30,26 @@ class LinkInspectionPanel:
         self.browser = LinkBrowser(scenario, getattr(geo, "client", geo), edges)
         self._busy = False
         self._changing = False
+        self._endpoints_by_edge = [self._endpoints(edge) for edge in self.browser.edges]
+        endpoint_ids = sorted({node for pair in self._endpoints_by_edge for node in pair})
+        initial_endpoint = self._endpoints_by_edge[0][0] if self.browser.edges else ""
+        self.endpoint = widgets.Text(
+            value=initial_endpoint, description="Endpoint:",
+            placeholder="Type a site ID", continuous_update=False,
+            layout=widgets.Layout(width="320px", max_width="100%"),
+        )
+        self.endpoint_list = widgets.Dropdown(
+            options=[("All endpoints", "")] + [(node, node) for node in endpoint_ids],
+            value=initial_endpoint, description="Select:",
+            layout=widgets.Layout(width="320px", max_width="100%"),
+        )
+        self._visible_indices = [i for i, pair in enumerate(self._endpoints_by_edge)
+                                 if self.endpoint.value in pair]
+        self.count = widgets.HTML()
         self.links = widgets.Select(
-            options=[(self._label(i, e), i) for i, e in enumerate(self.browser.edges)],
-            rows=min(10, max(3, len(self.browser.edges))),
-            description="Links:", layout=widgets.Layout(width="100%"),
+            options=[(self._label(i, self.browser.edges[i]), i) for i in self._visible_indices],
+            rows=min(6, max(3, len(self.browser.edges))),
+            description="Links:", layout=widgets.Layout(width="760px", max_width="100%"),
         )
         self.view = widgets.Dropdown(options=self.VIEWS, description="Show:")
         self.previous = widgets.Button(description="Previous", icon="arrow-left")
@@ -42,9 +58,13 @@ class LinkInspectionPanel:
         self.status = widgets.HTML()
         self.output = widgets.Output()
         self.widget = widgets.VBox([
-            self.links, widgets.HBox([self.previous, self.next]),
+            widgets.HBox([self.endpoint, self.endpoint_list],
+                         layout=widgets.Layout(flex_flow="row wrap")),
+            self.count, self.links, widgets.HBox([self.previous, self.next]),
             widgets.HBox([self.view, self.refresh]), self.status, self.output,
         ])
+        self.endpoint.observe(self._endpoint_changed, names="value")
+        self.endpoint_list.observe(self._endpoint_list_changed, names="value")
         self.links.observe(self._selection_changed, names="value")
         self.view.observe(self._selection_changed, names="value")
         self.previous.on_click(lambda _: self._move(-1))
@@ -55,6 +75,41 @@ class LinkInspectionPanel:
             self._render()
         else:
             self.status.value = "No links available for inspection."
+
+    @staticmethod
+    def _endpoints(edge):
+        return tuple(str(edge.get(f"{side}_site") or edge.get(f"{side}_site_id")
+                         or edge[side].split(":")[0]) for side in ("src", "dst"))
+
+    def _endpoint_list_changed(self, change):
+        if not self._changing and not self._busy:
+            self.endpoint.value = change["new"]
+
+    def _endpoint_changed(self, change):
+        if self._changing or self._busy:
+            return
+        endpoint = self.endpoint.value.strip()
+        self._changing = True
+        try:
+            available = {value for _, value in self.endpoint_list.options}
+            self.endpoint_list.value = endpoint if endpoint in available else None
+        finally:
+            self._changing = False
+        self._visible_indices = [i for i, pair in enumerate(self._endpoints_by_edge)
+                                 if not endpoint or endpoint in pair]
+        self._changing = True
+        try:
+            previous = self.links.value
+            self.links.options = [(self._label(i, self.browser.edges[i]), i)
+                                  for i in self._visible_indices]
+            self.links.value = (previous if previous in self._visible_indices else
+                                self._visible_indices[0] if self._visible_indices else None)
+        finally:
+            self._changing = False
+        self.output.clear_output()
+        self.status.value = ("Select a link or press Show to inspect it." if self._visible_indices
+                             else "No links match this endpoint. Select a listed ID; clear the field for all links.")
+        self._update_controls()
 
     @staticmethod
     def _label(index, edge):
@@ -72,11 +127,14 @@ class LinkInspectionPanel:
         display(self.widget)
 
     def _update_controls(self):
-        empty = not self.browser.edges
+        empty = not self._visible_indices
         index = self.links.value
+        position = self._visible_indices.index(index) if index in self._visible_indices else -1
+        self.endpoint.disabled = self.endpoint_list.disabled = self._busy or not self.browser.edges
+        self.count.value = f"{len(self._visible_indices)} of {len(self.browser.edges)} links · incoming and outgoing"
         self.links.disabled = self.view.disabled = self.refresh.disabled = self._busy or empty
-        self.previous.disabled = self._busy or empty or index is None or index <= 0
-        self.next.disabled = self._busy or empty or index is None or index >= len(self.browser.edges) - 1
+        self.previous.disabled = self._busy or empty or position <= 0
+        self.next.disabled = self._busy or empty or position < 0 or position >= len(self._visible_indices) - 1
 
     def _selection_changed(self, change):
         if not self._changing and not self._busy:
@@ -85,9 +143,9 @@ class LinkInspectionPanel:
     def _move(self, step):
         if self._busy or self.links.value is None:
             return
-        index = self.links.value + step
-        if 0 <= index < len(self.browser.edges):
-            self.links.value = index
+        position = self._visible_indices.index(self.links.value) + step
+        if 0 <= position < len(self._visible_indices):
+            self.links.value = self._visible_indices[position]
 
     def _inspect(self):
         geo = self.browser.geo
@@ -125,7 +183,7 @@ class LinkInspectionPanel:
             # Failed preparation keeps the previous position. A failed view
             # keeps the newly prepared link and can be retried with Show.
             self._changing = True
-            self.links.value = self.browser.index if self.browser.index >= 0 else None
+            self.links.value = self.browser.index if self.browser.index in self._visible_indices else None
             self._changing = False
             self.output.clear_output()
             self.status.value = "Could not show the link: " + escape(str(exc))

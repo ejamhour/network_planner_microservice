@@ -87,6 +87,8 @@ class MetricComputeBody(BaseModel):
     """
 
     edge_metrics: list[dict[str, Any]] | None = None
+    batch_offset: int = Field(default=0, ge=0)
+    batch_size: int | None = Field(default=None, ge=1)
     include_features: bool = False
     geo_base_url: str | None = None
     geo_user_prefix: str = "planning-api"
@@ -402,7 +404,16 @@ async def compute_metrics(
             runtime=request.app.state.runtime,
             cache=request.app.state.runtime.feature_caches.setdefault(scenario_id, FeatureCache()),
         )
-        return _metrics_response(planner, include_features=body.include_features)
+        response = _metrics_response(planner, include_features=body.include_features)
+        if body.batch_size is not None:
+            total = len(planner.candidate_edges)
+            response["data"]["batch"] = {
+                "offset": body.batch_offset,
+                "next_offset": min(body.batch_offset + body.batch_size, total),
+                "total_links": total,
+                "complete": body.batch_offset + body.batch_size >= total,
+            }
+        return response
     except Exception as exc:
         return _error(exc)
 
@@ -433,6 +444,8 @@ def get_metrics(
 def solve_network(request: Request, scenario_id: str):
     try:
         planner = _stored_planner(request, scenario_id)
+        if any(edge not in planner.edge_metrics for edge in planner.candidate_edges):
+            raise RuntimeError("Metrics are incomplete. Finish all batches before solving.")
         planner.run_rpl()
         return _solution_response(planner)
     except Exception as exc:
@@ -645,7 +658,15 @@ async def _compute_or_assign_metrics(
         pool_size=body.geo_pool_size,
         timeout=body.geo_timeout,
     )
-    await planner.compute_edge_metrics(geo, manage_geo=False)
+    if body.batch_size is None:
+        await planner.compute_edge_metrics(geo, manage_geo=False)
+    else:
+        if body.batch_offset == 0:
+            planner.edge_metrics = {}
+            planner.edge_features = {}
+            planner.rpl = None
+        edges = planner.candidate_edges[body.batch_offset:body.batch_offset + body.batch_size]
+        await planner.compute_edge_metrics(geo, edges, manage_geo=False, accumulate=True)
 
 
 def _candidate_response(

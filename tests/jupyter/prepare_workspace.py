@@ -65,7 +65,7 @@ def main() -> None:
     # user's normal pip index (PyPI by default). The service hosts no dependencies.
     with TemporaryDirectory(prefix="cisei-sdk-install-") as temporary:
         for service_url, service_address, requirement in (
-            (base_url, address, "cisei-planning-sdk>=0.1.24"),
+            (base_url, address, "cisei-planning-sdk>=0.1.31"),
             (features_url, features_address, "cisei-features-sdk>=0.1.1,<0.2.0"),
         ):
             command = pip + [

@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from functools import partial
 from typing import Any
+from uuid import uuid4
 
 from cisei_lib.io.geo_service_client import APIResult, GeoServiceClient
 
@@ -49,6 +50,8 @@ class AsyncGeoServicePool:
         pool_size: int = 3,
         *,
         timeout: float = 120,
+        session_id: str | None = None,
+        pool_number: int = 0,
     ):
         if pool_size < 1:
             raise ValueError("pool_size must be at least 1")
@@ -60,6 +63,13 @@ class AsyncGeoServicePool:
         self.pool_size = pool_size
         self.timeout = timeout
         self.user_prefix = user_prefix
+        self.session_id = session_id or uuid4().hex
+        self.pool_number = pool_number
+        self.worker_prefix = f"{user_prefix}-{self.session_id}-pool-{pool_number}-worker"
+        self._owned_clients: list[GeoServiceClient] = []
+        self.cleanup_errors: list[str] = []
+        self._lifecycle_lock = asyncio.Lock()
+        self._closing = False
 
         self._clients: asyncio.Queue[GeoServiceClient] | None = None
         self._executor: ThreadPoolExecutor | None = None
@@ -70,12 +80,24 @@ class AsyncGeoServicePool:
         self._started = False
         self._closed = False
 
+    @property
+    def worker_ids(self) -> list[str]:
+        """Owned worker IDs, without exposing authentication tokens."""
+        return [client.user_id for client in self._owned_clients]
+
     async def start(self) -> AsyncGeoServicePool:
+        async with self._lifecycle_lock:
+            return await self._start()
+
+    async def _start(self) -> AsyncGeoServicePool:
         if self._closed:
             raise RuntimeError("Pool has already been closed")
 
         if self._started:
             return self
+
+        if self._owned_clients:
+            raise GeoServiceError("Pool cleanup is incomplete; retry close() before reuse")
 
         self._clients = asyncio.Queue(maxsize=self.pool_size)
         self._executor = ThreadPoolExecutor(
@@ -91,10 +113,7 @@ class AsyncGeoServicePool:
                     timeout=self.timeout,
                 )
 
-                user_id = None
-                if self.user_prefix is not None:
-                    user_id = f"{self.user_prefix}-{index}"
-
+                user_id = f"{self.worker_prefix}-{index}"
                 await self._run_blocking(client.register, user_id=user_id)
 
                 if not client.user_id or not client.token:
@@ -102,64 +121,63 @@ class AsyncGeoServicePool:
                         f"GeoService registration failed for client {index}"
                     )
 
+                self._owned_clients.append(client)
                 self._clients.put_nowait(client)
 
-        except Exception:
-            if self._executor is not None:
-                self._executor.shutdown(wait=False, cancel_futures=True)
-
-            self._executor = None
-            self._clients = None
+        except Exception as startup_error:
+            try:
+                await self._close()
+            except Exception as cleanup_error:
+                raise GeoServiceError(
+                    f"Pool startup failed: {startup_error}; cleanup failed: {cleanup_error}"
+                ) from startup_error
             raise
 
         self._started = True
         return self
 
     async def close(self) -> None:
+        async with self._lifecycle_lock:
+            await self._close()
+
+    async def _close(self) -> None:
         if self._closed:
             return
 
-        pending = list(self._in_flight.values())
-        if pending:
-            await asyncio.gather(*pending, return_exceptions=True)
+        self._closing = True
+        try:
+            pending = list(self._in_flight.values())
+            if pending:
+                await asyncio.gather(*pending, return_exceptions=True)
 
-        clients: list[GeoServiceClient] = []
-
-        if self._clients is not None:
-            while not self._clients.empty():
-                clients.append(self._clients.get_nowait())
-
-        close_results = []
-
-        if self._executor is not None:
-            close_results = await asyncio.gather(
-                *(
-                    self._run_blocking(client.close_worker)
-                    for client in clients
-                ),
+            clients = list(self._owned_clients)
+            # Cleanup uses retained client credentials, including on retries
+            # after the extraction executor has been shut down.
+            results = await asyncio.gather(
+                *(asyncio.to_thread(client.close_worker) for client in clients),
                 return_exceptions=True,
             )
-
-            self._executor.shutdown(
-                wait=True,
-                cancel_futures=False,
-            )
-
-        self._executor = None
-        self._clients = None
-        self._started = False
-        self._closed = True
-
-        for client, result in zip(clients, close_results):
-            if isinstance(result, Exception):
-                raise GeoServiceError(
-                    f"Failed to close worker {client.user_id}: {result}"
-                )
-
-            self._validate_result(
-                result,
-                f"close_worker {client.user_id}",
-            )
+            self.cleanup_errors = []
+            failed_clients = []
+            for client, result in zip(clients, results):
+                try:
+                    if isinstance(result, BaseException):
+                        raise GeoServiceError(str(result))
+                    self._validate_result(result, f"close_worker {client.user_id}")
+                except Exception as exc:
+                    failed_clients.append(client)
+                    self.cleanup_errors.append(f"Worker {client.user_id}: {exc}")
+            self._owned_clients = failed_clients
+            if self._executor is not None:
+                self._executor.shutdown(wait=True, cancel_futures=False)
+            self._executor = None
+            self._clients = None
+            self._started = False
+            self._closed = not failed_clients
+            if self.cleanup_errors:
+                raise GeoServiceError("Pool cleanup failed: " + "; ".join(self.cleanup_errors))
+        finally:
+            self._closing = False
 
     async def __aenter__(self) -> AsyncGeoServicePool:
         return await self.start()
@@ -426,7 +444,7 @@ class AsyncGeoServicePool:
         return len(self._in_flight)
 
     def _require_started(self) -> None:
-        if not self._started:
+        if not self._started or self._closing:
             raise RuntimeError(
                 "AsyncGeoServicePool.start() must be called first"
             )

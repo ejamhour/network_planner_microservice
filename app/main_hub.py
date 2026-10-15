@@ -13,11 +13,13 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.background import BackgroundTask
 
+from app.version import __version__
 from app.routes_sdk import router as sdk_router
 from app.routes_examples import router as examples_router
 
 # Configuration
 MAX_IDLE_SECONDS = int(os.getenv("PLANNING_MAX_IDLE_SECONDS", "3600"))
+WORKER_REQUEST_TIMEOUT = float(os.getenv("PLANNING_WORKER_REQUEST_TIMEOUT", "600"))
 
 STARTUP_LOCK = asyncio.Lock()
 
@@ -52,14 +54,12 @@ def find_free_port(start_port: int = 15000, max_attempts: int = 200) -> int:
 async def start_worker_instance(user_id: str) -> int:
     port = find_free_port()
     
-    # Change: Capture PIPE instead of DEVNULL to see errors
+    # Inherit container logs: undrained subprocess pipes can block long-running workers.
     process = await asyncio.create_subprocess_exec(
         "uvicorn", "app.main:app", # Ensure this path is correct
         "--host", "127.0.0.1",
         "--port", str(port),
-        "--log-level", "error",
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE
+        "--log-level", "error"
     )
     
     max_retries = 30
@@ -67,9 +67,7 @@ async def start_worker_instance(user_id: str) -> int:
         for i in range(max_retries):
             # Check if the process crashed immediately
             if process.returncode is not None:
-                stdout, stderr = await process.communicate()
-                print(f"ERROR: Worker process died for user {user_id}")
-                print(f"STDERR: {stderr.decode()}")
+                print(f"ERROR: Worker process died for user {user_id}; exit code {process.returncode}")
                 raise RuntimeError("Worker process failed to start.")
 
             try:
@@ -154,9 +152,16 @@ async def proxy_request(worker_port: int, path: str, request: Request):
         background=BackgroundTask(rp_resp.aclose) # Ensures client closure
     )
 
+async def _close_proxy(response, client):
+    try:
+        await response.aclose()
+    finally:
+        await client.aclose()
+
+
 #----------------------------------------------
 
-hub_app = FastAPI(lifespan=lifespan)
+hub_app = FastAPI(title="Network Planning Hub", version=__version__, lifespan=lifespan)
 hub_app.include_router(sdk_router)
 hub_app.include_router(examples_router)
 hub_app.mount("/dist", StaticFiles(directory="dist"), name="dist")
@@ -215,7 +220,7 @@ async def route_request(user_id: str, path: str, request: Request):
     
     # Transparent Proxy Logic
     proxy_headers = {k: v for k, v in request.headers.items() if k.lower() != "host"}
-    client = httpx.AsyncClient(timeout=600.0) # 10 minutes
+    client = httpx.AsyncClient(timeout=WORKER_REQUEST_TIMEOUT)
     
     try:
         rp_req = client.build_request(
@@ -232,8 +237,24 @@ async def route_request(user_id: str, path: str, request: Request):
             rp_resp.aiter_raw(),
             status_code=rp_resp.status_code,
             headers=dict(rp_resp.headers),
-            background=BackgroundTask(rp_resp.aclose)
+            background=BackgroundTask(_close_proxy, rp_resp, client)
         )
-        
+
+    except httpx.TimeoutException as exc:
+        await client.aclose()
+        raise HTTPException(
+            status_code=504,
+            detail=(f"Planning worker request timed out ({type(exc).__name__}; "
+                    f"configured timeout {WORKER_REQUEST_TIMEOUT:g} seconds). "
+                    "Increase PLANNING_WORKER_REQUEST_TIMEOUT on the network service "
+                    "and keep the SDK client timeout higher."),
+        ) from exc
     except httpx.RequestError as exc:
-        raise HTTPException(status_code=502, detail=f"Worker error: {exc}")
+        await client.aclose()
+        raise HTTPException(
+            status_code=502,
+            detail=f"Planning worker connection failed ({type(exc).__name__}): {exc}",
+        ) from exc
+    except Exception:
+        await client.aclose()
+        raise

@@ -20,7 +20,7 @@ from app.routes_planning import router as planning_router
 from app.session import UserRuntime
 
 NOTEBOOKS = Path(__file__).resolve().parents[1] / "examples/notebooks"
-LTE_NOTEBOOKS = {"example1_LTE_planning_basic", "example_1_LTE_planning_and_link_inspection"}
+LTE_NOTEBOOKS = {"example1_LTE_planning_basic", "example_1_LTE_planning_and_link_inspection", "example_2_LTE_simulation"}
 
 
 @pytest.mark.parametrize("notebook", sorted(NOTEBOOKS.glob("*.ipynb")), ids=lambda p: p.stem)
@@ -37,7 +37,7 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
     class Geo:
         async def get_features(self, *args, **kwargs):
             geo_calls.append((args, kwargs))
-            return {"dist_m": 1000.0, "fspl": 100.0, "terrain_peak": {"vv_0": 0.0}, "buildings": {"core": 0.0, "fresnel": 0.0}}
+            return {"dist_m": 1000.0, "fspl": 100.0, "delta_diffra": 0.0, "terrain_peak": {"vv_0": 0.0}, "buildings": {"core": 0.0, "fresnel": 0.0}}
 
     async def geo_pool(**kwargs):
         return Geo()
@@ -59,7 +59,7 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
     if notebook.stem in LTE_NOTEBOOKS:
         result_dir /= notebook.stem
     inspection_calls = []
-    if notebook.stem == "example_1_LTE_planning_and_link_inspection":
+    if notebook.stem in {"example_1_LTE_planning_and_link_inspection", "example_2_LTE_simulation"}:
         class FeaturesNotebook:
             def __init__(self, *args, **kwargs):
                 self.client = self
@@ -105,8 +105,9 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
                 exec(compile(source, f"{notebook.name}:cell-{index}", "exec"), namespace)
         assert list(result_dir.rglob("*result.json"))
         if notebook.stem in LTE_NOTEBOOKS:
+            assert (result_dir / "candidate_network.html").exists()
+            assert (result_dir / "solution_network.html").exists()
             import matplotlib.pyplot as plt
-            assert len(plt.get_fignums()) == 2
             assert (result_dir / "result.json").exists()
             plt.close("all")
         if notebook.stem in LTE_NOTEBOOKS | {"custom_configuration"}:
@@ -118,7 +119,7 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             assert not any("/solution/solve" in path for _, path in calls)
         else:
             assert any("/solution/solve" in path for _, path in calls)
-        if notebook.stem == "example_1_LTE_planning_and_link_inspection":
+        if notebook.stem in {"example_1_LTE_planning_and_link_inspection", "example_2_LTE_simulation"}:
             assert len(inspection_calls) == 2
             assert namespace["candidate_panel"].current is not None
             assert namespace["solution_panel"].current is not None

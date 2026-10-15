@@ -40,7 +40,7 @@ def show_evaluation(evaluation: dict[str, Any]) -> None:
                     table(title, records)
 
 
-def plot_network(result: dict[str, Any], *, kind: str = "final", ax=None):
+def _plot_network_matplotlib(result: dict[str, Any], *, kind: str = "final", ax=None):
     """Draw a site-level candidate or final network from a loaded result.
 
     Interfaces at the same site are collapsed into one marker. Candidate links
@@ -137,3 +137,24 @@ def plot_network(result: dict[str, Any], *, kind: str = "final", ax=None):
         ax.legend()
     ax.grid(alpha=0.15)
     return ax
+
+
+def plot_network(result: dict[str, Any], *, kind: str = "final", ax=None, display=True, save_path=None):
+    """Display an offline interactive network inside a notebook.
+
+    Returns NetworkView, with save_html(path) for a standalone browser file.
+    Endpoint selection filters links; click nodes or links for saved details.
+    Candidate sectors require antenna metadata from an updated service export.
+    Pass save_path to write the same view beside a project result.
+    Pass ax for the legacy Matplotlib rendering, or display=False for file use.
+    """
+    if ax is not None:
+        return _plot_network_matplotlib(result, kind=kind, ax=ax)
+    from cisei_planning_sdk.network_view import NetworkView
+    view = NetworkView(result, kind=kind)
+    if save_path is not None:
+        view.save_html(save_path)
+    if display:
+        from IPython.display import display as show
+        show(view)
+    return view

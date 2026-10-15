@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 from typing import Any
+from uuid import uuid4
 
 from cisei_lib.io.async_geo_service_pool import AsyncGeoServicePool
 
@@ -19,6 +21,9 @@ class UserRuntime:
     """
 
     def __init__(self):
+        self.session_id = uuid4().hex
+        self._next_pool_number = 0
+        self._pool_lock = asyncio.Lock()
         self.planning_scenarios = {}
         self.planning_planners = {}
         self.feature_caches = {}
@@ -40,31 +45,44 @@ class UserRuntime:
         request timeout.
         """
         key = (base_url, user_prefix, pool_size, float(timeout))
-        pool = self.geo_pools.get(key)
-        if pool is None:
-            pool = AsyncGeoServicePool(
-                base_url=base_url,
-                user_prefix=user_prefix,
-                pool_size=pool_size,
-                timeout=timeout,
-            )
-            await pool.start()
-            self.geo_pools[key] = pool
-        return pool
+        # Serialize creation so simultaneous requests reuse one registered pool.
+        async with self._pool_lock:
+            pool = self.geo_pools.get(key)
+            if pool is None:
+                pool_number = self._next_pool_number
+                self._next_pool_number += 1
+                pool = AsyncGeoServicePool(
+                    base_url=base_url,
+                    user_prefix=user_prefix,
+                    pool_size=pool_size,
+                    timeout=timeout,
+                    session_id=self.session_id,
+                    pool_number=pool_number,
+                )
+                # Retain ownership even if startup cleanup fails.
+                self.geo_pools[key] = pool
+            try:
+                await pool.start()
+            except Exception:
+                if not pool.worker_ids and not pool.cleanup_errors:
+                    del self.geo_pools[key]
+                raise
+            return pool
 
     async def close_geo_pools(self) -> None:
-        """Close all reusable geo-service pools owned by this runtime."""
+        """Close owned pools; retain failed cleanup for inspection and retry."""
         errors = []
-        for pool in list(self.geo_pools.values()):
-            try:
-                await pool.close()
-            except Exception as exc:
-                errors.append(exc)
-        self.geo_pools.clear()
+        async with self._pool_lock:
+            for key, pool in list(self.geo_pools.items()):
+                try:
+                    await pool.close()
+                except Exception as exc:
+                    errors.append(str(exc))
+                else:
+                    del self.geo_pools[key]
         if errors:
             raise RuntimeError(
-                "Failed to close one or more geo pools: "
-                + "; ".join(str(error) for error in errors)
+                "Failed to close one or more geo pools: " + "; ".join(errors)
             )
 
     def geo_pool_status(self) -> list[dict[str, Any]]:
@@ -75,6 +93,10 @@ class UserRuntime:
                 {
                     "base_url": base_url,
                     "user_prefix": user_prefix,
+                    "session_id": pool.session_id,
+                    "pool_number": pool.pool_number,
+                    "worker_ids": pool.worker_ids,
+                    "cleanup_errors": list(pool.cleanup_errors),
                     "pool_size": pool_size,
                     "timeout": timeout,
                     "cache_size": pool.cache_size(),

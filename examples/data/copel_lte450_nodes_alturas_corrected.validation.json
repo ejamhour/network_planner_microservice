@@ -1,0 +1,23 @@
+{
+  "source": "copel_lte450_nodes_alturas-consistido1.csv",
+  "corrected_file": "copel_lte450_nodes_alturas_corrected.csv",
+  "rows": 91,
+  "crs_validation": "EPSG:4326 -> EPSG:31982",
+  "max_coordinate_difference_m": 0.0006529233862713145,
+  "mean_coordinate_difference_m": 0.0003900433094149365,
+  "corrections": [
+    "Delimiter changed from semicolon to comma.",
+    "Latitude/longitude: removed misplaced dots and restored decimal point after two integer digits.",
+    "Projected coordinates with multiple dots: restored decimal point after six easting or seven northing digits."
+  ],
+  "preserved_columns": [
+    "site_id",
+    "device_profile",
+    "kind",
+    "mount_height_m",
+    "connected",
+    "can_route",
+    "rank"
+  ],
+  "note": "Coordinate consistency validates formatting repair, not real-world site accuracy. Device profiles and LTE 450 radio configuration still require a scenario definition."
+}

@@ -5,6 +5,7 @@ from app.routes_planning import router as planning_router
 from app.routes_sdk import router as sdk_router
 from app.routes_examples import router as examples_router
 from app.session import UserRuntime
+from app.version import __version__
 
 
 @asynccontextmanager
@@ -19,7 +20,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Planning Micro-Service Docker",
     description="Provides methods for evaluating links and planning networks.",
-    version="1.0.0",
+    version=__version__,
     lifespan=lifespan
 )
 

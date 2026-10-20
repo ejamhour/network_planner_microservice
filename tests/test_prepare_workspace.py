@@ -27,7 +27,7 @@ def test_joint_install_from_separate_services(tmp_path):
         calls.append(command)
         if "download" in command:
             destination = Path(command[command.index("--dest") + 1])
-            package = "cisei_planning_sdk-0.1.31" if "planning" in command[-1] else "cisei_features_sdk-0.1.1"
+            package = "cisei_planning_sdk-0.1.36" if "planning" in command[-1] else "cisei_features_sdk-0.1.1"
             (destination / (package + "-py3-none-any.whl")).write_bytes(b"test wheel")
 
     with patch.object(sys, "argv", ["prepare_workspace.py", "--base-url", "http://network:8080", "--features-base-url", "https://geo.example", "--workspace", str(tmp_path)]), patch.object(module.subprocess, "run", side_effect=run):
@@ -38,7 +38,7 @@ def test_joint_install_from_separate_services(tmp_path):
     assert "--no-deps" in calls[0] and "--no-deps" in calls[1]
     assert "--trusted-host" in calls[0] and "--trusted-host" not in calls[1]
     assert calls[2].count("install") == 1
-    assert calls[2][-2].endswith("cisei_planning_sdk-0.1.31-py3-none-any.whl[notebook]")
+    assert calls[2][-2].endswith("cisei_planning_sdk-0.1.36-py3-none-any.whl[notebook]")
     assert calls[2][-1].endswith("cisei_features_sdk-0.1.1-py3-none-any.whl[notebook]")
     assert "--index-url" not in calls[2]
     assert "init_workspace" in calls[3][2]
@@ -67,7 +67,7 @@ def test_dependency_metadata_and_bootstrap_copies_agree():
     metadata = tomllib.loads((ROOT / "client_sdk/pyproject.toml").read_text())
     assert "cisei-features-sdk>=0.1.1,<0.2.0" in metadata["project"]["dependencies"]
     assert "cisei-features-sdk[notebook]>=0.1.1,<0.2.0" in metadata["project"]["optional-dependencies"]["notebook"]
-    assert metadata["project"]["version"] == "0.1.31"
+    assert metadata["project"]["version"] == "0.1.36"
     assert (ROOT / "examples/prepare_workspace.py").read_bytes() == (ROOT / "tests/jupyter/prepare_workspace.py").read_bytes()
 
 

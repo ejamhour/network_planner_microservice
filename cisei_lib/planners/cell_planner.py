@@ -101,6 +101,9 @@ class CellPlanner:
                     continue
 
                 distance_m = self.graph._distance_m(source, destination)
+                # A colocated pair has no valid RF propagation corridor.
+                if distance_m <= 0.0:
+                    continue
                 if limit_m is not None and distance_m > limit_m:
                     continue
 

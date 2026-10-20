@@ -281,8 +281,17 @@ class GraphPlanner:
                         continue
 
                     distance_m = self._distance_m(source, destination)
+                    # Colocated sites must not create zero-length RF paths.
+                    if distance_m <= 0.0:
+                        continue
                     if limit_m is not None and distance_m > limit_m:
                         continue
+                    if rule.get("sector_aware", False):
+                        from cisei_lib.planners.cell_planner import CellPlanner
+                        sector_filter = CellPlanner(self, primary_tech=tech)
+                        bearing = sector_filter._bearing_deg(source.pos_utm, destination.pos_utm)
+                        if not sector_filter._inside_antenna(source, bearing):
+                            continue
                     candidates.append((distance_m, destination))
 
                 candidates.sort(key=lambda item: (item[0], item[1].node_id))
@@ -488,13 +497,20 @@ class GraphPlanner:
 
                 src_site = self.nodes[src_node.extra["site_id"]].site
                 dst_site = self.nodes[dst_node.extra["site_id"]].site
-                features = await geo.get_features(
-                    src_site.geo_pos,
-                    dst_site.geo_pos,
-                    tx_ha=src_height,
-                    rx_ha=dst_height,
-                    freq_mhz=src_freq_mhz,
-                )
+                try:
+                    features = await geo.get_features(
+                        src_site.geo_pos,
+                        dst_site.geo_pos,
+                        tx_ha=src_height,
+                        rx_ha=dst_height,
+                        freq_mhz=src_freq_mhz,
+                    )
+                except Exception as exc:
+                    raise RuntimeError(
+                        f"Feature extraction failed for {src} -> {dst} "
+                        f"(tx={src_site.geo_pos}, rx={dst_site.geo_pos}, "
+                        f"frequency={src_freq_mhz} MHz): {exc}"
+                    ) from exc
 
                 features = dict(features)
                 features.setdefault("freq_mhz", src_freq_mhz)

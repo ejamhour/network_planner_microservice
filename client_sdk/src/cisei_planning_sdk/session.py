@@ -300,14 +300,17 @@ class ScenarioSession:
         self.metrics = payload["data"]
         return self.metrics
 
-    def show_metrics(self) -> None:
-        """Show the saved link metrics as a notebook table.
+    def show_metrics(self, *, save_path: str | Path | None = None) -> None:
+        """Browse saved link metrics in HTML and save metrics.html in the project.
 
         Reloads metrics without computing them. The data remains available in
         self.metrics. Requires the notebook extra.
         """
         from cisei_planning_sdk.visualization import show_metrics
-        show_metrics(self.get_metrics())
+        report = self.get_metrics()
+        destination = save_path if save_path is not None else self.project.path / "metrics.html" if self.project else None
+        options = {"save_path": destination} if destination is not None else {}
+        self.metrics_view = show_metrics(report, **options)
 
     def solve(self) -> dict[str, Any]:
         """
@@ -375,17 +378,21 @@ class ScenarioSession:
         rank_threshold: float,
         primary_tech: str = "lte",
         solution_kind: str | None = None,
+        save_path: str | Path | None = None,
     ) -> None:
-        """Evaluate the saved solution and show all quality tables in Jupyter.
+        """Evaluate the saved solution and display one HTML browsing report.
 
-        The report remains available in self.evaluation. Does not solve or save;
+        The data remains available in self.evaluation. HTML is saved beside the
+        project result by default (evaluation.html). Does not solve or save JSON;
         use save_result(rank_threshold=...) to persist the evaluated result.
         Requires the notebook extra.
         """
         from cisei_planning_sdk.visualization import show_evaluation
         report = self.evaluate(rank_threshold=rank_threshold,
                                primary_tech=primary_tech, solution_kind=solution_kind)
-        show_evaluation(report)
+        destination = save_path if save_path is not None else self.project.path / "evaluation.html" if self.project else None
+        options = {"save_path": destination} if destination is not None else {}
+        self.evaluation_view = show_evaluation(report, **options)
 
     def evaluate(
         self,

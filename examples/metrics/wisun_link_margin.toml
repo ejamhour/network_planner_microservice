@@ -1,0 +1,12 @@
+# Exploratory symmetric Wi-SUN link-margin routing cost; assumed hardware.
+version = 1
+result = "metric"
+[expressions]
+loss_db = "max(0.0, features.fspl) + max(0.0, features.delta_diffra)"
+margin_db = "tx.pw + tx.ant_gain + rx.ant_gain - loss_db - params.system_loss_db - params.clutter_allowance_db - params.fade_margin_db - params.required_rx_dbm"
+metric = "max(1.0, 2.0 - margin_db / 10.0)"
+[parameters]
+required_rx_dbm = -105.0
+system_loss_db = 3.0
+clutter_allowance_db = 6.0
+fade_margin_db = 10.0

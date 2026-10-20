@@ -259,3 +259,81 @@ leaving the field. Clear the field to show all links. Previous/Next navigation
 stays inside the filtered list, with a visible filtered/total count. Changing
 an endpoint only filters the list; select a link or press Show to inspect it.
 No call-site change is required for candidate or solution browsers.
+
+## Example 3: ordered replacement into a new hybrid project (SDK 0.1.32+)
+
+Run `notebooks/example_3_LTE_hybrid.ipynb` after saving the intended example 2
+baseline. It prepares `projects/example_3_LTE_hybrid` from a small extension.toml
+recipe. Paths remain in Python. `ExtendedPlanningProject(..., source=source)`
+merges tables recursively and replaces lists, applies the first matching rule
+once to each original CSV row, copies raw features, and reports replacements.
+`rank_lte` means <=, and conditions can also match a profile and exact CSV tags.
+Rules with no rank predicate do not require a solved result. Rank rules reject
+ambiguous multi-interface device ranks rather than silently aggregating them.
+
+Changed rows inherit the replacement profile's initial connectivity, routing,
+kind and rank. Coordinates, heights, IDs and other columns remain intact.
+No promoted device is automatically fixed or marked connected. The generated
+scenario is independent from its source and can be opened through the ordinary
+SDK. Existing generated files are never overwritten by prepare(). The recipe
+and resolved snapshot are separate. Source/result provenance is recorded.
+
+This example adds graph connectivity rules for LTE sectors, bounded Wi-SUN
+neighbors and same-device forwarding. `sector_aware=true` is supported for RF
+graph rules to preserve LTE source-sector filtering. New Wi-SUN features must
+be extracted; the inherited LTE cache does not cover a different frequency.
+Read the project README for radio assumptions and rank-threshold limitations.
+
+### Explicit replacement connectivity and rank (SDK 0.1.33+)
+
+Rules may add `connected = true/false` and `rank = "copy"` or a finite numeric
+rank. Copy uses the source result, not the original CSV. Numeric ranks bias
+RPL gateway preference; lower initial rank is more attractive. Omitted actions
+use the replacement profile defaults. Connected devices require a finite rank;
+unconnected devices must start at infinity (leave rank omitted). Missing or
+ambiguous copied ranks fail before output writes. Each replacement report
+includes initial_connected, initial_rank, rank_action and the original rank.
+
+Example 3's first rule now explicitly makes good LTE nodes connected gateways
+and copies their ranks. The Wi-SUN candidate rule targets unconnected devices,
+removing gateway-to-gateway links while preserving multihop secondary links.
+Its second rule leaves mesh-only clients unconnected. Existing generated
+projects are not rewritten; prepare a new destination using the updated recipe.
+
+SDK 0.1.34 makes derived preparation repeatable: unchanged prepared studies are
+reused, while `prepare(overwrite=True)` regenerates changed inputs in place,
+retains extracted features, and archives obsolete result/view files. The active
+result must then be recalculated; old solutions are available in the backup.
+
+## HTML evaluation reports (SDK 0.1.35+)
+
+`scenario.show_evaluation(rank_threshold=...)` displays one offline HTML browser
+instead of dumping DataFrames. It automatically writes `evaluation.html` in the
+active project directory. Targets include every technology, independently of
+the API service table's primary-tech filter. Separate sections show preset
+interfaces and selected links. Search, quality/technology filtering, rank/cost
+sorting, page size and record selection operate entirely locally. Internal
+forwarding edges are hidden by default. Threshold is report context, not a
+repeated field. Summary counts refer to interfaces, not distinct sites.
+
+Preset interfaces are initial conditions, not validated upstream connections.
+Their direct-dependent count considers selected cross-site children only; it
+is not a transitive traffic or unused-radio classification. Detailed IDs remain
+available on selection. No geographic extraction or solve is triggered by the
+view. `scenario.evaluation` retains the original API data for programmatic use.
+Call `show_evaluation(..., save_path=...)` to choose another report location.
+Existing calls and notebooks require no code changes. Trust notebook outputs
+if its iframe scripts are blocked, or open evaluation.html in a browser.
+
+## HTML metric browsing (SDK 0.1.36+)
+
+`scenario.show_metrics()` now displays one HTML metric browser and automatically
+saves `metrics.html` beside the active project's results. Search sites or
+interfaces, filter technology, sort by cost, select records, and browse pages.
+Internal forwarding edges are hidden unless requested. Metric-specific costs
+are not automatically labeled good/poor: evaluation uses accumulated route rank
+and its explicit threshold. These are computed candidates, not only the links
+chosen by the solver. Viewing reloads saved metrics via GET but never computes
+features or metrics. The original response remains in `scenario.metrics`.
+An optional `save_path` chooses another HTML destination. Existing notebook
+calls require no edits; trust outputs if notebook security blocks iframe scripts.

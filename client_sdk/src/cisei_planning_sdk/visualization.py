@@ -3,41 +3,28 @@ from math import isfinite
 from typing import Any
 
 
-def show_metrics(metrics: dict[str, Any]) -> None:
-    """Display saved link metric records without changing the response."""
-    import pandas as pd
-    from IPython.display import display
+def show_metrics(metrics: dict[str, Any], *, save_path=None, display=True):
+    """Browse saved link costs locally in HTML; no metric computation occurs."""
+    from cisei_planning_sdk.metrics_view import MetricsView
+    view = MetricsView(metrics)
+    if save_path is not None:
+        view.save_html(save_path)
+    if display:
+        from IPython.display import display as show
+        show(view)
+    return view
 
-    display(pd.DataFrame(metrics["metrics"]))
 
-
-def show_evaluation(evaluation: dict[str, Any]) -> None:
-    """Display the quality report as titled notebook tables, without changing it."""
-    import pandas as pd
-    from IPython.display import Markdown, display
-
-    titles = {
-        "quality_summary": "Quality overview",
-        "quality": "Quality at each location",
-        "service": "Network connections",
-        "result_edges": "Chosen connections",
-        "client_service": "Service at each location",
-        "cell_load": "Locations served by each cell",
-    }
-
-    def table(name, rows):
-        display(Markdown("### " + titles.get(name, name.replace("_", " ").capitalize())))
-        display(pd.DataFrame(rows))
-
-    if isinstance(evaluation.get("quality_summary"), dict):
-        table("quality_summary", [evaluation["quality_summary"]])
-    for name, rows in evaluation.items():
-        if isinstance(rows, list):
-            table(name, rows)
-        elif name == "cell" and isinstance(rows, dict):
-            for title, records in rows.items():
-                if isinstance(records, list):
-                    table(title, records)
+def show_evaluation(evaluation: dict[str, Any], *, save_path=None, display=True):
+    """Show one offline HTML evaluation browser, with optional standalone export."""
+    from cisei_planning_sdk.evaluation_view import EvaluationView
+    view = EvaluationView(evaluation)
+    if save_path is not None:
+        view.save_html(save_path)
+    if display:
+        from IPython.display import display as show
+        show(view)
+    return view
 
 
 def _plot_network_matplotlib(result: dict[str, Any], *, kind: str = "final", ax=None):

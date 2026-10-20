@@ -95,6 +95,19 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             return api.request(method, path, **kwargs)
 
         monkeypatch.setattr(requests.Session, "request", request)
+        if notebook.stem == "example_3_LTE_hybrid":
+            from cisei_planning_sdk import PlanningClient, PlanningProject
+            seed_client = PlanningClient("http://testserver", workspace="..")
+            seed_project = PlanningProject("../projects/example_2_LTE_simulation")
+            seed = seed_client.open_project(seed_project, planner="cell")
+            seed.build_candidate_edges()
+            seed.compute_metrics(batch_size=20, geo_base_url="http://features:8080")
+            seed.solve()
+            seed.save_result(rank_threshold=2)
+            baseline = seed_project.load_result()
+            next(n for n in baseline["planned_nodes"] if not n["connected"])["rank"] = 3.0
+            seed_project.save_result(baseline)
+            baseline_extractions = len(geo_calls)
         namespace = {"__name__": "__main__"}
         document = json.loads(notebook.read_text(encoding="utf-8"))
         for index, cell in enumerate(document["cells"]):
@@ -110,7 +123,15 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             import matplotlib.pyplot as plt
             assert (result_dir / "result.json").exists()
             plt.close("all")
-        if notebook.stem in LTE_NOTEBOOKS | {"custom_configuration"}:
+        if notebook.stem == "example_3_LTE_hybrid":
+            new_extractions = geo_calls[baseline_extractions:]
+            assert new_extractions and all(kwargs["freq_mhz"] == 915.0 for _, kwargs in new_extractions)
+            derived = tmp_path / "cisei_workspace/projects/example_3_LTE_hybrid"
+            assert (derived / "replacement_report.json").exists()
+            assert (derived / "solution_network.html").exists()
+            assert (derived / "evaluation.html").exists()
+            assert (derived / "metrics.html").exists()
+        if notebook.stem in LTE_NOTEBOOKS | {"custom_configuration", "example_3_LTE_hybrid"}:
             assert geo_calls, "The custom example must actually evaluate uploaded models and metrics"
         else:
             assert not geo_calls, "Synthetic smoke cases must not require geo data"

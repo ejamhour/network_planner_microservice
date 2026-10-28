@@ -1,0 +1,4 @@
+site_id,device_profile,lat,lon,mount_height_m,connected,can_route
+copel,mesh_node,-25.43273083515008,-49.339207159685344,7.0,False,False
+guaira,mesh_node,-25.42777449459199,-49.2655361005508,7.0,True,True
+italia,mesh_node,-25.43017531546412,-49.266232140399694,30.0,True,True

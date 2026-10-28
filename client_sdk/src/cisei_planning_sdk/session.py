@@ -44,6 +44,95 @@ class ScenarioSession:
     result: dict[str, Any] | None = None
     project: Any = None
 
+    def plan_mesh_link(self, src_site: str, dst_site: str, *, geo_base_url: str,
+                       pole_sites=None, poles=None, **options):
+        """Plan a link through candidate pole sites and save the standard result.
+
+        Candidate infrastructure comes from [mesh.poles].source (poles.csv),
+        separate from network nodes. Profiles describe proposed equipment and
+        are filtered by endpoint technology/frequency. Endpoints may be interface IDs or
+        unambiguous site IDs. Optional search controls use local [mesh]. All equipment comes from its normal profiles
+        and poles.csv. This creates a proposal, not an installed-network edit.
+        """
+        import tomlkit
+        defaults = {}
+        if self.project is not None:
+            defaults = dict(tomlkit.parse(self.project.scenario_path.read_text(encoding='utf-8')).get('mesh', {}))
+        from cisei_planning_sdk.local_io import load_poles_bundle
+        if poles is None:
+            poles = load_poles_bundle(self.project.scenario_path) if self.project is not None else None
+        defaults.pop('poles', None)
+        if pole_sites is None:
+            pole_sites = defaults.pop('pole_sites', None)
+        else:
+            defaults.pop('pole_sites', None)
+        allowed = {'max_repeaters', 'max_candidates', 'segment_threshold', 'search_heuristic', 'search_midpoint'}
+        controls = {**defaults, **options}
+        if set(controls) - allowed:
+            raise ValueError(f'Unknown mesh controls: {sorted(set(controls) - allowed)}')
+        result = self.client._request('post', f'/planning/scenarios/{self.scenario_id}/mesh/plan_link',
+                    json={'src_site': src_site, 'dst_site': dst_site, 'pole_sites': list(pole_sites) if pole_sites is not None else None,
+                          'poles': poles, 'geo_base_url': geo_base_url, **controls})['data']
+        self.result = result
+        self.solution = self.metrics = self.candidate_edges = self.evaluation = None
+        if self.project is not None:
+            self.project.save_result(result)
+            self.save_feature_cache()
+        return result
+
+    def show_mesh_link(self, *, kind="final", save_path=None):
+        """Display the last mesh proposal with the standard interactive map."""
+        from cisei_planning_sdk.visualization import plot_network
+        if kind not in {"final", "candidate"}:
+            raise ValueError("kind must be final or candidate")
+        if self.result is None or 'mesh_search' not in self.result:
+            raise RuntimeError('Run plan_mesh_link first')
+        if save_path is None and self.project is not None:
+            search = self.result['mesh_search']
+            # Site identifiers are not filesystem paths.
+            from hashlib import sha256
+            key = sha256((search['src_site'] + ':' + search['dst_site']).encode()).hexdigest()[:12]
+            save_path = self.project.path / f'mesh_{key}{"_candidates" if kind == "candidate" else ""}.html'
+        from IPython.display import HTML, display
+        from html import escape
+        search = self.result['mesh_search']
+        if kind == 'candidate':
+            candidates = self.result.get('mesh_candidates')
+            if candidates is None:
+                raise RuntimeError('Re-run planning with a service that exports the evaluated graph')
+            display(HTML('<p><strong>Enlaces avaliados na busca</strong><br>'
+                         + f"{search['evaluated_edges']} enlaces avaliados; "
+                         + f"{len(search.get('eligible_candidates', []))} candidatos compatíveis; "
+                         + f"{len(search.get('excluded_candidates', []))} candidatos excluídos por incompatibilidade ou configuração. "
+                         + 'Laranja: caminho selecionado; cinza: outras alternativas avaliadas. '
+                         + 'Clique em um enlace para consultar seu custo e se foi selecionado. '
+                         + 'Um candidato sem enlaces não foi avaliado nesta busca.</p>'))
+            return plot_network(candidates, kind='candidate', save_path=save_path)
+        status = ('Atende ao limite por segmento' if search['meets_segment_threshold']
+                  else 'Proposta com segmentos acima do limite; revisar')
+        display(HTML('<p><strong>' + escape(status) + '</strong><br>'
+                     + escape(' → '.join(search['node_path']))
+                     + f"<br>Repetidores: {len(search['repeaters'])}; custo acumulado: {search['path_cost']:.2f}; "
+                     + f"limite por segmento: {search['segment_threshold']:.2f}.</p>"))
+        return plot_network(self.result, save_path=save_path)
+
+    def show_mesh_candidates(self, *, save_path=None):
+        """Inspect all evaluated mesh links, including unselected alternatives."""
+        return self.show_mesh_link(kind='candidate', save_path=save_path)
+
+    def show_network(self, *, kind="final", rank_threshold=None, primary_tech="lte", save_path=None):
+        """Show a candidate graph or saved solution through the SDK visual view."""
+        from cisei_planning_sdk.visualization import plot_network
+        if kind not in {"candidate", "final"}:
+            raise ValueError("kind must be 'candidate' or 'final'")
+        # Candidate inspection is supported before solve; export_result is the
+        # existing server export used by the other candidate examples.
+        result = self.export_result(rank_threshold=rank_threshold, primary_tech=primary_tech)
+        if save_path is None and self.project is not None:
+            name = "candidate_network.html" if kind == "candidate" else "solution_network.html"
+            save_path = self.project.path / name
+        return plot_network(result, kind=kind, save_path=save_path)
+
     def link(self, geo: Any, src_interface: str, dst_interface: str) -> Any:
         """Prepare two compatible interfaces in an explicitly supplied features client.
 

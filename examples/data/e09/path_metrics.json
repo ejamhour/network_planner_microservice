@@ -1,0 +1,481 @@
+{
+  "network": "BRO-S",
+  "records": [
+    {
+      "site_id": "BRO-S-P7-001",
+      "rtt_metrics": {
+        "baseline": 11.4,
+        "delta_95": 0.1,
+        "delta_99": 0.1,
+        "mad": 0.0,
+        "ftsr": 1.0,
+        "intervalo": 0.3,
+        "media_xi": 0.09,
+        "max_xi": 0.3
+      },
+      "icmp_response_time": 0.012050000000000003,
+      "path_pkt_loss_count": 0.0,
+      "path_pkt_loss": 0.0,
+      "path_rtt_avg": 12.05,
+      "path_rtt_max": 14.691,
+      "path_rtt_min": 11.491999999999997
+    },
+    {
+      "site_id": "BRO-S-GE-003",
+      "rtt_metrics": {
+        "baseline": 25.3,
+        "delta_95": 18.25,
+        "delta_99": 20.9,
+        "mad": 8.8,
+        "ftsr": 0.21,
+        "intervalo": 36.3,
+        "media_xi": 15.6,
+        "max_xi": 36.3
+      },
+      "icmp_response_time": 0.09733399999999998,
+      "path_pkt_loss_count": 0.26,
+      "path_pkt_loss": 2.6,
+      "path_rtt_avg": 97.33399999999997,
+      "path_rtt_max": 284.652,
+      "path_rtt_min": 40.897999999999996
+    },
+    {
+      "site_id": "BRO-S-GE-004",
+      "rtt_metrics": {
+        "baseline": 22.2,
+        "delta_95": 17.96,
+        "delta_99": 19.85,
+        "mad": 12.95,
+        "ftsr": 0.24,
+        "intervalo": 36.1,
+        "media_xi": 17.18,
+        "max_xi": 36.1
+      },
+      "icmp_response_time": 0.058907999999999995,
+      "path_pkt_loss_count": 0.11,
+      "path_pkt_loss": 1.1,
+      "path_rtt_avg": 58.908,
+      "path_rtt_max": 142.84600000000003,
+      "path_rtt_min": 39.38
+    },
+    {
+      "site_id": "BRO-S-GE-005",
+      "rtt_metrics": {
+        "baseline": 121.98,
+        "delta_95": 31.5,
+        "delta_99": 34.51,
+        "mad": 16.5,
+        "ftsr": 0.06,
+        "intervalo": 83.02,
+        "media_xi": 45.34,
+        "max_xi": 83.02
+      },
+      "icmp_response_time": 0.19116999999999998,
+      "path_pkt_loss_count": 0.15,
+      "path_pkt_loss": 1.5,
+      "path_rtt_avg": 191.17,
+      "path_rtt_max": 270.91,
+      "path_rtt_min": 167.3
+    },
+    {
+      "site_id": "BRO-S-GE-006",
+      "rtt_metrics": {
+        "baseline": 216.99,
+        "delta_95": 31.05,
+        "delta_99": 34.0,
+        "mad": 14.5,
+        "ftsr": 0.05,
+        "intervalo": 83.01,
+        "media_xi": 47.12,
+        "max_xi": 83.01
+      },
+      "icmp_response_time": 0.30197999999999997,
+      "path_pkt_loss_count": 0.09,
+      "path_pkt_loss": 0.9,
+      "path_rtt_avg": 301.98,
+      "path_rtt_max": 438.91,
+      "path_rtt_min": 264.1
+    },
+    {
+      "site_id": "BRO-S-GE-007",
+      "rtt_metrics": {
+        "baseline": 71.6,
+        "delta_95": 33.5,
+        "delta_99": 35.5,
+        "mad": 14.0,
+        "ftsr": 0.04,
+        "intervalo": 82.4,
+        "media_xi": 45.1,
+        "max_xi": 82.4
+      },
+      "icmp_response_time": 0.136844,
+      "path_pkt_loss_count": 0.05,
+      "path_pkt_loss": 0.5,
+      "path_rtt_avg": 136.84400000000002,
+      "path_rtt_max": 204.486,
+      "path_rtt_min": 116.68800000000002
+    },
+    {
+      "site_id": "BRO-S-GE-008",
+      "rtt_metrics": {
+        "baseline": 115.98,
+        "delta_95": 29.55,
+        "delta_99": 31.5,
+        "mad": 15.5,
+        "ftsr": 0.04,
+        "intervalo": 84.02,
+        "media_xi": 50.63,
+        "max_xi": 84.02
+      },
+      "icmp_response_time": 0.19823000000000002,
+      "path_pkt_loss_count": 0.26,
+      "path_pkt_loss": 2.6,
+      "path_rtt_avg": 198.23,
+      "path_rtt_max": 302.06,
+      "path_rtt_min": 166.59
+    },
+    {
+      "site_id": "BRO-S-GE-009",
+      "rtt_metrics": {
+        "baseline": 118.99,
+        "delta_95": 32.05,
+        "delta_99": 35.0,
+        "mad": 17.5,
+        "ftsr": 0.06,
+        "intervalo": 84.01,
+        "media_xi": 50.6,
+        "max_xi": 84.01
+      },
+      "icmp_response_time": 0.20939,
+      "path_pkt_loss_count": 0.15,
+      "path_pkt_loss": 1.5,
+      "path_rtt_avg": 209.39,
+      "path_rtt_max": 358.19,
+      "path_rtt_min": 169.58
+    },
+    {
+      "site_id": "BRO-S-GE-010",
+      "rtt_metrics": {
+        "baseline": 114.99,
+        "delta_95": 32.5,
+        "delta_99": 36.52,
+        "mad": 14.5,
+        "ftsr": 0.04,
+        "intervalo": 90.01,
+        "media_xi": 49.5,
+        "max_xi": 90.01
+      },
+      "icmp_response_time": 0.1992,
+      "path_pkt_loss_count": 0.19,
+      "path_pkt_loss": 1.9,
+      "path_rtt_avg": 199.2,
+      "path_rtt_max": 305.04,
+      "path_rtt_min": 164.48
+    },
+    {
+      "site_id": "BRO-S-GE-012",
+      "rtt_metrics": {
+        "baseline": 170.82,
+        "delta_95": 29.15,
+        "delta_99": 33.03,
+        "mad": 17.0,
+        "ftsr": 0.041,
+        "intervalo": 80.18,
+        "media_xi": 44.55,
+        "max_xi": 80.18
+      },
+      "icmp_response_time": 0.23987000000000003,
+      "path_pkt_loss_count": 0.39,
+      "path_pkt_loss": 3.9,
+      "path_rtt_avg": 239.87,
+      "path_rtt_max": 342.81,
+      "path_rtt_min": 211.0
+    },
+    {
+      "site_id": "BRO-S-GE-013",
+      "rtt_metrics": {
+        "baseline": 119.0,
+        "delta_95": 33.55,
+        "delta_99": 36.51,
+        "mad": 16.5,
+        "ftsr": 0.04,
+        "intervalo": 85.0,
+        "media_xi": 47.54,
+        "max_xi": 85.0
+      },
+      "icmp_response_time": 0.21341,
+      "path_pkt_loss_count": 0.14,
+      "path_pkt_loss": 1.4,
+      "path_rtt_avg": 213.41,
+      "path_rtt_max": 352.64,
+      "path_rtt_min": 166.54
+    },
+    {
+      "site_id": "BRO-S-GE-014",
+      "rtt_metrics": {
+        "baseline": 22.2,
+        "delta_95": 18.64,
+        "delta_99": 21.61,
+        "mad": 13.2,
+        "ftsr": 0.33,
+        "intervalo": 36.3,
+        "media_xi": 15.12,
+        "max_xi": 36.3
+      },
+      "icmp_response_time": 0.062490999999999984,
+      "path_pkt_loss_count": 0.13,
+      "path_pkt_loss": 1.3,
+      "path_rtt_avg": 62.49099999999999,
+      "path_rtt_max": 175.31900000000002,
+      "path_rtt_min": 37.318000000000005
+    },
+    {
+      "site_id": "BRO-S-GE-016",
+      "rtt_metrics": {
+        "baseline": 68.59,
+        "delta_95": 34.5,
+        "delta_99": 34.51,
+        "mad": 16.0,
+        "ftsr": 0.04,
+        "intervalo": 84.41,
+        "media_xi": 48.45,
+        "max_xi": 84.41
+      },
+      "icmp_response_time": 0.14953000000000002,
+      "path_pkt_loss_count": 0.12,
+      "path_pkt_loss": 1.2,
+      "path_rtt_avg": 149.53,
+      "path_rtt_max": 263.98,
+      "path_rtt_min": 117.023
+    },
+    {
+      "site_id": "BRO-S-GE-017",
+      "rtt_metrics": {
+        "baseline": 54.58,
+        "delta_95": 25.02,
+        "delta_99": 28.53,
+        "mad": 11.5,
+        "ftsr": 0.13,
+        "intervalo": 51.42,
+        "media_xi": 21.29,
+        "max_xi": 51.42
+      },
+      "icmp_response_time": 0.10116499999999999,
+      "path_pkt_loss_count": 0.33,
+      "path_pkt_loss": 3.3,
+      "path_rtt_avg": 101.165,
+      "path_rtt_max": 193.21599999999998,
+      "path_rtt_min": 75.842
+    },
+    {
+      "site_id": "BRO-S-GE-019",
+      "rtt_metrics": {
+        "baseline": 53.2,
+        "delta_95": 25.74,
+        "delta_99": 27.11,
+        "mad": 12.0,
+        "ftsr": 0.153,
+        "intervalo": 46.8,
+        "media_xi": 21.01,
+        "max_xi": 46.8
+      },
+      "icmp_response_time": 0.11744499999999998,
+      "path_pkt_loss_count": 0.33,
+      "path_pkt_loss": 3.3,
+      "path_rtt_avg": 117.445,
+      "path_rtt_max": 281.418,
+      "path_rtt_min": 72.72599999999998
+    },
+    {
+      "site_id": "BRO-S-GE-020",
+      "rtt_metrics": {
+        "baseline": 22.1,
+        "delta_95": 14.41,
+        "delta_99": 15.81,
+        "mad": 12.0,
+        "ftsr": 0.25,
+        "intervalo": 36.7,
+        "media_xi": 17.35,
+        "max_xi": 36.7
+      },
+      "icmp_response_time": 0.084815,
+      "path_pkt_loss_count": 0.14,
+      "path_pkt_loss": 1.4,
+      "path_rtt_avg": 84.815,
+      "path_rtt_max": 244.143,
+      "path_rtt_min": 39.453
+    },
+    {
+      "site_id": "BRO-S-GE-023",
+      "rtt_metrics": {
+        "baseline": 170.96,
+        "delta_95": 32.1,
+        "delta_99": 37.04,
+        "mad": 16.0,
+        "ftsr": 0.051,
+        "intervalo": 79.04,
+        "media_xi": 40.79,
+        "max_xi": 79.04
+      },
+      "icmp_response_time": 0.27403,
+      "path_pkt_loss_count": 0.43,
+      "path_pkt_loss": 4.3,
+      "path_rtt_avg": 274.03,
+      "path_rtt_max": 483.25,
+      "path_rtt_min": 209.61
+    },
+    {
+      "site_id": "BRO-S-GE-024",
+      "rtt_metrics": {
+        "baseline": 56.8,
+        "delta_95": 21.9,
+        "delta_99": 25.84,
+        "mad": 10.6,
+        "ftsr": 0.07,
+        "intervalo": 53.2,
+        "media_xi": 23.77,
+        "max_xi": 53.2
+      },
+      "icmp_response_time": 0.121547,
+      "path_pkt_loss_count": 0.15,
+      "path_pkt_loss": 1.5,
+      "path_rtt_avg": 121.54700000000001,
+      "path_rtt_max": 290.254,
+      "path_rtt_min": 80.56400000000001
+    },
+    {
+      "site_id": "BRO-S-GE-025",
+      "rtt_metrics": {
+        "baseline": 22.3,
+        "delta_95": 16.7,
+        "delta_99": 18.28,
+        "mad": 10.45,
+        "ftsr": 0.14,
+        "intervalo": 45.7,
+        "media_xi": 17.96,
+        "max_xi": 45.7
+      },
+      "icmp_response_time": 0.07536,
+      "path_pkt_loss_count": 0.1,
+      "path_pkt_loss": 1.0,
+      "path_rtt_avg": 75.36,
+      "path_rtt_max": 212.49300000000002,
+      "path_rtt_min": 40.259
+    },
+    {
+      "site_id": "BRO-S-GE-026",
+      "rtt_metrics": {
+        "baseline": 25.5,
+        "delta_95": 18.68,
+        "delta_99": 22.21,
+        "mad": 12.75,
+        "ftsr": 0.3,
+        "intervalo": 47.2,
+        "media_xi": 15.84,
+        "max_xi": 47.2
+      },
+      "icmp_response_time": 0.08400299999999998,
+      "path_pkt_loss_count": 0.09,
+      "path_pkt_loss": 0.9,
+      "path_rtt_avg": 84.00299999999999,
+      "path_rtt_max": 227.858,
+      "path_rtt_min": 41.336000000000006
+    },
+    {
+      "site_id": "BRO-S-GE-027",
+      "rtt_metrics": {
+        "baseline": 65.38,
+        "delta_95": 31.55,
+        "delta_99": 39.09,
+        "mad": 18.5,
+        "ftsr": 0.06,
+        "intervalo": 244.62,
+        "media_xi": 48.74,
+        "max_xi": 244.62
+      },
+      "icmp_response_time": 0.21165599999999998,
+      "path_pkt_loss_count": 0.34,
+      "path_pkt_loss": 3.4,
+      "path_rtt_avg": 211.65599999999998,
+      "path_rtt_max": 491.48,
+      "path_rtt_min": 114.10099999999998
+    },
+    {
+      "site_id": "BRO-S-GE-028",
+      "rtt_metrics": {
+        "baseline": 25.0,
+        "delta_95": 18.3,
+        "delta_99": 19.53,
+        "mad": 11.8,
+        "ftsr": 0.24,
+        "intervalo": 39.4,
+        "media_xi": 16.93,
+        "max_xi": 39.4
+      },
+      "icmp_response_time": 0.10939299999999999,
+      "path_pkt_loss_count": 0.12,
+      "path_pkt_loss": 1.2,
+      "path_rtt_avg": 109.39299999999999,
+      "path_rtt_max": 353.151,
+      "path_rtt_min": 41.931000000000004
+    },
+    {
+      "site_id": "BRO-S-GE-029",
+      "rtt_metrics": {
+        "baseline": 218.98,
+        "delta_95": 38.45,
+        "delta_99": 120.34,
+        "mad": 12.0,
+        "ftsr": 0.06,
+        "intervalo": 198.02,
+        "media_xi": 48.93,
+        "max_xi": 198.02
+      },
+      "icmp_response_time": 0.38769999999999993,
+      "path_pkt_loss_count": 0.23,
+      "path_pkt_loss": 2.3,
+      "path_rtt_avg": 387.7,
+      "path_rtt_max": 720.97,
+      "path_rtt_min": 267.89
+    },
+    {
+      "site_id": "BRO-S-GE-030",
+      "rtt_metrics": {
+        "baseline": 223.0,
+        "delta_95": 27.05,
+        "delta_99": 31.01,
+        "mad": 15.0,
+        "ftsr": 0.04,
+        "intervalo": 83.0,
+        "media_xi": 47.5,
+        "max_xi": 83.0
+      },
+      "icmp_response_time": 0.4139899999999999,
+      "path_pkt_loss_count": 0.24,
+      "path_pkt_loss": 2.4,
+      "path_rtt_avg": 413.99,
+      "path_rtt_max": 846.8,
+      "path_rtt_min": 270.5
+    },
+    {
+      "site_id": "BRO-S-GE-001",
+      "rtt_metrics": {
+        "baseline": 22.4,
+        "delta_95": 21.06,
+        "delta_99": 22.26,
+        "mad": 12.1,
+        "ftsr": 0.31,
+        "intervalo": 37.7,
+        "media_xi": 15.47,
+        "max_xi": 37.7
+      },
+      "icmp_response_time": 0.082125,
+      "path_pkt_loss_count": 0.06,
+      "path_pkt_loss": 0.6,
+      "path_rtt_avg": 82.125,
+      "path_rtt_max": 236.14500000000004,
+      "path_rtt_min": 37.873000000000005
+    }
+  ],
+  "note": "Métricas de caminho preservadas para cruzamento com a aplicação; não são métricas de um único salto. Unidades originais não convertidas."
+}

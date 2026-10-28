@@ -88,6 +88,7 @@ def config_table(planner, kind: str = "nodes"):
 
 
 def node_table(planner, kind: str = "rpl"):
+    planner._sync_interfaces()
     kind = kind.lower()
     if kind == "result":
         return node_index_table(planner)
@@ -128,6 +129,7 @@ def node_table(planner, kind: str = "rpl"):
 
 
 def node_index_table(planner, G=None):
+    planner._sync_interfaces()
     if planner.rpl is None:
         raise RuntimeError("RPL was not run")
 
@@ -145,6 +147,8 @@ def node_index_table(planner, G=None):
     }
 
     table = planner.rpl.node_index_table(G=G)
+    if len(table) == 0:
+        return table
 
     try:
         if "interface_can_relay" not in table:
@@ -170,16 +174,13 @@ def node_index_table(planner, G=None):
 
 
 def edge_table(planner, kind: str = "candidate"):
+    planner._sync_interfaces()
     kind = kind.lower()
     rpl_by_id = {node.node_id: node for node in planner.rpl_nodes}
     rows = []
 
     if kind == "candidate":
-        edges = (
-            planner.candidate_edges
-            if planner.candidate_edges
-            else planner.build_candidate_edges_from_rules()
-        )
+        edges = planner._candidate_edges_or_build()
         metric_by_edge = {}
     elif kind == "metric":
         edges = list(planner.edge_metrics)

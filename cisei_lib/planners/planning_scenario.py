@@ -118,6 +118,7 @@ class PlanningScenario:
         self.candidate_edges: list[tuple[str, str]] = []
         self.candidate_edge_attrs: dict[tuple[str, str], dict[str, Any]] = {}
         self.instance_source: dict[str, Any] = {}
+        self.interface_overrides: dict[str, dict[str, Any]] = {}
 
     @classmethod
     def from_config_dict(
@@ -184,7 +185,44 @@ class PlanningScenario:
         for site_config in config.get("sites", []):
             scenario.add_site_node(scenario._site_node_from_config(site_config))
 
+        scenario.interface_overrides = scenario._parse_interface_overrides(
+            config.get("overrides", {})
+        )
+        if scenario.site_nodes or not scenario.instance_source:
+            scenario._apply_interface_overrides()
         return scenario
+
+    @staticmethod
+    def _parse_interface_overrides(overrides: Any) -> dict[str, dict[str, Any]]:
+        if not isinstance(overrides, Mapping) or set(overrides) - {"interfaces"}:
+            raise ValueError("overrides must be a table containing only interfaces")
+        adjustments = overrides.get("interfaces", {})
+        if not isinstance(adjustments, Mapping):
+            raise ValueError("overrides.interfaces must be a table")
+        for iid, fields in adjustments.items():
+            if not isinstance(iid, str) or not iid.strip():
+                raise ValueError("Override interface id must be a non-empty string")
+            if not isinstance(fields, Mapping) or set(fields) - {"enabled"}:
+                raise ValueError(f"Override {iid}: only enabled is supported")
+            if "enabled" in fields and not isinstance(fields["enabled"], bool):
+                raise ValueError(f"Override {iid}: enabled must be a boolean")
+        return {iid: dict(fields) for iid, fields in adjustments.items()}
+
+    def _apply_interface_overrides(self) -> None:
+        interfaces = {}
+        for site in self.site_nodes.values():
+            for interface in site.interfaces:
+                iid = interface.interface_id
+                if iid in interfaces:
+                    raise ValueError(f"Duplicate interface id: {iid}")
+                interfaces[iid] = interface
+        # Validate the entire set before changing any instance.
+        for iid in self.interface_overrides:
+            if iid not in interfaces:
+                raise ValueError(f"Override references unknown interface: {iid}")
+        for iid, fields in self.interface_overrides.items():
+            if "enabled" in fields:
+                interfaces[iid].enabled = fields["enabled"]
 
     @classmethod
     def from_toml(
@@ -217,6 +255,7 @@ class PlanningScenario:
         scenario = cls.from_config_dict(config, working_crs=working_crs)
         if load_instances and not scenario.site_nodes:
             scenario.load_instance_source(path.parent)
+            scenario._apply_interface_overrides()
         return scenario
 
     def add_antenna_profile(
@@ -302,6 +341,9 @@ class PlanningScenario:
             Antenna profile id.
 
         Optional profile fields:
+        ``enabled``:
+            Boolean initial activation state, defaulting to true. Concrete
+            instances preserve this field when saved and reloaded.
         ``can_relay``:
             Whether this interface may forward within the RPL graph for its
             own technology. Defaults are interpreted later by consumers.
@@ -334,6 +376,8 @@ class PlanningScenario:
             profile["max_links"] = self._max_links_value(profile["max_links"])
         profile["tech"] = str(profile["tech"])
         profile["antenna_id"] = str(profile["antenna_id"])
+        if "enabled" in profile and not isinstance(profile["enabled"], bool):
+            raise ValueError("Interface enabled must be a boolean")
         self.interface_profiles[profile_id] = profile
 
     def remove_interface_profile(
@@ -854,7 +898,7 @@ class PlanningScenario:
             return []
 
         records = self._read_csv_records(source)
-        return self.add_node_instances(
+        nodes = self.add_node_instances(
             records,
             profile_column=str(self.instance_source.get("profile_column")),
             resolve=resolve,
@@ -862,6 +906,8 @@ class PlanningScenario:
             tolerance_m=tolerance_m,
             update=update,
         )
+        self._apply_interface_overrides()
+        return nodes
 
     def to_instance_records(self) -> list[dict[str, Any]]:
         """
@@ -1139,6 +1185,8 @@ class PlanningScenario:
             config["metrics"] = deepcopy(self.metric_specs_by_tech)
         if self.instance_source:
             config["instances"] = deepcopy(self.instance_source)
+        if self.interface_overrides:
+            config["overrides"] = {"interfaces": deepcopy(self.interface_overrides)}
 
         net = {}
         if self.connectivity_rules:
@@ -1429,6 +1477,7 @@ class PlanningScenario:
                         interface_profile.get("max_links")
                     ),
                     extra={"interface_profile": interface_profile_id},
+                    enabled=interface_profile.get("enabled", True),
                 )
             )
 
@@ -1556,6 +1605,7 @@ class PlanningScenario:
         for interface_config in interfaces_config:
             interface_config = dict(interface_config)
             known_interface_keys = {
+                "enabled",
                 "interface_id",
                 "device_id",
                 "site_id",
@@ -1585,6 +1635,7 @@ class PlanningScenario:
                     freq_mhz=float(interface_config["freq_mhz"]),
                     tx_power_dbm=float(interface_config["tx_power_dbm"]),
                     antenna_id=str(interface_config["antenna_id"]),
+                    enabled=interface_config.get("enabled", True),
                     can_relay=PlanningScenario._bool_value(
                         interface_config.get("can_relay"),
                         True,

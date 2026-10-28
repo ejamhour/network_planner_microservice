@@ -407,9 +407,11 @@ class PoleGraph:
         return path, cost, path_details, edge_details
 
     # Find up to n-shortest path with cutoff hops or less
-    def find_shortest_paths(self, s_label, d_label, cutoff, beam_width, weight='metric', max_metric=None):
+    def find_shortest_paths(self, s_label, d_label, cutoff, beam_width, weight='metric', max_metric=None, max_edge_metric=None):
         candidates = []
         for path in nx.all_simple_paths(self.G, s_label, d_label, cutoff=cutoff + 1):
+            if max_edge_metric is not None and any(self.G[u][v][weight] > max_edge_metric for u, v in zip(path, path[1:])):
+                continue
             cost = sum(self.G[u][v][weight] for u, v in zip(path, path[1:]))
             if max_metric is not None and cost > max_metric:
                 continue

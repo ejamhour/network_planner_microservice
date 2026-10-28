@@ -1,0 +1,870 @@
+{
+  "format": "cisei-link-measurements",
+  "version": 1,
+  "records": [
+    {
+      "id": "BRO-S-P7-001__BRO-S-GE-003",
+      "request": {
+        "tx": [
+          -26.24628645,
+          -53.63843458
+        ],
+        "rx": [
+          -26.254284,
+          -53.633391
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-003",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-003:d0:i0"
+      },
+      "measures": {
+        "rssi": -71.25,
+        "lqi": 17.28,
+        "snr": 39.03
+      },
+      "link_id": "BRO-S-P7-001__BRO-S-GE-003",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-P7-001__BRO-S-GE-004",
+      "request": {
+        "tx": [
+          -26.24628645,
+          -53.63843458
+        ],
+        "rx": [
+          -26.240172,
+          -53.630832
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-004",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-004:d0:i0"
+      },
+      "measures": {
+        "rssi": -54.25,
+        "lqi": 16.58,
+        "snr": 58.94
+      },
+      "link_id": "BRO-S-P7-001__BRO-S-GE-004",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-007__BRO-S-GE-005",
+      "request": {
+        "tx": [
+          -26.2224,
+          -53.527
+        ],
+        "rx": [
+          -26.22885975,
+          -53.50450788
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-007",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-007:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-005",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-005:d0:i0"
+      },
+      "measures": {
+        "rssi": -64.03,
+        "lqi": 16.34,
+        "snr": 49.32
+      },
+      "link_id": "BRO-S-GE-007__BRO-S-GE-005",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-012__BRO-S-GE-006",
+      "request": {
+        "tx": [
+          -26.243832,
+          -53.489908
+        ],
+        "rx": [
+          -26.232537,
+          -53.454682
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-012",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-012:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-006",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-006:d0:i0"
+      },
+      "measures": {
+        "rssi": -61.4,
+        "lqi": 16.49,
+        "snr": 51.24
+      },
+      "link_id": "BRO-S-GE-012__BRO-S-GE-006",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-024__BRO-S-GE-007",
+      "request": {
+        "tx": [
+          -26.229448,
+          -53.519369
+        ],
+        "rx": [
+          -26.2224,
+          -53.527
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-024",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-024:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-007",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-007:d0:i0"
+      },
+      "measures": {
+        "rssi": -68.36,
+        "lqi": 17.49,
+        "snr": 46.05
+      },
+      "link_id": "BRO-S-GE-024__BRO-S-GE-007",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-007__BRO-S-GE-008",
+      "request": {
+        "tx": [
+          -26.2224,
+          -53.527
+        ],
+        "rx": [
+          -26.22464685,
+          -53.51989572
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-007",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-007:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-008",
+        "pw": 30.0,
+        "ant_gain": 2.5,
+        "interface_id": "BRO-S-GE-008:d0:i0"
+      },
+      "measures": {
+        "rssi": -56.82,
+        "lqi": 16.24,
+        "snr": 55.76
+      },
+      "link_id": "BRO-S-GE-007__BRO-S-GE-008",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-027__BRO-S-GE-009",
+      "request": {
+        "tx": [
+          -26.178154,
+          -53.628737
+        ],
+        "rx": [
+          -26.181362,
+          -53.610667
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-027",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-027:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-009",
+        "pw": 27.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-009:d0:i0"
+      },
+      "measures": {
+        "rssi": -61.59,
+        "lqi": 16.25,
+        "snr": 51.78
+      },
+      "link_id": "BRO-S-GE-027__BRO-S-GE-009",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-007__BRO-S-GE-010",
+      "request": {
+        "tx": [
+          -26.2224,
+          -53.527
+        ],
+        "rx": [
+          -26.241828,
+          -53.485302
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-007",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-007:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-010",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-010:d0:i0"
+      },
+      "measures": {
+        "rssi": -70.51,
+        "lqi": 16.7,
+        "snr": 41.7
+      },
+      "link_id": "BRO-S-GE-007__BRO-S-GE-010",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-010__BRO-S-GE-012",
+      "request": {
+        "tx": [
+          -26.241828,
+          -53.485302
+        ],
+        "rx": [
+          -26.243832,
+          -53.489908
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-010",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-010:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-012",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-012:d0:i0"
+      },
+      "measures": {
+        "rssi": -48.09,
+        "lqi": 16.41,
+        "snr": 58.47
+      },
+      "link_id": "BRO-S-GE-010__BRO-S-GE-012",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-027__BRO-S-GE-013",
+      "request": {
+        "tx": [
+          -26.178154,
+          -53.628737
+        ],
+        "rx": [
+          -26.171511,
+          -53.559785
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-027",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-027:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-013",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-013:d0:i0"
+      },
+      "measures": {
+        "rssi": -74.42,
+        "lqi": 16.47,
+        "snr": 38.88
+      },
+      "link_id": "BRO-S-GE-027__BRO-S-GE-013",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-P7-001__BRO-S-GE-014",
+      "request": {
+        "tx": [
+          -26.24628645,
+          -53.63843458
+        ],
+        "rx": [
+          -26.255065,
+          -53.625233
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-014",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-014:d0:i0"
+      },
+      "measures": {
+        "rssi": -59.79,
+        "lqi": 16.26,
+        "snr": 52.87
+      },
+      "link_id": "BRO-S-P7-001__BRO-S-GE-014",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-017__BRO-S-GE-016",
+      "request": {
+        "tx": [
+          -26.186788,
+          -53.638672
+        ],
+        "rx": [
+          -26.185217,
+          -53.65927
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-017",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-017:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-016",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-016:d0:i0"
+      },
+      "measures": {
+        "rssi": -86.22,
+        "lqi": 16.85,
+        "snr": 28.11
+      },
+      "link_id": "BRO-S-GE-017__BRO-S-GE-016",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-028__BRO-S-GE-017",
+      "request": {
+        "tx": [
+          -26.212451,
+          -53.639681
+        ],
+        "rx": [
+          -26.186788,
+          -53.638672
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-028",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-028:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-017",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-017:d0:i0"
+      },
+      "measures": {
+        "rssi": -58.98,
+        "lqi": 16.94,
+        "snr": 53.51
+      },
+      "link_id": "BRO-S-GE-028__BRO-S-GE-017",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-020__BRO-S-GE-019",
+      "request": {
+        "tx": [
+          -26.242838,
+          -53.565339
+        ],
+        "rx": [
+          -26.28,
+          -53.5279
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-020",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-020:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-019",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-019:d0:i0"
+      },
+      "measures": {
+        "rssi": -72.54,
+        "lqi": 16.78,
+        "snr": 40.97
+      },
+      "link_id": "BRO-S-GE-020__BRO-S-GE-019",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-P7-001__BRO-S-GE-020",
+      "request": {
+        "tx": [
+          -26.24628645,
+          -53.63843458
+        ],
+        "rx": [
+          -26.242838,
+          -53.565339
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-020",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-020:d0:i0"
+      },
+      "measures": {
+        "rssi": -79.81,
+        "lqi": 16.22,
+        "snr": 33.48
+      },
+      "link_id": "BRO-S-P7-001__BRO-S-GE-020",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-013__BRO-S-GE-023",
+      "request": {
+        "tx": [
+          -26.171511,
+          -53.559785
+        ],
+        "rx": [
+          -26.1821901,
+          -53.5887649
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-013",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-013:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-023",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-023:d0:i0"
+      },
+      "measures": {
+        "rssi": -73.18,
+        "lqi": 16.83,
+        "snr": 39.8
+      },
+      "link_id": "BRO-S-GE-013__BRO-S-GE-023",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-025__BRO-S-GE-024",
+      "request": {
+        "tx": [
+          -26.243549,
+          -53.524226
+        ],
+        "rx": [
+          -26.229448,
+          -53.519369
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-025",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-025:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-024",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-024:d0:i0"
+      },
+      "measures": {
+        "rssi": -69.6,
+        "lqi": 16.85,
+        "snr": 42.87
+      },
+      "link_id": "BRO-S-GE-025__BRO-S-GE-024",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-026__BRO-S-GE-025",
+      "request": {
+        "tx": [
+          -26.243549,
+          -53.524226
+        ],
+        "rx": [
+          -26.243549,
+          -53.524226
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-026",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-026:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-025",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-025:d0:i0"
+      },
+      "measures": {
+        "rssi": 0.0,
+        "lqi": 0.0,
+        "snr": 0.0
+      },
+      "link_id": "BRO-S-GE-026__BRO-S-GE-025",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-P7-001__BRO-S-GE-026",
+      "request": {
+        "tx": [
+          -26.24628645,
+          -53.63843458
+        ],
+        "rx": [
+          -26.243549,
+          -53.524226
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-026",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-026:d0:i0"
+      },
+      "measures": {
+        "rssi": -61.12,
+        "lqi": 16.48,
+        "snr": 51.2
+      },
+      "link_id": "BRO-S-P7-001__BRO-S-GE-026",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-017__BRO-S-GE-027",
+      "request": {
+        "tx": [
+          -26.186788,
+          -53.638672
+        ],
+        "rx": [
+          -26.178154,
+          -53.628737
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-017",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-017:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-027",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-027:d0:i0"
+      },
+      "measures": {
+        "rssi": -83.97,
+        "lqi": 17.26,
+        "snr": 27.91
+      },
+      "link_id": "BRO-S-GE-017__BRO-S-GE-027",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-001__BRO-S-GE-028",
+      "request": {
+        "tx": [
+          -26.212451,
+          -53.639681
+        ],
+        "rx": [
+          -26.212451,
+          -53.639681
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-001",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-001:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-028",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-028:d0:i0"
+      },
+      "measures": {
+        "rssi": 0.0,
+        "lqi": 0.0,
+        "snr": 0.0
+      },
+      "link_id": "BRO-S-GE-001__BRO-S-GE-028",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-023__BRO-S-GE-029",
+      "request": {
+        "tx": [
+          -26.1821901,
+          -53.5887649
+        ],
+        "rx": [
+          -26.19242073,
+          -53.60244156
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-023",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-023:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-029",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-029:d0:i0"
+      },
+      "measures": {
+        "rssi": -77.93,
+        "lqi": 16.19,
+        "snr": 34.51
+      },
+      "link_id": "BRO-S-GE-023__BRO-S-GE-029",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-GE-023__BRO-S-GE-030",
+      "request": {
+        "tx": [
+          -26.1821901,
+          -53.5887649
+        ],
+        "rx": [
+          -26.19462906,
+          -53.60109048
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-GE-023",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-GE-023:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-030",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-030:d0:i0"
+      },
+      "measures": {
+        "rssi": -82.78,
+        "lqi": 16.86,
+        "snr": 31.02
+      },
+      "link_id": "BRO-S-GE-023__BRO-S-GE-030",
+      "origin_field": "next_hop_rssi"
+    },
+    {
+      "id": "BRO-S-P7-001__BRO-S-GE-001",
+      "request": {
+        "tx": [
+          -26.24628645,
+          -53.63843458
+        ],
+        "rx": [
+          -26.212451,
+          -53.639681
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "BRO-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "BRO-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "BRO-S-GE-001",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "BRO-S-GE-001:d0:i0"
+      },
+      "measures": {
+        "rssi": -70.58,
+        "lqi": 17.83,
+        "snr": 40.81
+      },
+      "link_id": "BRO-S-P7-001__BRO-S-GE-001",
+      "origin_field": "next_hop_rssi"
+    }
+  ]
+}

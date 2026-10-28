@@ -24,6 +24,48 @@ router = APIRouter(prefix="/planning", tags=["planning"])
 PlannerKind = Literal["graph", "cell"]
 
 
+class MeshLinkBody(BaseModel):
+    """Single-link pole search using the scenario's equipment profiles."""
+    src_site: str
+    dst_site: str
+    pole_sites: list[str] | None = None
+    poles: list[dict[str, Any]] | None = None
+    geo_base_url: str | None = None
+    max_repeaters: int = Field(default=5, ge=0, le=20)
+    max_candidates: int = Field(default=5, ge=1, le=50)
+    segment_threshold: float = Field(default=2.0, ge=1, allow_inf_nan=False)
+    search_heuristic: Literal['sector_band', 'dual_cone'] = 'sector_band'
+    search_midpoint: bool = True
+
+
+@router.post('/scenarios/{scenario_id}/mesh/plan_link')
+async def plan_mesh_link(request: Request, scenario_id: str, body: MeshLinkBody):
+    """Search available sites for repeaters; save an independent link solution.
+
+    The original scenario remains unchanged. Only selected sites receive
+    proposed equipment in the result. No legacy home directories are accessed.
+    """
+    try:
+        from cisei_lib.planners.mesh_link_planner import MeshLinkPlanner
+        runtime = request.app.state.runtime
+        scenario = _stored_scenario(request, scenario_id)
+        cache = runtime.feature_caches.setdefault(scenario_id, FeatureCache())
+        geo = CachedGeo(runtime, cache, base_url=_geo_base_url(body.geo_base_url),
+                        user_prefix='mesh', pool_size=2, timeout=120.0)
+        planner = MeshLinkPlanner(scenario, src_site=body.src_site, dst_site=body.dst_site,
+                                  pole_sites=body.pole_sites, poles=body.poles, geo=geo,
+                                  max_repeaters=body.max_repeaters,
+                                  max_candidates=body.max_candidates,
+                                  segment_threshold=body.segment_threshold,
+                                  search_heuristic=body.search_heuristic,
+                                  search_midpoint=body.search_midpoint)
+        graph, result = await planner.plan()
+        runtime.planning_planners[scenario_id] = graph
+        return _ok(result)
+    except Exception as exc:
+        return _error(exc)
+
+
 class ScenarioBody(BaseModel):
     """A complete PlanningScenario configuration as JSON."""
 
@@ -643,7 +685,10 @@ async def _compute_or_assign_metrics(
     cache=None,
 ) -> None:
     if body.edge_metrics is not None:
-        planner.edge_metrics = _edge_metric_mapping(body.edge_metrics)
+        planner._sync_interfaces()
+        metrics = _edge_metric_mapping(body.edge_metrics)
+        planner._validate_active_edges(metrics)
+        planner.edge_metrics = metrics
         return
 
     if runtime is None:

@@ -75,6 +75,7 @@ class CellPlanner:
         ``limit_m`` optionally rejects long links. ``degree`` optionally keeps
         only the nearest N candidate clients per source interface.
         """
+        self.graph._sync_interfaces()
         if degree is not None and degree < 0:
             raise ValueError("degree must be >= 0")
         if limit_m is not None and limit_m < 0:

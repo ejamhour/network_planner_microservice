@@ -1,0 +1,532 @@
+[scenario]
+working_crs = "EPSG:31982"
+
+[antennas.ge_radio_1]
+kind = "omni"
+gain_dbi = 8.15
+height_m = 7.0
+description = "Antena OMNI original; ganho informado, sem diagrama direcional disponível"
+original_type = "OMNI"
+
+[antennas.ge_radio_2]
+kind = "omni"
+gain_dbi = 14.0
+height_m = 7.0
+description = "Antena YAGI original; ganho informado, sem diagrama direcional disponível"
+original_type = "YAGI"
+
+[antennas.ge_radio_3]
+kind = "omni"
+gain_dbi = 2.5
+height_m = 7.0
+description = "Antena OMNI original; ganho informado, sem diagrama direcional disponível"
+original_type = "OMNI"
+
+[interfaces.ge_radio_1]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_1"
+can_relay = true
+
+[interfaces.ge_radio_2]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_2"
+can_relay = true
+
+[interfaces.ge_radio_3]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_3"
+can_relay = true
+
+[devices.ge_radio_1]
+interfaces = ["ge_radio_1"]
+can_route = true
+connected = false
+
+[devices.ge_radio_2]
+interfaces = ["ge_radio_2"]
+can_route = true
+connected = false
+
+[devices.ge_radio_3]
+interfaces = ["ge_radio_3"]
+can_route = true
+connected = false
+
+[metrics.ge_mesh]
+spec = "version = 1\nresult = \"metric\"\n\n[expressions]\npredicted_rssi_dbm = \"0.0 + (1.0) * (tx.pw) + (1.0) * (tx.ant_gain) + (1.0) * (rx.ant_gain) + (1.114337839919779) * (-features.fspl) + (1.0) * (-features.delta_diffra) + (3.8599562365669438) * (-log10(1.0 + features.vegetation.boundary)) + (3.5389950747179117) * (-log10(1.0 + features.vegetation.fresnel)) + (2.3297748731723593) * (-log10(1.0 + features.vegetation.core)) + (1.940764307389644) * (-log10(1.0 + features.buildings.boundary)) + (1.1953311899967727) * (-log10(1.0 + features.buildings.fresnel)) + (1.0581500710246432) * (-log10(1.0 + features.buildings.core))\"\nmetric = \"max(1.0, 2.0 - (predicted_rssi_dbm - params.required_rssi_dbm) / params.db_per_cost)\"\n\n[parameters]\nrequired_rssi_dbm = -80.0\ndb_per_cost = 10.0\n"
+
+[instances]
+source = "nodes.csv"
+format = "csv"
+profile_column = "device_profile"
+
+[net]
+connectivity = []
+
+[[net.candidate_edges]]
+src = "AGU-S-P7-001:d0:i0"
+dst = "AGU-S-GE-001:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-P7-001__AGU-S-GE-001"
+
+[[net.candidate_edges]]
+src = "AGU-S-P7-001:d0:i0"
+dst = "AGU-S-GE-002:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-P7-001__AGU-S-GE-002"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-002:d0:i0"
+dst = "AGU-S-GE-003:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-002__AGU-S-GE-003"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-003:d0:i0"
+dst = "AGU-S-GE-004:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-003__AGU-S-GE-004"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-004:d0:i0"
+dst = "AGU-S-GE-005:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-004__AGU-S-GE-005"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-005:d0:i0"
+dst = "AGU-S-GE-006:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-005__AGU-S-GE-006"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-006:d0:i0"
+dst = "AGU-S-GE-007:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-006__AGU-S-GE-007"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-002:d0:i0"
+dst = "AGU-S-GE-008:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-002__AGU-S-GE-008"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-003:d0:i0"
+dst = "AGU-S-GE-009:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-003__AGU-S-GE-009"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-009:d0:i0"
+dst = "AGU-S-GE-010:d0:i0"
+kind = "internal"
+origin = "installed_network"
+link_id = "AGU-S-GE-009__AGU-S-GE-010"
+metric = 0.0
+connection_type = "back_to_back"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-010:d0:i0"
+dst = "AGU-S-GE-011:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-010__AGU-S-GE-011"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-065:d0:i0"
+dst = "AGU-S-GE-012:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-065__AGU-S-GE-012"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-065:d0:i0"
+dst = "AGU-S-GE-013:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-065__AGU-S-GE-013"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-011:d0:i0"
+dst = "AGU-S-GE-014:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-011__AGU-S-GE-014"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-014:d0:i0"
+dst = "AGU-S-GE-015:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-014__AGU-S-GE-015"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-015:d0:i0"
+dst = "AGU-S-GE-016:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-015__AGU-S-GE-016"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-066:d0:i0"
+dst = "AGU-S-GE-017:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-066__AGU-S-GE-017"
+
+[[net.candidate_edges]]
+src = "AGU-S-P7-001:d0:i0"
+dst = "AGU-S-GE-018:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-P7-001__AGU-S-GE-018"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-018:d0:i0"
+dst = "AGU-S-GE-019:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-018__AGU-S-GE-019"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-019:d0:i0"
+dst = "AGU-S-GE-020:d0:i0"
+kind = "internal"
+origin = "installed_network"
+link_id = "AGU-S-GE-019__AGU-S-GE-020"
+metric = 0.0
+connection_type = "back_to_back"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-018:d0:i0"
+dst = "AGU-S-GE-021:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-018__AGU-S-GE-021"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-020:d0:i0"
+dst = "AGU-S-GE-022:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-020__AGU-S-GE-022"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-022:d0:i0"
+dst = "AGU-S-GE-023:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-022__AGU-S-GE-023"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-023:d0:i0"
+dst = "AGU-S-GE-024:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-023__AGU-S-GE-024"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-024:d0:i0"
+dst = "AGU-S-GE-025:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-024__AGU-S-GE-025"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-025:d0:i0"
+dst = "AGU-S-GE-026:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-025__AGU-S-GE-026"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-022:d0:i0"
+dst = "AGU-S-GE-027:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-022__AGU-S-GE-027"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-027:d0:i0"
+dst = "AGU-S-GE-028:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-027__AGU-S-GE-028"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-027:d0:i0"
+dst = "AGU-S-GE-029:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-027__AGU-S-GE-029"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-027:d0:i0"
+dst = "AGU-S-GE-030:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-027__AGU-S-GE-030"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-022:d0:i0"
+dst = "AGU-S-GE-031:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-022__AGU-S-GE-031"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-031:d0:i0"
+dst = "AGU-S-GE-032:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-031__AGU-S-GE-032"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-032:d0:i0"
+dst = "AGU-S-GE-033:d0:i0"
+kind = "internal"
+origin = "installed_network"
+link_id = "AGU-S-GE-032__AGU-S-GE-033"
+metric = 0.0
+connection_type = "back_to_back"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-033:d0:i0"
+dst = "AGU-S-GE-034:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-033__AGU-S-GE-034"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-034:d0:i0"
+dst = "AGU-S-GE-035:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-034__AGU-S-GE-035"
+
+[[net.candidate_edges]]
+src = "AGU-S-P7-001:d0:i0"
+dst = "AGU-S-GE-041:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-P7-001__AGU-S-GE-041"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-041:d0:i0"
+dst = "AGU-S-GE-042:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-041__AGU-S-GE-042"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-042:d0:i0"
+dst = "AGU-S-GE-043:d0:i0"
+kind = "internal"
+origin = "installed_network"
+link_id = "AGU-S-GE-042__AGU-S-GE-043"
+metric = 0.0
+connection_type = "back_to_back"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-043:d0:i0"
+dst = "AGU-S-GE-044:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-043__AGU-S-GE-044"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-043:d0:i0"
+dst = "AGU-S-GE-045:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-043__AGU-S-GE-045"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-045:d0:i0"
+dst = "AGU-S-GE-046:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-045__AGU-S-GE-046"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-045:d0:i0"
+dst = "AGU-S-GE-047:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-045__AGU-S-GE-047"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-047:d0:i0"
+dst = "AGU-S-GE-048:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-047__AGU-S-GE-048"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-047:d0:i0"
+dst = "AGU-S-GE-049:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-047__AGU-S-GE-049"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-062:d0:i0"
+dst = "AGU-S-GE-050:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-062__AGU-S-GE-050"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-050:d0:i0"
+dst = "AGU-S-GE-051:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-050__AGU-S-GE-051"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-051:d0:i0"
+dst = "AGU-S-GE-052:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-051__AGU-S-GE-052"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-052:d0:i0"
+dst = "AGU-S-GE-053:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-052__AGU-S-GE-053"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-053:d0:i0"
+dst = "AGU-S-GE-054:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-053__AGU-S-GE-054"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-052:d0:i0"
+dst = "AGU-S-GE-055:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-052__AGU-S-GE-055"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-052:d0:i0"
+dst = "AGU-S-GE-056:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-052__AGU-S-GE-056"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-047:d0:i0"
+dst = "AGU-S-GE-057:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-047__AGU-S-GE-057"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-049:d0:i0"
+dst = "AGU-S-GE-062:d0:i0"
+kind = "internal"
+origin = "installed_network"
+link_id = "AGU-S-GE-049__AGU-S-GE-062"
+metric = 0.0
+connection_type = "back_to_back"
+
+[[net.candidate_edges]]
+src = "AGU-S-P7-001:d0:i0"
+dst = "AGU-S-GE-063:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-P7-001__AGU-S-GE-063"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-065:d0:i0"
+dst = "AGU-S-GE-036:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-065__AGU-S-GE-036"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-004:d0:i0"
+dst = "AGU-S-GE-037:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-004__AGU-S-GE-037"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-024:d0:i0"
+dst = "AGU-S-GE-038:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-024__AGU-S-GE-038"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-066:d0:i0"
+dst = "AGU-S-GE-039:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-066__AGU-S-GE-039"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-006:d0:i0"
+dst = "AGU-S-GE-040:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-006__AGU-S-GE-040"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-015:d0:i0"
+dst = "AGU-S-GE-064:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-015__AGU-S-GE-064"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-011:d0:i0"
+dst = "AGU-S-GE-065:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-011__AGU-S-GE-065"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-015:d0:i0"
+dst = "AGU-S-GE-066:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-015__AGU-S-GE-066"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-006:d0:i0"
+dst = "AGU-S-GE-067:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-006__AGU-S-GE-067"
+
+[[net.candidate_edges]]
+src = "AGU-S-GE-014:d0:i0"
+dst = "AGU-S-GE-058:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "AGU-S-GE-014__AGU-S-GE-058"
+
+[attachments]
+source = "attached_equipment.csv"
+format = "csv"

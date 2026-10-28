@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cisei-planning-sdk"
-version = "0.1.36"
+version = "0.1.56"
 description = "Notebook client SDK for the CISEI planning microservice"
 requires-python = ">=3.10"
 dependencies = [
@@ -15,7 +15,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-notebook = ["pandas>=1.5", "matplotlib>=3.6", "ipywidgets>=8.0", "cisei-features-sdk[notebook]>=0.1.1,<0.2.0"]
+baseline = ["numpy>=1.23"]
+notebook = ["numpy>=1.23", "pandas>=1.5", "matplotlib>=3.6", "ipywidgets>=8.0", "cisei-features-sdk[notebook]>=0.1.1,<0.2.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

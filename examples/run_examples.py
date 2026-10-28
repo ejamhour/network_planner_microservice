@@ -7,7 +7,7 @@ from pathlib import Path
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--notebook", choices=["all", "graph_planning", "example1_LTE_planning_basic", "example_1_LTE_planning_and_link_inspection", "example_2_LTE_simulation", "example_3_LTE_hybrid", "custom_configuration", "advanced_api"], default="all")
+    parser.add_argument("--notebook", choices=["all", "graph_planning", "example1_LTE_planning_basic", "example_1_LTE_planning_and_link_inspection", "example_2_LTE_simulation", "example_3_LTE_hybrid", "e07_01_projeto_original", "e07_02_projeto_redundancia", "custom_configuration", "advanced_api"], default="all")
     parser.add_argument("--base-url", default="http://network-service:8080")
     parser.add_argument("--geo-url", default="http://planning-service:8080")
     parser.add_argument("--features-url", default="http://features:8080")
@@ -17,7 +17,7 @@ def main():
     directory = workspace / "notebooks"
     if not directory.is_dir():
         raise FileNotFoundError(f"Workspace notebooks directory not found: {directory}")
-    names = ["graph_planning", "example1_LTE_planning_basic", "example_2_LTE_simulation", "example_3_LTE_hybrid", "custom_configuration", "advanced_api"] if args.notebook == "all" else [args.notebook]
+    names = ["graph_planning", "example1_LTE_planning_basic", "example_2_LTE_simulation", "example_3_LTE_hybrid", "e07_01_projeto_original", "e07_02_projeto_redundancia", "custom_configuration", "advanced_api"] if args.notebook == "all" else [args.notebook]
     previous_directory = Path.cwd()
     previous_features_url = os.environ.get("CISEI_FEATURES_URL")
     previous_planning_url = os.environ.get("PLANNING_BASE_URL")

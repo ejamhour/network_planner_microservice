@@ -1,0 +1,330 @@
+{
+  "network": "AGU-S",
+  "records": [
+    {
+      "site_id": "AGU-S-P7-001",
+      "path_pkt_loss_count": 0.0,
+      "path_pkt_loss": 0.0
+    },
+    {
+      "site_id": "AGU-S-GE-001",
+      "path_pkt_loss_count": 0.5,
+      "path_pkt_loss": 5.0
+    },
+    {
+      "site_id": "AGU-S-GE-002",
+      "path_pkt_loss_count": 0.9,
+      "path_pkt_loss": 9.0
+    },
+    {
+      "site_id": "AGU-S-GE-003",
+      "path_pkt_loss_count": 0.0,
+      "path_pkt_loss": 0.0
+    },
+    {
+      "site_id": "AGU-S-GE-004",
+      "path_pkt_loss_count": 0.6,
+      "path_pkt_loss": 6.0
+    },
+    {
+      "site_id": "AGU-S-GE-005",
+      "path_pkt_loss_count": 3.7,
+      "path_pkt_loss": 37.0
+    },
+    {
+      "site_id": "AGU-S-GE-006",
+      "path_pkt_loss_count": 3.6,
+      "path_pkt_loss": 36.0
+    },
+    {
+      "site_id": "AGU-S-GE-007",
+      "path_pkt_loss_count": 3.9,
+      "path_pkt_loss": 39.0
+    },
+    {
+      "site_id": "AGU-S-GE-008",
+      "path_pkt_loss_count": 0.4,
+      "path_pkt_loss": 4.0
+    },
+    {
+      "site_id": "AGU-S-GE-009",
+      "path_pkt_loss_count": 1.5,
+      "path_pkt_loss": 15.0
+    },
+    {
+      "site_id": "AGU-S-GE-010",
+      "path_pkt_loss_count": 0.2,
+      "path_pkt_loss": 2.0
+    },
+    {
+      "site_id": "AGU-S-GE-011",
+      "path_pkt_loss_count": 0.3,
+      "path_pkt_loss": 3.0
+    },
+    {
+      "site_id": "AGU-S-GE-012",
+      "path_pkt_loss_count": 0.2,
+      "path_pkt_loss": 2.0
+    },
+    {
+      "site_id": "AGU-S-GE-013",
+      "path_pkt_loss_count": 0.0,
+      "path_pkt_loss": 0.0
+    },
+    {
+      "site_id": "AGU-S-GE-014",
+      "path_pkt_loss_count": 0.9,
+      "path_pkt_loss": 9.0
+    },
+    {
+      "site_id": "AGU-S-GE-015",
+      "path_pkt_loss_count": 0.5,
+      "path_pkt_loss": 5.0
+    },
+    {
+      "site_id": "AGU-S-GE-016",
+      "path_pkt_loss_count": 0.6,
+      "path_pkt_loss": 6.0
+    },
+    {
+      "site_id": "AGU-S-GE-017",
+      "path_pkt_loss_count": 0.3,
+      "path_pkt_loss": 3.0
+    },
+    {
+      "site_id": "AGU-S-GE-018",
+      "path_pkt_loss_count": 0.5,
+      "path_pkt_loss": 5.0
+    },
+    {
+      "site_id": "AGU-S-GE-019",
+      "path_pkt_loss_count": 1.0,
+      "path_pkt_loss": 10.0
+    },
+    {
+      "site_id": "AGU-S-GE-020",
+      "path_pkt_loss_count": 0.0,
+      "path_pkt_loss": 0.0
+    },
+    {
+      "site_id": "AGU-S-GE-021",
+      "path_pkt_loss_count": 0.3,
+      "path_pkt_loss": 3.0
+    },
+    {
+      "site_id": "AGU-S-GE-022",
+      "path_pkt_loss_count": 1.2,
+      "path_pkt_loss": 12.0
+    },
+    {
+      "site_id": "AGU-S-GE-023",
+      "path_pkt_loss_count": 1.6,
+      "path_pkt_loss": 16.0
+    },
+    {
+      "site_id": "AGU-S-GE-024",
+      "path_pkt_loss_count": 1.6,
+      "path_pkt_loss": 16.0
+    },
+    {
+      "site_id": "AGU-S-GE-025",
+      "path_pkt_loss_count": 1.8,
+      "path_pkt_loss": 18.0
+    },
+    {
+      "site_id": "AGU-S-GE-026",
+      "path_pkt_loss_count": 1.3,
+      "path_pkt_loss": 13.0
+    },
+    {
+      "site_id": "AGU-S-GE-027",
+      "path_pkt_loss_count": 1.3,
+      "path_pkt_loss": 13.0
+    },
+    {
+      "site_id": "AGU-S-GE-028",
+      "path_pkt_loss_count": 1.1,
+      "path_pkt_loss": 11.0
+    },
+    {
+      "site_id": "AGU-S-GE-029",
+      "path_pkt_loss_count": 0.6,
+      "path_pkt_loss": 6.0
+    },
+    {
+      "site_id": "AGU-S-GE-030",
+      "path_pkt_loss_count": 0.7,
+      "path_pkt_loss": 7.0
+    },
+    {
+      "site_id": "AGU-S-GE-031",
+      "path_pkt_loss_count": 1.2,
+      "path_pkt_loss": 12.0
+    },
+    {
+      "site_id": "AGU-S-GE-032",
+      "path_pkt_loss_count": 7.7,
+      "path_pkt_loss": 77.0
+    },
+    {
+      "site_id": "AGU-S-GE-033",
+      "path_pkt_loss_count": 8.0,
+      "path_pkt_loss": 80.0
+    },
+    {
+      "site_id": "AGU-S-GE-034",
+      "path_pkt_loss_count": 7.7,
+      "path_pkt_loss": 77.0
+    },
+    {
+      "site_id": "AGU-S-GE-035",
+      "path_pkt_loss_count": 8.1,
+      "path_pkt_loss": 81.0
+    },
+    {
+      "site_id": "AGU-S-GE-041",
+      "path_pkt_loss_count": 0.7,
+      "path_pkt_loss": 7.0
+    },
+    {
+      "site_id": "AGU-S-GE-042",
+      "path_pkt_loss_count": 1.5,
+      "path_pkt_loss": 15.0
+    },
+    {
+      "site_id": "AGU-S-GE-043",
+      "path_pkt_loss_count": 0.6,
+      "path_pkt_loss": 6.0
+    },
+    {
+      "site_id": "AGU-S-GE-044",
+      "path_pkt_loss_count": 0.1,
+      "path_pkt_loss": 1.0
+    },
+    {
+      "site_id": "AGU-S-GE-045",
+      "path_pkt_loss_count": 0.5,
+      "path_pkt_loss": 5.0
+    },
+    {
+      "site_id": "AGU-S-GE-046",
+      "path_pkt_loss_count": 10.0,
+      "path_pkt_loss": 100.0
+    },
+    {
+      "site_id": "AGU-S-GE-047",
+      "path_pkt_loss_count": 1.6,
+      "path_pkt_loss": 16.0
+    },
+    {
+      "site_id": "AGU-S-GE-048",
+      "path_pkt_loss_count": 0.8,
+      "path_pkt_loss": 8.0
+    },
+    {
+      "site_id": "AGU-S-GE-049",
+      "path_pkt_loss_count": 0.6,
+      "path_pkt_loss": 6.0
+    },
+    {
+      "site_id": "AGU-S-GE-050",
+      "path_pkt_loss_count": 2.0,
+      "path_pkt_loss": 20.0
+    },
+    {
+      "site_id": "AGU-S-GE-051",
+      "path_pkt_loss_count": 0.9,
+      "path_pkt_loss": 9.0
+    },
+    {
+      "site_id": "AGU-S-GE-052",
+      "path_pkt_loss_count": 1.4,
+      "path_pkt_loss": 14.0
+    },
+    {
+      "site_id": "AGU-S-GE-053",
+      "path_pkt_loss_count": 1.0,
+      "path_pkt_loss": 10.0
+    },
+    {
+      "site_id": "AGU-S-GE-054",
+      "path_pkt_loss_count": 0.8,
+      "path_pkt_loss": 8.0
+    },
+    {
+      "site_id": "AGU-S-GE-055",
+      "path_pkt_loss_count": 1.1,
+      "path_pkt_loss": 11.0
+    },
+    {
+      "site_id": "AGU-S-GE-056",
+      "path_pkt_loss_count": 0.3,
+      "path_pkt_loss": 3.0
+    },
+    {
+      "site_id": "AGU-S-GE-057",
+      "path_pkt_loss_count": 1.0,
+      "path_pkt_loss": 10.0
+    },
+    {
+      "site_id": "AGU-S-GE-062",
+      "path_pkt_loss_count": 1.4,
+      "path_pkt_loss": 14.0
+    },
+    {
+      "site_id": "AGU-S-GE-063",
+      "path_pkt_loss_count": 0.9,
+      "path_pkt_loss": 9.0
+    },
+    {
+      "site_id": "AGU-S-GE-036",
+      "path_pkt_loss_count": 0.3,
+      "path_pkt_loss": 3.0
+    },
+    {
+      "site_id": "AGU-S-GE-037",
+      "path_pkt_loss_count": 2.2,
+      "path_pkt_loss": 22.0
+    },
+    {
+      "site_id": "AGU-S-GE-038",
+      "path_pkt_loss_count": 1.5,
+      "path_pkt_loss": 15.0
+    },
+    {
+      "site_id": "AGU-S-GE-039",
+      "path_pkt_loss_count": 0.6,
+      "path_pkt_loss": 6.0
+    },
+    {
+      "site_id": "AGU-S-GE-040",
+      "path_pkt_loss_count": 3.7,
+      "path_pkt_loss": 37.0
+    },
+    {
+      "site_id": "AGU-S-GE-064",
+      "path_pkt_loss_count": 1.0,
+      "path_pkt_loss": 10.0
+    },
+    {
+      "site_id": "AGU-S-GE-065",
+      "path_pkt_loss_count": 0.7,
+      "path_pkt_loss": 7.0
+    },
+    {
+      "site_id": "AGU-S-GE-066",
+      "path_pkt_loss_count": 0.8,
+      "path_pkt_loss": 8.0
+    },
+    {
+      "site_id": "AGU-S-GE-067",
+      "path_pkt_loss_count": 3.7,
+      "path_pkt_loss": 37.0
+    },
+    {
+      "site_id": "AGU-S-GE-058",
+      "path_pkt_loss_count": 0.0,
+      "path_pkt_loss": 0.0
+    }
+  ]
+}

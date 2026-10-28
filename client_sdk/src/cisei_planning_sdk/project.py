@@ -66,3 +66,42 @@ class PlanningProject:
 
     def save_scenario(self, config):
         return save_scenario(config, self.scenario_path)
+
+    def show_network(self, *, save_path=None):
+        """Display the saved solution offline, including its saved quality."""
+        from cisei_planning_sdk.visualization import plot_network
+        return plot_network(self.load_result(), save_path=save_path or self.path / "solution_network.html")
+
+    def show_dependencies(self, *, save_path=None):
+        """Display an interactive descendant explorer for the saved solution."""
+        from IPython.display import display
+        from cisei_planning_sdk.network_view import NetworkView
+        view = NetworkView(self.load_result(), dependency_mode=True)
+        view.save_html(save_path or self.path / "dependencies.html")
+        display(view)
+        return view
+
+    def save_redundancy_selection(self, site_id):
+        """Persist the engineer's manual choice, with source-result identity."""
+        import hashlib
+        from cisei_planning_sdk.dependencies import network_dependencies
+        result_bytes = self.result_path.read_bytes()
+        result = json.loads(result_bytes)
+        report = network_dependencies(result)
+        if site_id not in report["sites"]:
+            raise ValueError(f"Unknown site: {site_id}")
+        own = report["sites"][site_id]["interface_ids"]
+        if len(own) != 1:
+            raise ValueError("Selection currently requires one interface per site")
+        planned = {row["node_id"]: row for row in result["planned_nodes"]}
+        row = planned.get(own[0], {})
+        if row.get("parent") is None or row.get("connected"):
+            raise ValueError("Choose a served site without initial external connectivity")
+        selection = {
+            "selected_site": site_id, "selected_interface": own[0],
+            "active_sites": sorted({site_id, *report["sites"][site_id]["descendant_sites"]}),
+            "source_result_sha256": hashlib.sha256(result_bytes).hexdigest(),
+        }
+        path = self.path / "redundancy_selection.json"
+        path.write_text(json.dumps(selection, ensure_ascii=False, indent=2), encoding="utf-8")
+        return path

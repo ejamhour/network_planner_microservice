@@ -2,7 +2,6 @@ from cisei_lib.usermng.homeFolder import user_home
 from cisei_lib.planners.pole_graph_async import PoleGraph
 import geopandas as gpd
 import pandas as pd
-from cisei_lib.planners.serializer import Serializer
 from cisei_lib.planners.planner_classes import LinkNode, PlannerNode
 from copy import deepcopy
 
@@ -32,10 +31,11 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
         self,
         project: str,
         user_id: str,
+        persist: bool = True,
         **kwargs,
     ):
         self.user_id = user_id
-        self.home = user_home(user_id)
+        self.home = user_home(user_id) if persist else None
         self.project = project
 
         self.path = None
@@ -64,10 +64,12 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
 
         super().__init__(**context)
 
-        self.serializer = Serializer(
+        if persist:
+            from cisei_lib.planners.serializer import Serializer
+        self.serializer = (Serializer(
             folder=self.home.get_project_path(project, "."),
             sub_folder="link-planner",
-        )
+        ) if persist else None)
 
     async def __aenter__(self):
         await self.start()
@@ -226,7 +228,7 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
         if self.context['debug']:
             print(f'worst {edge} = {worst}')
 
-        if worst <= REPEATER_BREAK_EVEN_METRIC:
+        if worst <= self.context.get('segment_threshold', REPEATER_BREAK_EVEN_METRIC):
             return edge, False
         
         return edge, True
@@ -268,7 +270,7 @@ class LinkPlanner(PoleGraph): #[tour:linkplanner]
 
             # Check if the solution converged to a feasible path
             all_metrics_ok = any(
-                all(attr['metric'] <= REPEATER_BREAK_EVEN_METRIC for _, _, attr in edge_path)
+                all(attr['metric'] <= self.context.get('segment_threshold', REPEATER_BREAK_EVEN_METRIC) for _, _, attr in edge_path)
                 for edge_path in edge_paths
             )
             if all_metrics_ok: break # no need of improvement

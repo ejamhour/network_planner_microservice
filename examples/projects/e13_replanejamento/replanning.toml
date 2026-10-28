@@ -1,0 +1,12 @@
+[poles]
+source = "poles.csv"
+device_profile = "ge_radio_1"
+mount_height_m = 7.0
+# Restrict each independent search to this distance from its endpoint segment.
+corridor_m = 1500.0
+
+[search]
+max_repeaters = 5
+max_candidates = 3
+segment_threshold = 2.0
+search_midpoint = true

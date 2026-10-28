@@ -15,6 +15,7 @@ def _files() -> list[str]:
         if path.is_file()
         and not any(part.startswith(".") for part in path.relative_to(EXAMPLES_DIR).parts)
         and "__pycache__" not in path.relative_to(EXAMPLES_DIR).parts
+        and "preparation_backups" not in path.relative_to(EXAMPLES_DIR).parts
         and path.suffix not in {".pyc", ".pyo"}
         and path.resolve().is_relative_to(EXAMPLES_DIR.resolve())
     )

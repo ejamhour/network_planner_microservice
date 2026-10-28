@@ -344,6 +344,8 @@ class Device:
 
 @dataclass(slots=True)
 class RadioInterface:
+    """Concrete interface; disabled interfaces remain in the scenario inventory."""
+
     interface_id: str
     device_id: str
     site_id: str
@@ -355,6 +357,11 @@ class RadioInterface:
     medium: str = "rf"
     max_links: float = inf
     extra: dict[str, Any] = field(default_factory=dict)
+    enabled: bool = True
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.enabled, bool):
+            raise ValueError("Interface enabled must be a boolean")
 
     @property
     def radio_id(self) -> str:
@@ -399,6 +406,7 @@ class RadioInterface:
             extra["device_can_route"] = device.can_route
 
         extra.update(self.extra)
+        extra["enabled"] = self.enabled
 
         return RPLNode(
             node_id=self.interface_id,
@@ -426,6 +434,7 @@ class RadioInterface:
             "max_links": self.max_links if isfinite(self.max_links) else None,
         }
         data.update(self.extra)
+        data["enabled"] = self.enabled
         return data
 
 
@@ -440,6 +449,7 @@ class RadioInterfacePattern:
     medium: str = "rf"
     max_links: float = inf
     extra: dict[str, Any] = field(default_factory=dict)
+    enabled: bool = True
 
     def instantiate(
         self,
@@ -462,6 +472,7 @@ class RadioInterfacePattern:
             medium=self.medium,
             max_links=self.max_links,
             extra=deepcopy(self.extra),
+            enabled=self.enabled,
         )
 
 

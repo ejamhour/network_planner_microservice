@@ -96,12 +96,14 @@ class GraphPlanner:
         self.antenna_catalog: dict[str, AntennaSpec] = scenario.antenna_profiles
         self.nodes: dict[str, SiteNode] = scenario.site_nodes
         self.rpl_nodes: list[RPLNode] = self._build_rpl_nodes()
+        self._interface_state = self._interface_signature()
         self.connectivity_rules: dict[str, dict[str, Any]] = (
             scenario.connectivity_rules
         )
         self.candidate_edges: list[tuple[str, str]] = list(
             scenario.candidate_edges
         )
+        self._candidates_built = bool(self.candidate_edges)
         self.candidate_edge_attrs: dict[tuple[str, str], dict[str, Any]] = {
             edge: dict(attrs)
             for edge, attrs in scenario.candidate_edge_attrs.items()
@@ -115,6 +117,7 @@ class GraphPlanner:
         self.antenna_planner = AntennaPlanner()
         self.antenna_planner.models.update(antenna_models_from_config(scenario.antenna_library))
         self.rpl: GeoRPL | None = None
+        self._validate_active_edges(self.candidate_edges)
 
         if scenario.metric_specs_by_tech:
             self.compile_metric_specs_by_tech(scenario.metric_specs_by_tech)
@@ -135,6 +138,8 @@ class GraphPlanner:
         generated/manual edges in the planner are discarded, then the supplied
         edges are validated and added through ``add_candidate_edges``.
         """
+        self._sync_interfaces()
+        edges = self._validate_active_edges(edges)
         self.candidate_edges = []
         self.candidate_edge_attrs = {}
         return self.add_candidate_edges(
@@ -158,6 +163,8 @@ class GraphPlanner:
         pairs. Adding candidates clears prior metrics and RPL results because
         they no longer describe the active candidate graph.
         """
+        self._sync_interfaces()
+        edges = self._validate_active_edges(edges)
         rpl_by_id = {node.node_id: node for node in self.rpl_nodes}
         attrs_by_edge = attrs_by_edge or {}
         default_attrs = dict(default_attrs or {})
@@ -187,6 +194,7 @@ class GraphPlanner:
             edge_keys.add(key)
 
         self._clear_results()
+        self._candidates_built = True
         return list(self.candidate_edges)
 
     def build_candidate_edges_from_rules(
@@ -207,8 +215,12 @@ class GraphPlanner:
         - ``internal``: connect interfaces installed in the same routing-capable
           device, normally with metric zero.
         """
+        self._sync_interfaces()
         if not self.connectivity_rules:
-            raise RuntimeError("No connectivity rules were configured")
+            return self.set_candidate_edges(
+                self.candidate_edges if preserve_existing else [],
+                attrs_by_edge=self.candidate_edge_attrs,
+            )
 
         rpl_nodes = self.rpl_nodes
         edges = list(self.candidate_edges) if preserve_existing else []
@@ -313,6 +325,7 @@ class GraphPlanner:
         self.candidate_edges = edges
         self.candidate_edge_attrs = edge_attrs
         self._clear_results()
+        self._candidates_built = True
         return list(self.candidate_edges)
 
     def candidate_graph(
@@ -328,14 +341,12 @@ class GraphPlanner:
         """
         import networkx as nx
 
+        self._sync_interfaces()
         rpl_nodes = self.rpl_nodes
         if candidate_edges is None:
-            candidate_edges = (
-                self.candidate_edges
-                if self.candidate_edges
-                else self.build_candidate_edges_from_rules()
-            )
+            candidate_edges = self._candidate_edges_or_build()
         candidate_edges = list(candidate_edges)
+        self._validate_active_edges(candidate_edges)
 
         graph = nx.Graph()
         for node_index, node in enumerate(rpl_nodes):
@@ -419,25 +430,22 @@ class GraphPlanner:
         and ``geo.close()``. Leave it false when the caller manages a reused
         ``AsyncGeoServicePool``.
         """
+        self._sync_interfaces()
         if metric_specs_by_tech is not None:
             self.compile_metric_specs_by_tech(metric_specs_by_tech)
 
-        if not self.metric_functions_by_tech:
-            raise RuntimeError("No metric functions were registered")
-
         if candidate_edges is None:
-            candidate_edges = (
-                self.candidate_edges
-                if self.candidate_edges
-                else self.build_candidate_edges_from_rules()
-            )
+            candidate_edges = self._candidate_edges_or_build()
         candidate_edges = list(candidate_edges)
+        self._validate_active_edges(candidate_edges)
+        if candidate_edges and not self.metric_functions_by_tech:
+            raise RuntimeError("No metric functions were registered")
 
         rpl_by_id = {node.node_id: node for node in self.rpl_nodes}
         edge_metrics = {}
         edge_features = {}
 
-        if manage_geo:
+        if manage_geo and candidate_edges:
             await geo.start()
 
         try:
@@ -524,7 +532,7 @@ class GraphPlanner:
                 edge_features[(src, dst)] = metric_record
 
         finally:
-            if manage_geo:
+            if manage_geo and candidate_edges:
                 await geo.close()
 
         if accumulate:
@@ -549,9 +557,11 @@ class GraphPlanner:
         the method uses metrics previously produced by ``compute_edge_metrics``.
         The resulting ``GeoRPL`` instance is stored on ``self.rpl``.
         """
+        self._sync_interfaces()
         if edge_metrics is None:
             edge_metrics = self.edge_metrics
-        if not edge_metrics:
+        self._validate_active_edges(edge_metrics)
+        if not edge_metrics and self.candidate_edges:
             raise RuntimeError("No edge metrics were computed")
 
         self.edge_metrics = {
@@ -560,9 +570,18 @@ class GraphPlanner:
         }
 
         rpl = GeoRPL()
+        if not self.rpl_nodes:
+            self.rpl = rpl
+            return rpl
         rpl.set_nodes(self.rpl_nodes)
-        rpl.set_edge_metrics(self.edge_metrics)
-        rpl.run_RPL()
+        if self.edge_metrics:
+            rpl.set_edge_metrics(self.edge_metrics)
+            rpl.run_RPL()
+        # Isolated external accesses remain part of a valid solution.
+        rpl.G_res.add_nodes_from(
+            (node, attrs.copy()) for node, attrs in rpl.G.nodes(data=True)
+            if attrs["connected"]
+        )
 
         self.rpl = rpl
         return rpl
@@ -599,11 +618,20 @@ class GraphPlanner:
         The object is JSON-ready and is suitable for notebooks, API responses
         and persisted planning artifacts.
         """
+        self._sync_interfaces()
+        inventory = []
+        for site in self.nodes.values():
+            enabled = {i.interface_id: i.enabled for i in site.interfaces}
+            for record in self._rpl_node_records(site.rpl_nodes()):
+                record["enabled"] = enabled[record["node_id"]]
+                inventory.append(record)
         result: dict[str, Any] = {
             "working_crs": self.working_crs,
             "counts": {
                 "sites": len(self.nodes),
                 "rpl_nodes": len(self.rpl_nodes),
+                "interfaces": len(inventory),
+                "disabled_interfaces": sum(not row["enabled"] for row in inventory),
                 "candidate_edges": len(self.candidate_edges),
                 "metric_edges": len(self.edge_metrics),
                 "planned_nodes": (
@@ -618,6 +646,7 @@ class GraphPlanner:
                 ),
             },
             "rpl_nodes": self._rpl_node_records(self.rpl_nodes),
+            "interface_inventory": inventory,
             "antennas": {key: antenna.to_dict() for key, antenna in self.antenna_catalog.items()},
         }
 
@@ -763,6 +792,45 @@ class GraphPlanner:
         self.edge_features = {}
         self.rpl = None
 
+    def _interface_signature(self):
+        return tuple(
+            (interface.interface_id, interface.enabled)
+            for site in self.nodes.values() for interface in site.interfaces
+        )
+
+    def _sync_interfaces(self) -> None:
+        """Activation changes invalidate computed state, not external raw caches."""
+        signature = self._interface_signature()
+        if signature != self._interface_state:
+            self.rpl_nodes = self._build_rpl_nodes()
+            self.candidate_edges = list(self.scenario.candidate_edges)
+            self.candidate_edge_attrs = {
+                edge: dict(attrs) for edge, attrs in self.scenario.candidate_edge_attrs.items()
+            }
+            self._candidates_built = bool(self.candidate_edges)
+            self._clear_results()
+            self._interface_state = signature
+        self._validate_active_edges(self.candidate_edges)
+
+    def _candidate_edges_or_build(self):
+        self._sync_interfaces()
+        if self._candidates_built or self.candidate_edges or not self.connectivity_rules:
+            return self.candidate_edges
+        return self.build_candidate_edges_from_rules()
+
+    def _validate_active_edges(self, edges):
+        edges = list(edges)
+        known = {i.interface_id: i.enabled for site in self.nodes.values() for i in site.interfaces}
+        for edge in edges:
+            if not isinstance(edge, tuple) or len(edge) != 2:
+                raise TypeError("Candidate edges must be (src, dst) tuples")
+            for iid in edge:
+                if iid not in known:
+                    raise KeyError(f"Unknown interface: {iid}")
+                if not known[iid]:
+                    raise ValueError(f"Edge references disabled interface: {iid}")
+        return edges
+
     def _build_rpl_nodes(self) -> list[RPLNode]:
         """
         Convert all site/device/interface instances into interface-level nodes.
@@ -774,7 +842,8 @@ class GraphPlanner:
         """
         rpl_nodes = []
         for site_node in self.nodes.values():
-            rpl_nodes.extend(site_node.rpl_nodes())
+            enabled = {i.interface_id for i in site_node.interfaces if i.enabled}
+            rpl_nodes.extend(node for node in site_node.rpl_nodes() if node.node_id in enabled)
         return rpl_nodes
 
     # Internal result serialization helpers ---------------------------------
@@ -830,6 +899,7 @@ class GraphPlanner:
             records.append(
                 {
                     "node_id": node.node_id,
+                    "enabled": node.extra.get("enabled", True),
                     "site_id": node.extra.get("site_id"),
                     "device_id": node.extra.get("device_id"),
                     "tech": node.extra.get("tech"),

@@ -1,0 +1,35 @@
+# E07: installed GE links + dual profile + disabled upstream interface.
+[topology]
+mode = "installed"
+
+[antennas.cellular_external]
+kind = "omni"
+gain_dbi = 0.0
+description = "External service placeholder; no cellular RF planning"
+
+[interfaces.cellular_public]
+tech = "cellular_public"
+medium = "external"
+freq_mhz = 0.0
+tx_power_dbm = 0.0
+antenna_id = "cellular_external"
+can_relay = false
+
+[devices.ge_mesh_cellular_gateway]
+kind = "gateway"
+connected = true
+can_route = true
+rank = 1.0
+# Keep GE first so its installed interface identity remains unchanged.
+interfaces = ["ge_mesh_radio", "cellular_public"]
+
+[[replacement.rules]]
+name = "Cellular access at Barigui"
+profile = "ge_mesh_router"
+tags = { site_id = "barigui" }
+replace_with = "ge_mesh_cellular_gateway"
+connected = true
+rank = 1.0
+
+[overrides.interfaces."torre:d0:i0"]
+enabled = false

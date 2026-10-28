@@ -1,0 +1,110 @@
+[scenario]
+working_crs = "EPSG:31982"
+
+[antennas.ge_mesh_omni]
+kind = "omni"
+gain_dbi = 3.0
+height_m = 7.0
+description = "Ganho fixo ilustrativo; validar antena GE do projeto real"
+
+[antennas.cellular_external]
+kind = "omni"
+gain_dbi = 0.0
+description = "External service placeholder; no cellular RF planning"
+
+[interfaces.ge_mesh_radio]
+tech = "ge_mesh"
+freq_mhz = 915.0
+tx_power_dbm = 30.0
+antenna_id = "ge_mesh_omni"
+can_relay = true
+
+[interfaces.cellular_public]
+tech = "cellular_public"
+medium = "external"
+freq_mhz = 0.0
+tx_power_dbm = 0.0
+antenna_id = "cellular_external"
+can_relay = false
+
+[devices.ge_mesh_router]
+kind = "router"
+connected = false
+can_route = true
+interfaces = ["ge_mesh_radio"]
+
+[devices.ge_mesh_gateway]
+kind = "gateway"
+connected = true
+can_route = true
+rank = 0.0
+interfaces = ["ge_mesh_radio"]
+
+[devices.ge_mesh_cellular_gateway]
+kind = "gateway"
+connected = true
+can_route = true
+rank = 1.0
+interfaces = ["ge_mesh_radio", "cellular_public"]
+
+[metrics.ge_mesh]
+spec = "default"
+
+[instances]
+source = "nodes.csv"
+format = "csv"
+profile_column = "device_profile"
+
+[net]
+connectivity = []
+
+[[net.candidate_edges]]
+src = "copel:d0:i0"
+dst = "saturno:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[[net.candidate_edges]]
+src = "praca_29:d0:i0"
+dst = "itallia:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[[net.candidate_edges]]
+src = "woodland:d0:i0"
+dst = "saturno:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[[net.candidate_edges]]
+src = "deneka:d0:i0"
+dst = "shopping:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[[net.candidate_edges]]
+src = "deneka:d0:i0"
+dst = "saturno:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[[net.candidate_edges]]
+src = "decatlon:d0:i0"
+dst = "barigui:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[[net.candidate_edges]]
+src = "shopping:d0:i0"
+dst = "barigui:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[[net.candidate_edges]]
+src = "guaira:d0:i0"
+dst = "itallia:d0:i0"
+kind = "rf"
+origin = "installed_solution"
+
+[overrides.interfaces."torre:d0:i0"]
+enabled = false

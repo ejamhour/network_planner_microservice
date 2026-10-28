@@ -1,0 +1,10 @@
+version = 1
+result = "metric"
+
+[expressions]
+predicted_rssi_dbm = "0.0 + (1.0) * (tx.pw) + (1.0) * (tx.ant_gain) + (1.0) * (rx.ant_gain) + (1.114337839919779) * (-features.fspl) + (1.0) * (-features.delta_diffra) + (3.8599562365669438) * (-log10(1.0 + features.vegetation.boundary)) + (3.5389950747179117) * (-log10(1.0 + features.vegetation.fresnel)) + (2.3297748731723593) * (-log10(1.0 + features.vegetation.core)) + (1.940764307389644) * (-log10(1.0 + features.buildings.boundary)) + (1.1953311899967727) * (-log10(1.0 + features.buildings.fresnel)) + (1.0581500710246432) * (-log10(1.0 + features.buildings.core))"
+metric = "max(1.0, 2.0 - (predicted_rssi_dbm - params.required_rssi_dbm) / params.db_per_cost)"
+
+[parameters]
+required_rssi_dbm = -80.0
+db_per_cost = 10.0

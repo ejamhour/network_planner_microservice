@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "data": "projects/e09_diagnostico_bro/features.json",
+  "measurements": "data/e09/hop_metrics.json",
+  "model": "metrics/e08_copel_rssi.json",
+  "metric": "metrics/e09_bro.toml",
+  "filters": [],
+  "enriched": "projects/e09_diagnostico_bro/enriched_features.json"
+}

@@ -82,3 +82,12 @@ def test_notebook_samples_have_no_saved_outputs():
             if cell["cell_type"] == "code":
                 assert cell["outputs"] == []
                 assert cell["execution_count"] is None
+
+
+def test_e07_examples_are_distributed_without_preparation_backups(examples_client):
+    files = examples_client.get("/examples/manifest.json").json()["files"]
+    assert "notebooks/e07_01_projeto_original.ipynb" in files
+    assert "notebooks/e07_02_projeto_redundancia.ipynb" in files
+    assert "projects/e07_ge_mesh_original/scenario.toml" in files
+    assert "projects/e07_ge_mesh_redundancia/extension_fixed_links.toml" in files
+    assert not any("preparation_backups" in path.split("/") for path in files)

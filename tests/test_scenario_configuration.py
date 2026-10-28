@@ -84,3 +84,29 @@ def test_invalid_upload_preserves_live_state(setup, changes):
     assert runtime.planning_scenarios["custom"] is original
     assert runtime.planning_planners["custom"] is planner
     assert session.candidate_edges is cached
+
+
+@pytest.mark.parametrize("root_only", [True, False])
+def test_disabled_interfaces_end_to_end(setup, root_only):
+    from cisei_lib.planners.planning_solution import PlanningSolution
+    from cisei_lib.planners import planner_reports
+    _, runtime, original = setup
+    config = original.export_scenario()
+    adjustments = {}
+    for site in config["sites"]:
+        devices = {d["device_id"]: d for d in site["devices"]}
+        for interface in site["interfaces"]:
+            enabled = root_only and bool(devices[interface["device_id"]].get("connected"))
+            adjustments[interface["interface_id"]] = {"enabled": enabled}
+    config["overrides"] = {"interfaces": adjustments}
+    session = original.client.define_scenario(name="disabled", scenario=config, planner="cell")
+    assert session.build_candidate_edges(planner="cell")["candidate_edges"] == []
+    session.solve()
+    result = session.export_result()
+    assert result["counts"]["disabled_interfaces"] > 0
+    assert all(row["connected"] for row in result["planned_nodes"])
+    assert bool(result["planned_nodes"]) is root_only
+    assert len(result["interface_inventory"]) == len(adjustments)
+    summary = PlanningSolution.from_result(result).quality_summary(rank_threshold=2)
+    assert summary["total_targets"] == 0
+    planner_reports.node_index_table(runtime.planning_planners["disabled"])

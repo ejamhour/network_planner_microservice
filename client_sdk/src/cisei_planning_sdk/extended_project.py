@@ -61,6 +61,12 @@ class ExtendedPlanningProject(PlanningProject):
         existing = any(p.exists() for p in outputs)
         source = tomlkit.parse(self.source.scenario_path.read_text(encoding="utf-8")).unwrap()
         extension = tomlkit.parse(self.extension_path.read_text(encoding="utf-8")).unwrap()
+        topology = extension.pop("topology", {})
+        if not isinstance(topology, dict) or set(topology) - {"mode"}:
+            raise ValueError("topology accepts only mode = 'installed'")
+        if topology and topology.get("mode") != "installed":
+            raise ValueError("topology.mode must be 'installed'")
+        installed = topology.get("mode") == "installed"
         rules = extension.pop("replacement", {}).get("rules", [])
         if not isinstance(rules, list) or not rules:
             raise ValueError("Extension requires ordered [[replacement.rules]]")
@@ -95,13 +101,13 @@ class ExtendedPlanningProject(PlanningProject):
                 if value != "copy" and (isinstance(value, bool) or not isinstance(value, (float, int)) or not isfinite(value)):
                     raise ValueError('rank action must be "copy" or a finite number')
         needs_rank = any("rank_lte" in rule or rule.get("rank") == "copy" for rule in rules)
-        result = result if result is not None else self.source.load_result() if needs_rank else None
+        result = result if result is not None else self.source.load_result() if needs_rank or installed else None
         ranks = {}
-        if needs_rank:
+        if needs_rank or installed:
             if not isinstance(result, dict) or not result.get("planned_nodes"):
                 raise ValueError("Rank conditions/copy actions require a solved source result")
             bundle = load_scenario_bundle(self.source.scenario_path)
-            expected = {i["interface_id"] for s in bundle["sites"] for i in s["interfaces"]}
+            expected = {i["interface_id"] for s in bundle["sites"] for i in s["interfaces"] if i.get("enabled", True)}
             if {n["node_id"] for n in result.get("rpl_nodes", [])} != expected:
                 raise ValueError("Source result does not match source interface IDs")
             for node in result["planned_nodes"]:
@@ -174,6 +180,10 @@ class ExtendedPlanningProject(PlanningProject):
                            "rule_index": matched[0] if matched else None,
                            "rule": matched[1].get("name", str(matched[0])) if matched else None})
         config["instances"] = {**instances, "source": "nodes.csv"}
+        if installed:
+            # The source solution is the installed network. Never regenerate
+            # geometric candidates, even after disabling an upstream interface.
+            config["net"] = {"connectivity": [], "candidate_edges": []}
         for name, profile in profiles.items():
             for interface in profile.get("interfaces", []):
                 if interface not in config.get("interfaces", {}):
@@ -202,7 +212,17 @@ class ExtendedPlanningProject(PlanningProject):
                 writer = csv.DictWriter(handle, fieldnames=fields)
                 writer.writeheader()
                 writer.writerows(rows)
-            load_scenario_bundle(stage / "scenario.toml")
+            resolved = load_scenario_bundle(stage / "scenario.toml")
+            if installed:
+                from .topology import installed_edges
+                edges, excluded = installed_edges(result, resolved, bundle)
+                config["net"]["candidate_edges"] = edges
+                provenance["topology"] = {
+                    "mode": "installed", "retained_edges": len(edges),
+                    "excluded_edges": excluded,
+                }
+                (stage / "scenario.toml").write_text(tomlkit.dumps(config), encoding="utf-8")
+                load_scenario_bundle(stage / "scenario.toml")
             if cache is not None:
                 (stage / "features.json").write_text(json.dumps(cache, allow_nan=False), encoding="utf-8")
             if overwrite and existing:

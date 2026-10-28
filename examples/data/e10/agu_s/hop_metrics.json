@@ -1,0 +1,2058 @@
+{
+  "format": "cisei-link-measurements",
+  "version": 1,
+  "records": [
+    {
+      "id": "AGU-S-P7-001__AGU-S-GE-001",
+      "link_id": "AGU-S-P7-001__AGU-S-GE-001",
+      "request": {
+        "tx": [
+          -25.988,
+          -49.3342
+        ],
+        "rx": [
+          -25.99107,
+          -49.34219
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-001:d0:i0"
+      },
+      "measures": {
+        "rssi": -62.3,
+        "lqi": 9.2,
+        "snr": 46.4
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-P7-001__AGU-S-GE-002",
+      "link_id": "AGU-S-P7-001__AGU-S-GE-002",
+      "request": {
+        "tx": [
+          -25.988,
+          -49.3342
+        ],
+        "rx": [
+          -25.998342,
+          -49.347979
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-002",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-002:d0:i0"
+      },
+      "measures": {
+        "rssi": -77.0,
+        "lqi": 9.7,
+        "snr": 20.5
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-002__AGU-S-GE-003",
+      "link_id": "AGU-S-GE-002__AGU-S-GE-003",
+      "request": {
+        "tx": [
+          -25.998342,
+          -49.347979
+        ],
+        "rx": [
+          -26.00097,
+          -49.35716
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-002",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-002:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-003",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-003:d0:i0"
+      },
+      "measures": {
+        "rssi": -80.8,
+        "lqi": 15.4,
+        "snr": 28.2
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-003__AGU-S-GE-004",
+      "link_id": "AGU-S-GE-003__AGU-S-GE-004",
+      "request": {
+        "tx": [
+          -26.00097,
+          -49.35716
+        ],
+        "rx": [
+          -26.0041,
+          -49.35394
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-003",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-003:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-004",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-004:d0:i0"
+      },
+      "measures": {
+        "rssi": -60.8,
+        "lqi": 10.2,
+        "snr": 32.4
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-004__AGU-S-GE-005",
+      "link_id": "AGU-S-GE-004__AGU-S-GE-005",
+      "request": {
+        "tx": [
+          -26.0041,
+          -49.35394
+        ],
+        "rx": [
+          -26.01727,
+          -49.36691
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-004",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-004:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-005",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-005:d0:i0"
+      },
+      "measures": {
+        "rssi": -96.9,
+        "lqi": 19.0,
+        "snr": 12.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-005__AGU-S-GE-006",
+      "link_id": "AGU-S-GE-005__AGU-S-GE-006",
+      "request": {
+        "tx": [
+          -26.01727,
+          -49.36691
+        ],
+        "rx": [
+          -26.03036,
+          -49.38388
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-005",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-005:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-006",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-006:d0:i0"
+      },
+      "measures": {
+        "rssi": -79.9,
+        "lqi": 11.4,
+        "snr": 19.2
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-006__AGU-S-GE-007",
+      "link_id": "AGU-S-GE-006__AGU-S-GE-007",
+      "request": {
+        "tx": [
+          -26.03036,
+          -49.38388
+        ],
+        "rx": [
+          -26.03351,
+          -49.37447
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-006",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-006:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-007",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-007:d0:i0"
+      },
+      "measures": {
+        "rssi": -59.0,
+        "lqi": 10.2,
+        "snr": 50.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-002__AGU-S-GE-008",
+      "link_id": "AGU-S-GE-002__AGU-S-GE-008",
+      "request": {
+        "tx": [
+          -25.998342,
+          -49.347979
+        ],
+        "rx": [
+          -25.99936,
+          -49.35734
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-002",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-002:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-008",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-008:d0:i0"
+      },
+      "measures": {
+        "rssi": -84.3,
+        "lqi": 10.2,
+        "snr": 25.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-003__AGU-S-GE-009",
+      "link_id": "AGU-S-GE-003__AGU-S-GE-009",
+      "request": {
+        "tx": [
+          -26.00097,
+          -49.35716
+        ],
+        "rx": [
+          -26.00313,
+          -49.3787
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-003",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-003:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-009",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-009:d0:i0"
+      },
+      "measures": {
+        "rssi": -78.7,
+        "lqi": 11.1,
+        "snr": 26.9
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-010__AGU-S-GE-011",
+      "link_id": "AGU-S-GE-010__AGU-S-GE-011",
+      "request": {
+        "tx": [
+          -26.00313,
+          -49.3787
+        ],
+        "rx": [
+          -25.99426,
+          -49.38689
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-010",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-010:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-011",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-011:d0:i0"
+      },
+      "measures": {
+        "rssi": -68.5,
+        "lqi": 16.8,
+        "snr": 35.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-065__AGU-S-GE-012",
+      "link_id": "AGU-S-GE-065__AGU-S-GE-012",
+      "request": {
+        "tx": [
+          -26.00655,
+          -49.406845
+        ],
+        "rx": [
+          -26.00575,
+          -49.40511
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-065",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-065:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-012",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-012:d0:i0"
+      },
+      "measures": {
+        "rssi": -37.8,
+        "lqi": 16.0,
+        "snr": 59.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-065__AGU-S-GE-013",
+      "link_id": "AGU-S-GE-065__AGU-S-GE-013",
+      "request": {
+        "tx": [
+          -26.00655,
+          -49.406845
+        ],
+        "rx": [
+          -26.00722,
+          -49.40288
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-065",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-065:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-013",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-013:d0:i0"
+      },
+      "measures": {
+        "rssi": -43.0,
+        "lqi": 16.3,
+        "snr": 61.9
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-011__AGU-S-GE-014",
+      "link_id": "AGU-S-GE-011__AGU-S-GE-014",
+      "request": {
+        "tx": [
+          -25.99426,
+          -49.38689
+        ],
+        "rx": [
+          -25.99714,
+          -49.40509
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-011",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-011:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-014",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-014:d0:i0"
+      },
+      "measures": {
+        "rssi": -63.6,
+        "lqi": 16.4,
+        "snr": 48.2
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-014__AGU-S-GE-015",
+      "link_id": "AGU-S-GE-014__AGU-S-GE-015",
+      "request": {
+        "tx": [
+          -25.99714,
+          -49.40509
+        ],
+        "rx": [
+          -26.0157,
+          -49.46534
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-014",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-014:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-015",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-015:d0:i0"
+      },
+      "measures": {
+        "rssi": -82.8,
+        "lqi": 16.3,
+        "snr": 26.7
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-015__AGU-S-GE-016",
+      "link_id": "AGU-S-GE-015__AGU-S-GE-016",
+      "request": {
+        "tx": [
+          -26.0157,
+          -49.46534
+        ],
+        "rx": [
+          -26.04368,
+          -49.5186
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-015",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-015:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-016",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-016:d0:i0"
+      },
+      "measures": {
+        "rssi": -79.3,
+        "lqi": 16.5,
+        "snr": 32.7
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-066__AGU-S-GE-017",
+      "link_id": "AGU-S-GE-066__AGU-S-GE-017",
+      "request": {
+        "tx": [
+          -26.01692,
+          -49.44515
+        ],
+        "rx": [
+          -26.03798,
+          -49.44047
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-066",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-066:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-017",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-017:d0:i0"
+      },
+      "measures": {
+        "rssi": -61.1,
+        "lqi": 16.3,
+        "snr": 44.3
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-P7-001__AGU-S-GE-018",
+      "link_id": "AGU-S-P7-001__AGU-S-GE-018",
+      "request": {
+        "tx": [
+          -25.988,
+          -49.3342
+        ],
+        "rx": [
+          -26.00089,
+          -49.33383
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-018",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-018:d0:i0"
+      },
+      "measures": {
+        "rssi": -77.4,
+        "lqi": 11.2,
+        "snr": 29.8
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-018__AGU-S-GE-019",
+      "link_id": "AGU-S-GE-018__AGU-S-GE-019",
+      "request": {
+        "tx": [
+          -26.00089,
+          -49.33383
+        ],
+        "rx": [
+          -26.00751,
+          -49.32283
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-018",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-018:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-019",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-019:d0:i0"
+      },
+      "measures": {
+        "rssi": -80.0,
+        "lqi": 7.9,
+        "snr": 25.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-018__AGU-S-GE-021",
+      "link_id": "AGU-S-GE-018__AGU-S-GE-021",
+      "request": {
+        "tx": [
+          -26.00089,
+          -49.33383
+        ],
+        "rx": [
+          -26.0032,
+          -49.32553
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-018",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-018:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-021",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-021:d0:i0"
+      },
+      "measures": {
+        "rssi": -76.1,
+        "lqi": 7.9,
+        "snr": 32.7
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-020__AGU-S-GE-022",
+      "link_id": "AGU-S-GE-020__AGU-S-GE-022",
+      "request": {
+        "tx": [
+          -26.00751,
+          -49.32283
+        ],
+        "rx": [
+          -26.01439,
+          -49.29656
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-020",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-020:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-022",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-022:d0:i0"
+      },
+      "measures": {
+        "rssi": -84.3,
+        "lqi": 18.2,
+        "snr": 18.9
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-022__AGU-S-GE-023",
+      "link_id": "AGU-S-GE-022__AGU-S-GE-023",
+      "request": {
+        "tx": [
+          -26.01439,
+          -49.29656
+        ],
+        "rx": [
+          -26.01249,
+          -49.29545
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-022",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-022:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-023",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-023:d0:i0"
+      },
+      "measures": {
+        "rssi": -41.1,
+        "lqi": 16.3,
+        "snr": 55.5
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-023__AGU-S-GE-024",
+      "link_id": "AGU-S-GE-023__AGU-S-GE-024",
+      "request": {
+        "tx": [
+          -26.01249,
+          -49.29545
+        ],
+        "rx": [
+          -26.02105,
+          -49.32922
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-023",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-023:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-024",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-024:d0:i0"
+      },
+      "measures": {
+        "rssi": -77.9,
+        "lqi": 16.7,
+        "snr": 32.9
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-024__AGU-S-GE-025",
+      "link_id": "AGU-S-GE-024__AGU-S-GE-025",
+      "request": {
+        "tx": [
+          -26.02105,
+          -49.32922
+        ],
+        "rx": [
+          -26.0605083,
+          -49.3309616
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-024",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-024:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-025",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-025:d0:i0"
+      },
+      "measures": {
+        "rssi": -84.5,
+        "lqi": 17.8,
+        "snr": 25.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-022__AGU-S-GE-027",
+      "link_id": "AGU-S-GE-022__AGU-S-GE-027",
+      "request": {
+        "tx": [
+          -26.01439,
+          -49.29656
+        ],
+        "rx": [
+          -26.02064,
+          -49.298503
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-022",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-022:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-027",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-027:d0:i0"
+      },
+      "measures": {
+        "rssi": -73.3,
+        "lqi": 17.5,
+        "snr": 35.2
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-027__AGU-S-GE-028",
+      "link_id": "AGU-S-GE-027__AGU-S-GE-028",
+      "request": {
+        "tx": [
+          -26.02064,
+          -49.298503
+        ],
+        "rx": [
+          -26.02049,
+          -49.30186
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-027",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-027:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-028",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-028:d0:i0"
+      },
+      "measures": {
+        "rssi": -59.4,
+        "lqi": 16.3,
+        "snr": 53.8
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-027__AGU-S-GE-029",
+      "link_id": "AGU-S-GE-027__AGU-S-GE-029",
+      "request": {
+        "tx": [
+          -26.02064,
+          -49.298503
+        ],
+        "rx": [
+          -26.02052,
+          -49.30025
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-027",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-027:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-029",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-029:d0:i0"
+      },
+      "measures": {
+        "rssi": -41.8,
+        "lqi": 16.4,
+        "snr": 57.1
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-027__AGU-S-GE-030",
+      "link_id": "AGU-S-GE-027__AGU-S-GE-030",
+      "request": {
+        "tx": [
+          -26.02064,
+          -49.298503
+        ],
+        "rx": [
+          -26.01951,
+          -49.29756
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-027",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-027:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-030",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-030:d0:i0"
+      },
+      "measures": {
+        "rssi": -42.6,
+        "lqi": 16.6,
+        "snr": 50.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-022__AGU-S-GE-031",
+      "link_id": "AGU-S-GE-022__AGU-S-GE-031",
+      "request": {
+        "tx": [
+          -26.01439,
+          -49.29656
+        ],
+        "rx": [
+          -26.02231,
+          -49.28583
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-022",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-022:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-031",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-031:d0:i0"
+      },
+      "measures": {
+        "rssi": -89.6,
+        "lqi": 17.3,
+        "snr": 21.1
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-031__AGU-S-GE-032",
+      "link_id": "AGU-S-GE-031__AGU-S-GE-032",
+      "request": {
+        "tx": [
+          -26.02231,
+          -49.28583
+        ],
+        "rx": [
+          -26.021628,
+          -49.268104
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-031",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-031:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-032",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-032:d0:i0"
+      },
+      "measures": {
+        "rssi": -74.4,
+        "lqi": 16.8,
+        "snr": 35.8
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-033__AGU-S-GE-034",
+      "link_id": "AGU-S-GE-033__AGU-S-GE-034",
+      "request": {
+        "tx": [
+          -26.021628,
+          -49.268104
+        ],
+        "rx": [
+          -26.02071,
+          -49.26503
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-033",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-033:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-034",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-034:d0:i0"
+      },
+      "measures": {
+        "rssi": -48.2,
+        "lqi": 16.0,
+        "snr": 57.8
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-034__AGU-S-GE-035",
+      "link_id": "AGU-S-GE-034__AGU-S-GE-035",
+      "request": {
+        "tx": [
+          -26.02071,
+          -49.26503
+        ],
+        "rx": [
+          -26.01978,
+          -49.26344
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-034",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-034:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-035",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-035:d0:i0"
+      },
+      "measures": {
+        "rssi": -69.4,
+        "lqi": 15.9,
+        "snr": 40.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-P7-001__AGU-S-GE-041",
+      "link_id": "AGU-S-P7-001__AGU-S-GE-041",
+      "request": {
+        "tx": [
+          -25.988,
+          -49.3342
+        ],
+        "rx": [
+          -25.98132,
+          -49.33782
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-041",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-041:d0:i0"
+      },
+      "measures": {
+        "rssi": -50.7,
+        "lqi": 7.9,
+        "snr": 57.2
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-041__AGU-S-GE-042",
+      "link_id": "AGU-S-GE-041__AGU-S-GE-042",
+      "request": {
+        "tx": [
+          -25.98132,
+          -49.33782
+        ],
+        "rx": [
+          -25.97524,
+          -49.3376
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-041",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-041:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-042",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-042:d0:i0"
+      },
+      "measures": {
+        "rssi": -74.1,
+        "lqi": 12.5,
+        "snr": 34.1
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-043__AGU-S-GE-044",
+      "link_id": "AGU-S-GE-043__AGU-S-GE-044",
+      "request": {
+        "tx": [
+          -25.97524,
+          -49.3376
+        ],
+        "rx": [
+          -25.96317,
+          -49.33039
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-043",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-043:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-044",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-044:d0:i0"
+      },
+      "measures": {
+        "rssi": -87.1,
+        "lqi": 17.0,
+        "snr": 25.5
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-043__AGU-S-GE-045",
+      "link_id": "AGU-S-GE-043__AGU-S-GE-045",
+      "request": {
+        "tx": [
+          -25.97524,
+          -49.3376
+        ],
+        "rx": [
+          -25.95094,
+          -49.34927
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-043",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-043:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-045",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-045:d0:i0"
+      },
+      "measures": {
+        "rssi": -79.6,
+        "lqi": 16.4,
+        "snr": 32.9
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-045__AGU-S-GE-046",
+      "link_id": "AGU-S-GE-045__AGU-S-GE-046",
+      "request": {
+        "tx": [
+          -25.95094,
+          -49.34927
+        ],
+        "rx": [
+          -25.950973,
+          -49.34963
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-045",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-045:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-046",
+        "pw": 30.0,
+        "ant_gain": 2.5,
+        "interface_id": "AGU-S-GE-046:d0:i0"
+      },
+      "measures": {
+        "rssi": -30.0,
+        "lqi": 16.0,
+        "snr": 25.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-045__AGU-S-GE-047",
+      "link_id": "AGU-S-GE-045__AGU-S-GE-047",
+      "request": {
+        "tx": [
+          -25.95094,
+          -49.34927
+        ],
+        "rx": [
+          -25.92825,
+          -49.35639
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-045",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-045:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-047",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-047:d0:i0"
+      },
+      "measures": {
+        "rssi": -73.3,
+        "lqi": 16.7,
+        "snr": 34.3
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-047__AGU-S-GE-048",
+      "link_id": "AGU-S-GE-047__AGU-S-GE-048",
+      "request": {
+        "tx": [
+          -25.92825,
+          -49.35639
+        ],
+        "rx": [
+          -25.92798,
+          -49.35933
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-047",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-047:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-048",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-048:d0:i0"
+      },
+      "measures": {
+        "rssi": -69.7,
+        "lqi": 15.9,
+        "snr": 41.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-047__AGU-S-GE-049",
+      "link_id": "AGU-S-GE-047__AGU-S-GE-049",
+      "request": {
+        "tx": [
+          -25.92825,
+          -49.35639
+        ],
+        "rx": [
+          -25.92754,
+          -49.3655
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-047",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-047:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-049",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-049:d0:i0"
+      },
+      "measures": {
+        "rssi": -67.1,
+        "lqi": 15.8,
+        "snr": 44.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-062__AGU-S-GE-050",
+      "link_id": "AGU-S-GE-062__AGU-S-GE-050",
+      "request": {
+        "tx": [
+          -25.92754,
+          -49.3655
+        ],
+        "rx": [
+          -25.9379,
+          -49.39376
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-062",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-062:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-050",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-050:d0:i0"
+      },
+      "measures": {
+        "rssi": -84.6,
+        "lqi": 18.8,
+        "snr": 26.2
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-050__AGU-S-GE-051",
+      "link_id": "AGU-S-GE-050__AGU-S-GE-051",
+      "request": {
+        "tx": [
+          -25.9379,
+          -49.39376
+        ],
+        "rx": [
+          -25.93075,
+          -49.39653
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-050",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-050:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-051",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-051:d0:i0"
+      },
+      "measures": {
+        "rssi": -48.1,
+        "lqi": 16.8,
+        "snr": 58.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-051__AGU-S-GE-052",
+      "link_id": "AGU-S-GE-051__AGU-S-GE-052",
+      "request": {
+        "tx": [
+          -25.93075,
+          -49.39653
+        ],
+        "rx": [
+          -25.94333,
+          -49.40221
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-051",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-051:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-052",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-052:d0:i0"
+      },
+      "measures": {
+        "rssi": -75.3,
+        "lqi": 16.5,
+        "snr": 35.7
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-052__AGU-S-GE-053",
+      "link_id": "AGU-S-GE-052__AGU-S-GE-053",
+      "request": {
+        "tx": [
+          -25.94333,
+          -49.40221
+        ],
+        "rx": [
+          -25.94738,
+          -49.40529
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-052",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-052:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-053",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-053:d0:i0"
+      },
+      "measures": {
+        "rssi": -77.1,
+        "lqi": 18.4,
+        "snr": 34.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-053__AGU-S-GE-054",
+      "link_id": "AGU-S-GE-053__AGU-S-GE-054",
+      "request": {
+        "tx": [
+          -25.94738,
+          -49.40529
+        ],
+        "rx": [
+          -25.94699,
+          -49.40638
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-053",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-053:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-054",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-054:d0:i0"
+      },
+      "measures": {
+        "rssi": -42.2,
+        "lqi": 16.3,
+        "snr": 57.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-052__AGU-S-GE-055",
+      "link_id": "AGU-S-GE-052__AGU-S-GE-055",
+      "request": {
+        "tx": [
+          -25.94333,
+          -49.40221
+        ],
+        "rx": [
+          -25.94624,
+          -49.40508
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-052",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-052:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-055",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-055:d0:i0"
+      },
+      "measures": {
+        "rssi": -84.5,
+        "lqi": 18.8,
+        "snr": 27.4
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-052__AGU-S-GE-056",
+      "link_id": "AGU-S-GE-052__AGU-S-GE-056",
+      "request": {
+        "tx": [
+          -25.94333,
+          -49.40221
+        ],
+        "rx": [
+          -25.9455,
+          -49.40467
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-052",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-052:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-056",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-056:d0:i0"
+      },
+      "measures": {
+        "rssi": -55.2,
+        "lqi": 16.3,
+        "snr": 55.9
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-047__AGU-S-GE-057",
+      "link_id": "AGU-S-GE-047__AGU-S-GE-057",
+      "request": {
+        "tx": [
+          -25.92825,
+          -49.35639
+        ],
+        "rx": [
+          -25.92662,
+          -49.36127
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-047",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-047:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-057",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-057:d0:i0"
+      },
+      "measures": {
+        "rssi": -72.0,
+        "lqi": 15.8,
+        "snr": 38.5
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-P7-001__AGU-S-GE-063",
+      "link_id": "AGU-S-P7-001__AGU-S-GE-063",
+      "request": {
+        "tx": [
+          -25.988,
+          -49.3342
+        ],
+        "rx": [
+          -25.98554,
+          -49.33687
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-P7-001",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-P7-001:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-063",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-063:d0:i0"
+      },
+      "measures": {
+        "rssi": -51.9,
+        "lqi": 9.6,
+        "snr": 58.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-065__AGU-S-GE-036",
+      "link_id": "AGU-S-GE-065__AGU-S-GE-036",
+      "request": {
+        "tx": [
+          -26.00655,
+          -49.406845
+        ],
+        "rx": [
+          -26.007844,
+          -49.399765
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-065",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-065:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-036",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-036:d0:i0"
+      },
+      "measures": {
+        "rssi": -64.5,
+        "lqi": 16.3,
+        "snr": 50.0
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-004__AGU-S-GE-037",
+      "link_id": "AGU-S-GE-004__AGU-S-GE-037",
+      "request": {
+        "tx": [
+          -26.0041,
+          -49.35394
+        ],
+        "rx": [
+          -26.014596,
+          -49.364995
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-004",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-004:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-037",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-037:d0:i0"
+      },
+      "measures": {
+        "rssi": -82.4,
+        "lqi": 8.5,
+        "snr": 27.5
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-024__AGU-S-GE-038",
+      "link_id": "AGU-S-GE-024__AGU-S-GE-038",
+      "request": {
+        "tx": [
+          -26.02105,
+          -49.32922
+        ],
+        "rx": [
+          -26.017673,
+          -49.332493
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-024",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-024:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-038",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-038:d0:i0"
+      },
+      "measures": {
+        "rssi": -59.0,
+        "lqi": 16.8,
+        "snr": 47.5
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-066__AGU-S-GE-039",
+      "link_id": "AGU-S-GE-066__AGU-S-GE-039",
+      "request": {
+        "tx": [
+          -26.01692,
+          -49.44515
+        ],
+        "rx": [
+          -26.052042,
+          -49.451684
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-066",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-066:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-039",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-039:d0:i0"
+      },
+      "measures": {
+        "rssi": -72.4,
+        "lqi": 16.7,
+        "snr": 32.9
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-006__AGU-S-GE-040",
+      "link_id": "AGU-S-GE-006__AGU-S-GE-040",
+      "request": {
+        "tx": [
+          -26.03036,
+          -49.38388
+        ],
+        "rx": [
+          -26.049278,
+          -49.360737
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-006",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-006:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-040",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-040:d0:i0"
+      },
+      "measures": {
+        "rssi": -60.8,
+        "lqi": 10.0,
+        "snr": 38.6
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-015__AGU-S-GE-064",
+      "link_id": "AGU-S-GE-015__AGU-S-GE-064",
+      "request": {
+        "tx": [
+          -26.0157,
+          -49.46534
+        ],
+        "rx": [
+          -26.010595,
+          -49.440838
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-015",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-015:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-064",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-064:d0:i0"
+      },
+      "measures": {
+        "rssi": -82.7,
+        "lqi": 15.8,
+        "snr": 28.1
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-011__AGU-S-GE-065",
+      "link_id": "AGU-S-GE-011__AGU-S-GE-065",
+      "request": {
+        "tx": [
+          -25.99426,
+          -49.38689
+        ],
+        "rx": [
+          -26.00655,
+          -49.406845
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-011",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-011:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-065",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-065:d0:i0"
+      },
+      "measures": {
+        "rssi": -78.3,
+        "lqi": 16.2,
+        "snr": 35.8
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-015__AGU-S-GE-066",
+      "link_id": "AGU-S-GE-015__AGU-S-GE-066",
+      "request": {
+        "tx": [
+          -26.0157,
+          -49.46534
+        ],
+        "rx": [
+          -26.01692,
+          -49.44515
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-015",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-015:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-066",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-066:d0:i0"
+      },
+      "measures": {
+        "rssi": -88.0,
+        "lqi": 17.5,
+        "snr": 21.4
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    },
+    {
+      "id": "AGU-S-GE-006__AGU-S-GE-067",
+      "link_id": "AGU-S-GE-006__AGU-S-GE-067",
+      "request": {
+        "tx": [
+          -26.03036,
+          -49.38388
+        ],
+        "rx": [
+          -26.03383,
+          -49.37461
+        ],
+        "tx_ha": 7.0,
+        "rx_ha": 7.0,
+        "freq_mhz": 900.0,
+        "options": {}
+      },
+      "tx": {
+        "name": "AGU-S-GE-006",
+        "pw": 30.0,
+        "ant_gain": 8.15,
+        "interface_id": "AGU-S-GE-006:d0:i0"
+      },
+      "rx": {
+        "name": "AGU-S-GE-067",
+        "pw": 30.0,
+        "ant_gain": 14.0,
+        "interface_id": "AGU-S-GE-067:d0:i0"
+      },
+      "measures": {
+        "rssi": -74.1,
+        "lqi": 9.6,
+        "snr": 33.8
+      },
+      "origin_field": "Parent Node Avg Rssi"
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+[scenario]
+working_crs = "EPSG:31982"
+
+[antennas.ge_radio_1]
+kind = "omni"
+gain_dbi = 8.15
+height_m = 7.0
+description = "Antena OMNI original; ganho informado, sem diagrama direcional disponível"
+original_type = "OMNI"
+
+[antennas.ge_radio_2]
+kind = "omni"
+gain_dbi = 14.0
+height_m = 7.0
+description = "Antena YAGI original; ganho informado, sem diagrama direcional disponível"
+original_type = "YAGI"
+
+[antennas.ge_radio_3]
+kind = "omni"
+gain_dbi = 2.5
+height_m = 7.0
+description = "Antena OMNI original; ganho informado, sem diagrama direcional disponível"
+original_type = "OMNI"
+
+[antennas.ge_radio_4]
+kind = "omni"
+gain_dbi = 14.0
+height_m = 7.0
+description = "Antena YAGI original; ganho informado, sem diagrama direcional disponível"
+original_type = "YAGI"
+
+[interfaces.ge_radio_1]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_1"
+can_relay = true
+
+[interfaces.ge_radio_2]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_2"
+can_relay = true
+
+[interfaces.ge_radio_3]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_3"
+can_relay = true
+
+[interfaces.ge_radio_4]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 27.0
+antenna_id = "ge_radio_4"
+can_relay = true
+
+[devices.ge_radio_1]
+interfaces = ["ge_radio_1"]
+can_route = true
+connected = false
+
+[devices.ge_radio_2]
+interfaces = ["ge_radio_2"]
+can_route = true
+connected = false
+
+[devices.ge_radio_3]
+interfaces = ["ge_radio_3"]
+can_route = true
+connected = false
+
+[devices.ge_radio_4]
+interfaces = ["ge_radio_4"]
+can_route = true
+connected = false
+
+[metrics.ge_mesh]
+spec = "version = 1\nresult = \"metric\"\n\n[expressions]\npredicted_rssi_dbm = \"0.0 + (1.0) * (tx.pw) + (1.0) * (tx.ant_gain) + (1.0) * (rx.ant_gain) + (1.114337839919779) * (-features.fspl) + (1.0) * (-features.delta_diffra) + (3.8599562365669438) * (-log10(1.0 + features.vegetation.boundary)) + (3.5389950747179117) * (-log10(1.0 + features.vegetation.fresnel)) + (2.3297748731723593) * (-log10(1.0 + features.vegetation.core)) + (1.940764307389644) * (-log10(1.0 + features.buildings.boundary)) + (1.1953311899967727) * (-log10(1.0 + features.buildings.fresnel)) + (1.0581500710246432) * (-log10(1.0 + features.buildings.core))\"\nmetric = \"max(1.0, 2.0 - (predicted_rssi_dbm - params.required_rssi_dbm) / params.db_per_cost)\"\n\n[parameters]\nrequired_rssi_dbm = -80.0\ndb_per_cost = 10.0\n"
+
+[instances]
+source = "nodes.csv"
+format = "csv"
+profile_column = "device_profile"
+
+[net]
+connectivity = []
+
+[[net.candidate_edges]]
+src = "BRO-S-P7-001:d0:i0"
+dst = "BRO-S-GE-003:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-P7-001__BRO-S-GE-003"
+
+[[net.candidate_edges]]
+src = "BRO-S-P7-001:d0:i0"
+dst = "BRO-S-GE-004:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-P7-001__BRO-S-GE-004"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-007:d0:i0"
+dst = "BRO-S-GE-005:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-007__BRO-S-GE-005"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-012:d0:i0"
+dst = "BRO-S-GE-006:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-012__BRO-S-GE-006"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-024:d0:i0"
+dst = "BRO-S-GE-007:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-024__BRO-S-GE-007"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-007:d0:i0"
+dst = "BRO-S-GE-008:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-007__BRO-S-GE-008"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-027:d0:i0"
+dst = "BRO-S-GE-009:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-027__BRO-S-GE-009"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-007:d0:i0"
+dst = "BRO-S-GE-010:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-007__BRO-S-GE-010"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-010:d0:i0"
+dst = "BRO-S-GE-012:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-010__BRO-S-GE-012"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-027:d0:i0"
+dst = "BRO-S-GE-013:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-027__BRO-S-GE-013"
+
+[[net.candidate_edges]]
+src = "BRO-S-P7-001:d0:i0"
+dst = "BRO-S-GE-014:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-P7-001__BRO-S-GE-014"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-017:d0:i0"
+dst = "BRO-S-GE-016:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-017__BRO-S-GE-016"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-028:d0:i0"
+dst = "BRO-S-GE-017:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-028__BRO-S-GE-017"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-020:d0:i0"
+dst = "BRO-S-GE-019:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-020__BRO-S-GE-019"
+
+[[net.candidate_edges]]
+src = "BRO-S-P7-001:d0:i0"
+dst = "BRO-S-GE-020:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-P7-001__BRO-S-GE-020"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-013:d0:i0"
+dst = "BRO-S-GE-023:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-013__BRO-S-GE-023"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-025:d0:i0"
+dst = "BRO-S-GE-024:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-025__BRO-S-GE-024"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-026:d0:i0"
+dst = "BRO-S-GE-025:d0:i0"
+kind = "internal"
+origin = "installed_network"
+link_id = "BRO-S-GE-026__BRO-S-GE-025"
+metric = 0.0
+connection_type = "back_to_back"
+
+[[net.candidate_edges]]
+src = "BRO-S-P7-001:d0:i0"
+dst = "BRO-S-GE-026:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-P7-001__BRO-S-GE-026"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-017:d0:i0"
+dst = "BRO-S-GE-027:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-017__BRO-S-GE-027"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-001:d0:i0"
+dst = "BRO-S-GE-028:d0:i0"
+kind = "internal"
+origin = "installed_network"
+link_id = "BRO-S-GE-001__BRO-S-GE-028"
+metric = 0.0
+connection_type = "back_to_back"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-023:d0:i0"
+dst = "BRO-S-GE-029:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-023__BRO-S-GE-029"
+
+[[net.candidate_edges]]
+src = "BRO-S-GE-023:d0:i0"
+dst = "BRO-S-GE-030:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-GE-023__BRO-S-GE-030"
+
+[[net.candidate_edges]]
+src = "BRO-S-P7-001:d0:i0"
+dst = "BRO-S-GE-001:d0:i0"
+kind = "rf"
+origin = "installed_network"
+link_id = "BRO-S-P7-001__BRO-S-GE-001"

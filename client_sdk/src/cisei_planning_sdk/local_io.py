@@ -80,7 +80,79 @@ def load_scenario_bundle(path: str | Path) -> dict[str, Any]:
         config["sites"] = _instantiate_sites(config, rows, instances)
 
     config.pop("instances", None)
+    config.pop("mesh", None)  # Local SDK search settings and file references.
+    config.pop("attachments", None)  # Descriptive inventory, not RF input.
+    _apply_interface_overrides(config)
     return _json_value(config)
+
+
+def load_poles_bundle(path: str | Path) -> list[dict[str, Any]] | None:
+    """Read [mesh.poles] locally without adding infrastructure to scenario sites.
+
+    The CSV uses pole_id, device_profile, lat/lon (or x/y), and optional
+    mount_height_m. Profiles describe equipment that could be installed.
+    Only a planning request receives these hypothetical instances.
+    """
+    path = Path(path).expanduser().resolve()
+    config = _plain(tomlkit.parse(path.read_text(encoding='utf-8')).unwrap())
+    poles = dict(config.get('mesh', {}).get('poles') or {})
+    if not poles:
+        return None
+    source = poles.get('source')
+    if not source:
+        raise ValueError('[mesh.poles].source is required')
+    resolved = (path.parent / str(source)).resolve()
+    if not resolved.is_relative_to(path.parent):
+        raise ValueError('Pole source must remain inside the project directory')
+    rows = _read_instances(path.parent, poles)
+    prepared = []
+    for row in rows:
+        if _is_blank(row.get('pole_id')):
+            raise ValueError('Each pole row requires pole_id')
+        if any(key in row for key in ('site_id', 'connected', 'candidate', 'rank')):
+            raise ValueError('poles.csv describes infrastructure; do not include site_id, connected, candidate or rank')
+        item = dict(row)
+        item['site_id'] = _clean_id(item.pop('pole_id'))
+        item.update(connected=False, candidate=True, rank=None)
+        prepared.append(item)
+    sites = _instantiate_sites(config, prepared, poles)
+    # Canonical equipment configuration is transmitted as JSON, never local paths.
+    for site in sites:
+        site['pole_id'] = site['site_id']
+    original = load_scenario_bundle(path)
+    node_ids = {site['site_id'] for site in original.get('sites', [])}
+    conflicts = node_ids.intersection(site['site_id'] for site in sites)
+    if conflicts:
+        raise ValueError(f'Pole IDs collide with network nodes: {sorted(conflicts)}')
+    return _json_value(sites)
+
+
+def _apply_interface_overrides(config: dict[str, Any]) -> None:
+    """Validate all instance adjustments before mutating expanded interfaces."""
+    overrides = config.get("overrides", {})
+    if not isinstance(overrides, dict) or set(overrides) - {"interfaces"}:
+        raise ValueError("overrides must be a table containing only interfaces")
+    adjustments = overrides.get("interfaces", {})
+    if not isinstance(adjustments, dict):
+        raise ValueError("overrides.interfaces must be a table")
+    interfaces = {}
+    for site in config.get("sites", []):
+        for interface in site.get("interfaces", []):
+            iid = interface["interface_id"]
+            if iid in interfaces:
+                raise ValueError(f"Duplicate interface id: {iid}")
+            interfaces[iid] = interface
+    for iid, fields in adjustments.items():
+        if not isinstance(iid, str) or not iid.strip():
+            raise ValueError("Override interface id must be a non-empty string")
+        if not isinstance(fields, dict) or set(fields) - {"enabled"}:
+            raise ValueError(f"Override {iid}: only enabled is supported")
+        if "enabled" in fields and not isinstance(fields["enabled"], bool):
+            raise ValueError(f"Override {iid}: enabled must be a boolean")
+        if iid not in interfaces:
+            raise ValueError(f"Override references unknown interface: {iid}")
+    for iid, fields in adjustments.items():
+        interfaces[iid].update(fields)
 
 
 def _read_instances(
@@ -137,6 +209,7 @@ def _instantiate_sites(
         site = {
             "site_id": site_id,
             "kind": str(row.get("kind") or device_profile.get("kind") or "field"),
+            "candidate": _bool_value(row.get("candidate"), False),
             "lat": _optional_float(row.get("lat")),
             "lon": _optional_float(row.get("lon")),
             "x": _optional_float(row.get("x")),
@@ -158,6 +231,7 @@ def _instantiate_sites(
             "antenna_height_m",
             "connected",
             "can_route",
+            "candidate",
             "rank",
             profile_column,
         }
@@ -187,6 +261,9 @@ def _instantiate_sites(
                     f"interface profile {interface_profile_id!r}"
                 )
             interface_profile = interface_profiles[interface_profile_id]
+            enabled = interface_profile.get("enabled", True)
+            if not isinstance(enabled, bool):
+                raise ValueError("Interface enabled must be a boolean")
             site["interfaces"].append(
                 {
                     "interface_id": f"{site_id}:d0:i{interface_index}",
@@ -200,6 +277,7 @@ def _instantiate_sites(
                     "medium": str(interface_profile.get("medium", "rf")),
                     "max_links": _max_links_value(interface_profile.get("max_links")),
                     "interface_profile": interface_profile_id,
+                    "enabled": enabled,
                 }
             )
 

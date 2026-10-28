@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "data": "projects/e08_baseline_copel/features.json",
+  "model": "metrics/e08_copel_rssi.json",
+  "metric": "metrics/e08_copel.toml",
+  "filters": [
+    {
+      "feature_path": "measures.rssi",
+      "min_value": -120,
+      "max_value": -35,
+      "include_max": true
+    },
+    {
+      "feature_path": "tx.pw",
+      "min_value": 0,
+      "max_value": 40,
+      "include_max": true
+    },
+    {
+      "feature_path": "tx.ant_gain",
+      "min_value": 0,
+      "max_value": 40,
+      "include_max": true
+    },
+    {
+      "feature_path": "rx.ant_gain",
+      "min_value": 0,
+      "max_value": 40,
+      "include_max": true
+    }
+  ],
+  "stages": [
+    {
+      "name": "base",
+      "filters": [
+        {
+          "feature_path": "features.vegetation.boundary",
+          "min_value": 0,
+          "max_value": 1,
+          "include_max": false
+        },
+        {
+          "feature_path": "features.buildings.boundary",
+          "min_value": 0,
+          "max_value": 1,
+          "include_max": false
+        },
+        {
+          "feature_path": "features.terrain.boundary",
+          "min_value": 0,
+          "max_value": 1,
+          "include_max": false
+        }
+      ],
+      "fit": {
+        "fixed_terms": {
+          "tx_power": "tx.pw",
+          "tx_gain": "tx.ant_gain",
+          "rx_gain": "rx.ant_gain"
+        },
+        "fixed_coeffs": {
+          "tx_power": 1.0,
+          "tx_gain": 1.0,
+          "rx_gain": 1.0
+        },
+        "learned_terms": {
+          "fspl": "-features.fspl",
+          "diff": "-features.delta_diffra"
+        },
+        "learned_priors": {
+          "fspl": 1.0,
+          "diff": 1.0
+        },
+        "bounds": {
+          "fspl": [
+            0.0,
+            null
+          ],
+          "diff": [
+            0.0,
+            null
+          ]
+        },
+        "y_expr": "measures.rssi",
+        "fit_intercept": false,
+        "tau": 0.5,
+        "l2_to_prior": 0.01
+      }
+    },
+    {
+      "name": "vegetation",
+      "filters": [
+        {
+          "feature_path": "features.vegetation.boundary",
+          "min_value": 10,
+          "max_value": 100000,
+          "include_max": true
+        },
+        {
+          "feature_path": "features.buildings.boundary",
+          "min_value": 0,
+          "max_value": 10,
+          "include_max": false
+        },
+        {
+          "feature_path": "features.terrain.fresnel",
+          "min_value": 0,
+          "max_value": 10,
+          "include_max": false
+        }
+      ],
+      "fit": {
+        "fixed_terms": {
+          "tx_power": "tx.pw",
+          "tx_gain": "tx.ant_gain",
+          "rx_gain": "rx.ant_gain",
+          "fspl": "-features.fspl",
+          "diff": "-features.delta_diffra"
+        },
+        "fixed_coeffs": {
+          "tx_power": 1.0,
+          "tx_gain": 1.0,
+          "rx_gain": 1.0,
+          "fspl": "base.fspl",
+          "diff": "base.diff"
+        },
+        "learned_terms": {
+          "veg_boundary": "-math.log10(1.0 + features.vegetation.boundary)",
+          "veg_fresnel": "-math.log10(1.0 + features.vegetation.fresnel)",
+          "veg_core": "-math.log10(1.0 + features.vegetation.core)"
+        },
+        "learned_priors": {
+          "veg_boundary": 1,
+          "veg_fresnel": 1,
+          "veg_core": 1
+        },
+        "bounds": {
+          "veg_boundary": [
+            0.0,
+            null
+          ],
+          "veg_fresnel": [
+            0.0,
+            null
+          ],
+          "veg_core": [
+            0.0,
+            null
+          ]
+        },
+        "y_expr": "measures.rssi",
+        "fit_intercept": false,
+        "tau": 0.25,
+        "l2_to_prior": 0.0001
+      }
+    },
+    {
+      "name": "buildings",
+      "filters": [
+        {
+          "feature_path": "features.vegetation.boundary",
+          "min_value": 0,
+          "max_value": 1,
+          "include_max": true
+        },
+        {
+          "feature_path": "features.buildings.boundary",
+          "min_value": 10,
+          "max_value": 1000,
+          "include_max": false
+        },
+        {
+          "feature_path": "features.terrain.fresnel",
+          "min_value": 0,
+          "max_value": 1,
+          "include_max": true
+        }
+      ],
+      "fit": {
+        "fixed_terms": {
+          "tx_power": "tx.pw",
+          "tx_gain": "tx.ant_gain",
+          "rx_gain": "rx.ant_gain",
+          "fspl": "-features.fspl",
+          "diff": "-features.delta_diffra"
+        },
+        "fixed_coeffs": {
+          "tx_power": 1.0,
+          "tx_gain": 1.0,
+          "rx_gain": 1.0,
+          "fspl": "base.fspl",
+          "diff": "base.diff"
+        },
+        "learned_terms": {
+          "bldg_boundary": "-math.log10(1.0 + features.buildings.boundary)",
+          "bldg_fresnel": "-math.log10(1.0 + features.buildings.fresnel)",
+          "bldg_core": "-math.log10(1.0 + features.buildings.core)"
+        },
+        "learned_priors": {
+          "bldg_boundary": 1,
+          "bldg_fresnel": 1,
+          "bldg_core": 1
+        },
+        "bounds": {
+          "bldg_boundary": [
+            0.0,
+            null
+          ],
+          "bldg_fresnel": [
+            0.0,
+            null
+          ],
+          "bldg_core": [
+            0.0,
+            null
+          ]
+        },
+        "y_expr": "measures.rssi",
+        "fit_intercept": false,
+        "tau": 0.25,
+        "l2_to_prior": 0.0001
+      }
+    },
+    {
+      "name": "final",
+      "filters": [],
+      "fit": {
+        "fixed_terms": {
+          "tx_power": "tx.pw",
+          "tx_gain": "tx.ant_gain",
+          "rx_gain": "rx.ant_gain",
+          "fspl": "-features.fspl",
+          "diff": "-features.delta_diffra"
+        },
+        "fixed_coeffs": {
+          "tx_power": 1.0,
+          "tx_gain": 1.0,
+          "rx_gain": 1.0,
+          "fspl": "base.fspl",
+          "diff": "base.diff"
+        },
+        "learned_terms": {
+          "veg_boundary": "-math.log10(1.0 + features.vegetation.boundary)",
+          "veg_fresnel": "-math.log10(1.0 + features.vegetation.fresnel)",
+          "veg_core": "-math.log10(1.0 + features.vegetation.core)",
+          "bldg_boundary": "-math.log10(1.0 + features.buildings.boundary)",
+          "bldg_fresnel": "-math.log10(1.0 + features.buildings.fresnel)",
+          "bldg_core": "-math.log10(1.0 + features.buildings.core)"
+        },
+        "learned_priors": {
+          "veg_boundary": "vegetation.veg_boundary",
+          "veg_fresnel": "vegetation.veg_fresnel",
+          "veg_core": "vegetation.veg_core",
+          "bldg_boundary": "buildings.bldg_boundary",
+          "bldg_fresnel": "buildings.bldg_fresnel",
+          "bldg_core": "buildings.bldg_core"
+        },
+        "bounds": {
+          "veg_boundary": [
+            0,
+            null
+          ],
+          "veg_fresnel": [
+            0,
+            null
+          ],
+          "veg_core": [
+            0,
+            null
+          ],
+          "bldg_boundary": [
+            0.0,
+            null
+          ],
+          "bldg_fresnel": [
+            0.0,
+            null
+          ],
+          "bldg_core": [
+            0.0,
+            null
+          ]
+        },
+        "fit_intercept": false,
+        "tau": 0.5,
+        "l2_to_prior": 0.0001
+      }
+    }
+  ],
+  "measurements": "data/e08/measurements.json",
+  "enriched": "projects/e08_baseline_copel/enriched_features.json"
+}

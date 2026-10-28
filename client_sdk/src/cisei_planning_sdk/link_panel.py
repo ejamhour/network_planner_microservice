@@ -23,7 +23,7 @@ class LinkInspectionPanel:
         ("Link features", "features"),
     )
 
-    def __init__(self, scenario, geo, edges):
+    def __init__(self, scenario, geo, edges, *, auto_load=True, initial_endpoint=None):
         import ipywidgets as widgets
 
         # Use the underlying client to keep intermediate responses out of cells.
@@ -32,7 +32,8 @@ class LinkInspectionPanel:
         self._changing = False
         self._endpoints_by_edge = [self._endpoints(edge) for edge in self.browser.edges]
         endpoint_ids = sorted({node for pair in self._endpoints_by_edge for node in pair})
-        initial_endpoint = self._endpoints_by_edge[0][0] if self.browser.edges else ""
+        if initial_endpoint is None:
+            initial_endpoint = self._endpoints_by_edge[0][0] if self.browser.edges else ""
         self.endpoint = widgets.Text(
             value=initial_endpoint, description="Endpoint:",
             placeholder="Type a site ID", continuous_update=False,
@@ -44,7 +45,7 @@ class LinkInspectionPanel:
             layout=widgets.Layout(width="320px", max_width="100%"),
         )
         self._visible_indices = [i for i, pair in enumerate(self._endpoints_by_edge)
-                                 if self.endpoint.value in pair]
+                                 if not self.endpoint.value or self.endpoint.value in pair]
         self.count = widgets.HTML()
         self.links = widgets.Select(
             options=[(self._label(i, self.browser.edges[i]), i) for i in self._visible_indices],
@@ -71,8 +72,10 @@ class LinkInspectionPanel:
         self.next.on_click(lambda _: self._move(1))
         self.refresh.on_click(lambda _: self._render())
         self._update_controls()
-        if self.browser.edges:
+        if self.browser.edges and auto_load:
             self._render()
+        elif self.browser.edges:
+            self.status.value = "Select a view and press Show to inspect the selected link."
         else:
             self.status.value = "No links available for inspection."
 

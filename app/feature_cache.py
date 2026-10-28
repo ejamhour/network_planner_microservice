@@ -71,3 +71,9 @@ class CachedGeo:
             FeatureCache.from_document({"format": "cisei-feature-cache", "version": 1, "entries": [entry]})
             self.cache.records[key] = entry
         return deepcopy(self.cache.records[key]["features"])
+
+    async def point_samples(self, points, **options):
+        """Terrain samples used by infrastructure search; raw link cache is unchanged."""
+        if self.pool is None:
+            self.pool = await self.runtime.get_geo_pool(**self.pool_options)
+        return await self.pool.point_samples(points, **options)

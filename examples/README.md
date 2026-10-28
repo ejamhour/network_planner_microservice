@@ -1,5 +1,14 @@
 # Planning workspace and projects
 
+## E08 Technology baseline
+
+`notebooks/e08_baseline_tecnologia.ipynb` demonstrates RSSI training and
+evaluation with the COPEL Phase 1 links in `projects/e08_baseline_copel`.
+Requires SDK 0.1.42 with notebook extras. Measurements and precomputed features
+are in `data/e08`; the fitted JSON model and planning metric TOML are saved in
+`metrics/`. No geographic extraction or service connection is needed to run
+this example. The notebook uses only SDK calls and interactive visual reports.
+
 Start the numbered series with
 `notebooks/example_1_LTE_planning_and_link_inspection.ipynb` (SDK 0.1.20+).
 Its project is `projects/example_1_LTE_planning_and_link_inspection`.
@@ -12,19 +21,19 @@ SDK 0.1.18+ downloads its contents directly into the workspace.
 
 ```text
 cisei_workspace/
-├── notebooks/
-│   └── example1_LTE_planning_basic.ipynb
-├── projects/
-│   └── example1_LTE_planning_basic/
-│       ├── scenario.toml
-│       ├── nodes.csv
-│       ├── features.json   # created after metric computation
-│       └── result.json     # created when you save a result
-├── antennas/               # shared antenna-model library files
-├── metrics/                # shared metric specifications (one metric per file)
-├── data/
-├── prepare_workspace.py
-└── run_examples.py
+â”œâ”€â”€ notebooks/
+â”‚   â””â”€â”€ example1_LTE_planning_basic.ipynb
+â”œâ”€â”€ projects/
+â”‚   â””â”€â”€ example1_LTE_planning_basic/
+â”‚       â”œâ”€â”€ scenario.toml
+â”‚       â”œâ”€â”€ nodes.csv
+â”‚       â”œâ”€â”€ features.json   # created after metric computation
+â”‚       â””â”€â”€ result.json     # created when you save a result
+â”œâ”€â”€ antennas/               # shared antenna-model library files
+â”œâ”€â”€ metrics/                # shared metric specifications (one metric per file)
+â”œâ”€â”€ data/
+â”œâ”€â”€ prepare_workspace.py
+â””â”€â”€ run_examples.py
 ```
 
 Each project is a directory, not a notebook. `init_workspace` creates the
@@ -337,3 +346,67 @@ chosen by the solver. Viewing reloads saved metrics via GET but never computes
 features or metrics. The original response remains in `scenario.metrics`.
 An optional `save_path` chooses another HTML destination. Existing notebook
 calls require no edits; trust outputs if notebook security blocks iframe scripts.
+
+## E07 â€” Rede GE instalada e redundÃ¢ncia celular
+
+Requer SDK 0.1.39+ e o serviÃ§o atualizado. Execute prepare_workspace.py com
+--refresh-notebooks e reinicie o kernel. Os nomes dos notebooks foram mantidos.
+
+1. notebooks/e07_01_projeto_original.ipynb planeja os 13 sites do example_1
+   como GE mesh, permite explorar qualidade/dependÃªncias no grafo e registra
+   a escolha manual do engenheiro.
+2. notebooks/e07_02_projeto_redundancia.ipynb usa extension_fixed_links.toml
+   para dar a Barigui duas interfaces (GE e celular), tornÃ¡-lo conectado e
+   desabilitar a interface GE de Torre. Somente os enlaces instalados do
+   primeiro projeto sÃ£o usados; nÃ£o sÃ£o gerados novos enlaces GE.
+
+Ambos contÃªm apenas chamadas ao SDK, sem tabelas ou lÃ³gica de anÃ¡lise local.
+Os projetos sÃ£o e07_ge_mesh_original e e07_ge_mesh_redundancia. Os parÃ¢metros
+GE sÃ£o ilustrativos. O acesso celular pÃºblico Ã© uma premissa externa com custo
+inicial 1.0. A nova receita Ã© baixada sem substituir extension.toml editado
+localmente; o notebook 2 referencia explicitamente extension_fixed_links.toml.
+
+No grafo, cinza indica desabilitado, vermelho ausÃªncia de caminho e magenta
+qualidade abaixo do limiar. Selecione um site na visualizaÃ§Ã£o de dependÃªncias
+para destacar a sub-rede. A decisÃ£o de proteÃ§Ã£o permanece manual.
+
+## E09 â€” Entradas da rede instalada BRO-S
+
+O projeto `projects/e09_diagnostico_bro` contÃ©m 25 equipamentos e 24 enlaces
+instalados, preparados externamente a partir do arquivo original BRO-S.
+Usa `scenario.toml`, `nodes.csv` e as mediÃ§Ãµes no contrato JSON da E08 em
+`data/e09/hop_metrics.json`. NÃ£o hÃ¡ importador de GeoJSON ou sÃ©ries temporais.
+O notebook `notebooks/e09_diagnostico_bro.ipynb` requer SDK 0.1.47 e importa
+a topologia instalada sem planejamento. As vistas lÃ³gica e geogrÃ¡fica
+destacam o caminho do nÃ³ selecionado atÃ© o backbone. As seÃ§Ãµes 4 e 5 extraem
+features em lotes pelos serviÃ§os existentes e abrem o inspetor de enlaces.
+A seÃ§Ã£o 6 gera `enriched_features.json` com 22 observaÃ§Ãµes de rÃ¡dio, preservando
+o cache puro `features.json` e usando o mÃ©todo
+da E08 e excluindo explicitamente os dois registros internos. A avaliaÃ§Ã£o
+das mediÃ§Ãµes pela metodologia da E08 estÃ¡ na seÃ§Ã£o 7. A seÃ§Ã£o 8 mostra a
+topologia colorida por classificaÃ§Ã£o e o diagnÃ³stico do caminho selecionado.
+
+### Mesh com postes candidatos
+
+`notebooks/exemple_4_Mesh_basic.ipynb` planeja os enlaces Copel–Guaíra e Copel–Itália usando os perfis e posições de `projects/exemple_4_Mesh_basic`. Requer SDK 0.1.50 e a rota Mesh atualizada no microserviço. A busca usa o serviço de features e salva propostas e mapas no projeto.
+
+No exemplo 4, equipamentos usam `nodes.csv` e infraestrutura candidata usa `poles.csv`, referenciado em `[mesh.poles]` do TOML. Os grafos avaliados e as soluções são visualizados separadamente.
+
+### E13 — Diagnóstico e revisão AGU-S
+
+`notebooks/e13_diagnostico.ipynb` aplica o fluxo existente da E09 aos 65 equipamentos de AGU-S. O projeto está em `projects/e10_diagnostico` e as medições em `data/e10/agu_s`. Usa o modelo compartilhado da E08; não realiza replanejamento nem usa postes nesta etapa.
+
+
+### E13 — Replanejamento de enlaces AGU-S
+
+`notebooks/e13_replanejamento.ipynb` usa a seleção confirmada no diagnóstico para
+criar o projeto independente `projects/e13_replanejamento`. Retira somente os
+enlaces escolhidos, preserva os 65 rádios e os demais enlaces e usa LinkPlanner
+para buscar ligações com repetidores nos postes de `poles.csv`. Os parâmetros
+ficam em `replanning.toml`. Requer SDK 0.1.56 e o código atualizado do serviço de
+rede para seleção de caminhos que atendem à qualidade por segmento.
+
+O notebook mostra a rede preparada, os grafos efetivamente avaliados, as
+propostas individuais e a rede consolidada. Propostas acima do limite são
+registradas sem serem incorporadas; demandas sem alternativa permanecem
+identificadas. O projeto de origem, `e10_diagnostico`, não é alterado.

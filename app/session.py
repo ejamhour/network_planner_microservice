@@ -26,6 +26,7 @@ class UserRuntime:
         self._pool_lock = asyncio.Lock()
         self.planning_scenarios = {}
         self.planning_planners = {}
+        self.mesh_planners = {}
         self.feature_caches = {}
         self.geo_pools: dict[tuple[Any, ...], AsyncGeoServicePool] = {}
 

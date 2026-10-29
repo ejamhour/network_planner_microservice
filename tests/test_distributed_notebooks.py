@@ -184,7 +184,7 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             assert (derived / "solution_network.html").exists()
             assert (derived / "evaluation.html").exists()
             assert (derived / "metrics.html").exists()
-        if notebook.stem in LTE_NOTEBOOKS | E07_NOTEBOOKS | {"custom_configuration", "example_3_LTE_hybrid", "e09_diagnostico_bro", "e13_diagnostico", "e13_replanejamento", "exemple_4_Mesh_basic"}:
+        if notebook.stem in LTE_NOTEBOOKS | E07_NOTEBOOKS | {"custom_configuration", "example_3_LTE_hybrid", "e09_diagnostico_bro", "e13_diagnostico", "e13_replanejamento", "exemple_4_Mesh_basic", "example_5_Mesh_network"}:
             assert geo_calls, "The custom example must actually evaluate uploaded models and metrics"
         else:
             assert not geo_calls, "Synthetic smoke cases must not require geo data"
@@ -234,6 +234,22 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             assert namespace["proposal_italia"]["mesh_search"]["dst_site"] == "italia"
             assert len(runtime.planning_scenarios[namespace["scenario"].scenario_id].site_nodes) == 3
             assert (result_dir / "exemple_4_Mesh_basic/poles.csv").exists()
+        elif notebook.stem == 'example_5_Mesh_network':
+            assert namespace['scenario'].planner == 'mesh'
+            assert not any('/mesh/plan_network' in path for _, path in calls)
+            assert sum('/mesh/add_repeaters' in path for _, path in calls) == 1
+            assert sum('/mesh/remove_unused_repeaters' in path for _, path in calls) == 1
+            assert any('/candidate_edges/build' in path for _, path in calls)
+            assert any('/metrics/compute' in path for _, path in calls)
+            assert any('/solution/solve' in path for _, path in calls)
+            result = namespace['result']
+            assert result['mesh_network']['unserved_interfaces'] == []
+            assert len(result['rpl_nodes']) == 5
+            assert sum(n['connected'] for n in result['planned_nodes']) == 2
+            derived = result_dir / 'example_5_Mesh_network'
+            assert (derived / 'mesh_solution/scenario.toml').exists()
+            assert (derived / 'mesh_solution/nodes.csv').exists()
+            assert (derived / 'mesh_step_0001_attempt_01_candidate.html').exists()
         elif repair:
             assert namespace['replanning']['accepted_links'] == 4
             assert namespace['preparation']['installed_radios'] == 65

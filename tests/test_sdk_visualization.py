@@ -129,3 +129,41 @@ if(!elements.get('#scene').children.some(e=>e.class==='label'))throw Error('Labe
     path = tmp_path / "quality.cjs"
     path.write_text(harness + script + checks, encoding="utf-8")
     subprocess.run([node, str(path)], check=True, capture_output=True, text=True, timeout=20)
+
+
+def test_selected_link_displays_solution_ranks_and_edge_cost(tmp_path):
+    import re
+    import shutil
+    import subprocess
+    from cisei_planning_sdk.network_view import NetworkView
+    node = shutil.which('node')
+    if node is None:
+        pytest.skip('Node.js is required for the browser rendering check')
+    result = {
+        'rpl_nodes': [
+            {'node_id': 'a', 'site_id': 'A', 'x': 0, 'y': 0, 'rank': None},
+            {'node_id': 'b', 'site_id': 'B', 'x': 100, 'y': 100, 'rank': None},
+        ],
+        'planned_nodes': [{'node_id': 'a', 'rank': 0}, {'node_id': 'b', 'rank': 3.7, 'parent': 'a'}],
+        'planned_edges': [{'src': 'a', 'dst': 'b', 'metric': 3.7}],
+        'mesh_search': {},
+    }
+    script = re.search(r'<script>(.*?)</script>', NetworkView(result).to_html(), re.S).group(1)
+    harness = r"""
+const elements=new Map();
+class Element {constructor(){this.children=[];this.checked=true;this.value=''}setAttribute(k,v){this[k]=v}append(e){this.children.push(e)}replaceChildren(){this.children=[]}}
+global.document={querySelector(s){if(!elements.has(s))elements.set(s,new Element());return elements.get(s)},createElementNS(){return new Element()},createElement(){return new Element()}};
+"""
+    checks = r"""
+const edge=elements.get('#scene').children.find(e=>e.class==='edge');edge.onclick();
+let text=elements.get('#details').textContent;
+for(const s of ['Custo do segmento: 3.7','Rank de A: 0','Rank de B: 3.7','Ranks locais'])if(!text.includes(s))throw Error('Missing '+s);
+select(['B']);if(!elements.get('#details').textContent.includes('Rank: 3.7'))throw Error('Node rank missing');
+if(edgeMetric({src:'a',dst:'b',metric:0}).metric!==0)throw Error('Zero cost lost');
+metrics.set(JSON.stringify(['b','a']),{metric:2});
+if(edgeMetric({src:'a',dst:'b'}).metric!==2)throw Error('Reverse metric missing');
+planned.delete('b');edge.onclick();if(!elements.get('#details').textContent.includes('Rank de B: sem caminho na solução'))throw Error('Unserved rank invented');
+"""
+    path = tmp_path / 'selected_link.cjs'
+    path.write_text(harness + script + checks, encoding='utf-8')
+    subprocess.run([node, str(path)], check=True, capture_output=True, text=True, timeout=20)

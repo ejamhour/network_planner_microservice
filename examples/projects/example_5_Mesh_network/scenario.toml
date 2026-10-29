@@ -1,0 +1,91 @@
+[scenario]
+working_crs = "EPSG:31982"
+
+[antennas.mesh_omni]
+kind = "omni"
+height_m = 7.0
+gain_dbi = 3.0
+
+[interfaces.mesh_radio]
+tech = "mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "mesh_omni"
+can_relay = true
+
+[devices.mesh_node]
+connected = false
+can_route = true
+interfaces = ["mesh_radio"]
+
+[metrics.mesh]
+spec = "default"
+
+[instances]
+source = "nodes.csv"
+format = "csv"
+profile_column = "device_profile"
+
+# Link search controls. Infrastructure is loaded separately from poles.csv.
+[mesh]
+max_repeaters = 5
+max_candidates = 5
+segment_threshold = 2.0
+search_heuristic = "sector_band"
+search_midpoint = true
+
+# Different radio profiles may share the endpoint technology.
+[antennas.mesh_high_gain]
+kind = "omni"
+height_m = 7.0
+gain_dbi = 6.0
+
+[interfaces.mesh_radio_high_gain]
+tech = "mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "mesh_high_gain"
+can_relay = true
+
+[devices.mesh_high_gain]
+can_route = true
+interfaces = ["mesh_radio_high_gain"]
+
+# This candidate is deliberately incompatible with the endpoint technology.
+[interfaces.wisun_radio]
+tech = "wisun"
+freq_mhz = 915.0
+tx_power_dbm = 23.0
+antenna_id = "mesh_omni"
+can_relay = true
+
+[devices.wisun_node]
+can_route = true
+interfaces = ["wisun_radio"]
+
+# This profile has two technologies; the mesh interface is selected for this study.
+[devices.mesh_wisun_node]
+can_route = true
+interfaces = ["mesh_radio", "wisun_radio"]
+
+[mesh.poles]
+source = "poles.csv"
+format = "csv"
+profile_column = "device_profile"
+
+# Specialized mesh network construction and final candidate graph.
+[mesh.network]
+parent_candidates = 3
+corridor_m = 1500.0
+final_degree = 3
+
+[interfaces.mesh_leaf]
+tech = "mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "mesh_omni"
+can_relay = false
+
+[devices.mesh_terminal]
+can_route = false
+interfaces = ["mesh_leaf"]

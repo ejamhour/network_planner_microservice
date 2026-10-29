@@ -9,7 +9,7 @@ from cisei_planning_sdk.baseline import BaselineProject
 from cisei_planning_sdk.installed_project import InstalledNetworkProject
 from cisei_planning_sdk.link_replanning import LinkReplanningProject
 
-__version__ = "0.1.56"
+__version__ = "0.1.60"
 
 __all__ = ["PlanningClient", "ScenarioSession", "init_workspace", "load_scenario_bundle",
            "save_result", "load_result", "save_scenario", "plot_network", "PlanningProject", "ExtendedPlanningProject",

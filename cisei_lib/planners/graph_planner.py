@@ -416,6 +416,7 @@ class GraphPlanner:
         ] | None = None,
         manage_geo: bool = False,
         accumulate: bool = False,
+        bidirectional: bool = False,
     ) -> dict[tuple[str, str], float]:
         """
         Extract geo features and compute one metric per candidate edge.
@@ -425,6 +426,9 @@ class GraphPlanner:
         the compiled metric for that technology and stores both final scalar
         metrics and the expanded metric records. Internal edges use their rule
         metric directly and do not call the geo service.
+
+        ``bidirectional=True`` evaluates both RF directions and uses the
+        greater cost. The default preserves the original one-direction policy.
 
         Set ``manage_geo=True`` when this method should call ``geo.start()``
         and ``geo.close()``. Leave it false when the caller manages a reused
@@ -529,6 +533,21 @@ class GraphPlanner:
                     features,
                 )
                 edge_metrics[(src, dst)] = float(metric_function(metric_record))
+                if bidirectional:
+                    try:
+                        reverse = await geo.get_features(
+                            dst_site.geo_pos, src_site.geo_pos,
+                            tx_ha=dst_height, rx_ha=src_height, freq_mhz=src_freq_mhz)
+                    except Exception as exc:
+                        raise RuntimeError(f'Feature extraction failed for {dst} -> {src}: {exc}') from exc
+                    reverse = dict(reverse)
+                    reverse.setdefault('freq_mhz', src_freq_mhz)
+                    reverse_record = self._metric_record(dst_node, src_node, reverse)
+                    reverse_cost = float(metric_function(reverse_record))
+                    if not isfinite(reverse_cost) or not isfinite(edge_metrics[(src, dst)]):
+                        raise ValueError(f'Nonfinite bidirectional metric for {src} -> {dst}')
+                    edge_metrics[(src, dst)] = max(edge_metrics[(src, dst)], reverse_cost)
+                    metric_record['reverse'] = reverse_record
                 edge_features[(src, dst)] = metric_record
 
         finally:
@@ -542,6 +561,7 @@ class GraphPlanner:
             self.candidate_edges = candidate_edges
             self.edge_metrics = edge_metrics
             self.edge_features = edge_features
+        self.rpl = None
         return dict(edge_metrics)
 
     # RPL execution ----------------------------------------------------------
@@ -549,6 +569,8 @@ class GraphPlanner:
     def run_rpl(
         self,
         edge_metrics: Mapping[tuple[str, str], float] | None = None,
+        *,
+        max_edge_metric: float | None = None,
     ) -> GeoRPL:
         """
         Run RPL over the current metric graph.
@@ -568,14 +590,21 @@ class GraphPlanner:
             (str(src), str(dst)): float(metric)
             for (src, dst), metric in edge_metrics.items()
         }
+        if max_edge_metric is not None and (not isfinite(max_edge_metric) or max_edge_metric < 0):
+            raise ValueError('max_edge_metric must be finite and nonnegative')
+        if max_edge_metric is not None and any(not isfinite(v) or v < 0 for v in self.edge_metrics.values()):
+            raise ValueError('Edge metrics must be finite and nonnegative')
+        self.last_max_edge_metric = max_edge_metric
+        usable_metrics = {k: v for k, v in self.edge_metrics.items()
+                          if max_edge_metric is None or v <= max_edge_metric}
 
         rpl = GeoRPL()
         if not self.rpl_nodes:
             self.rpl = rpl
             return rpl
         rpl.set_nodes(self.rpl_nodes)
-        if self.edge_metrics:
-            rpl.set_edge_metrics(self.edge_metrics)
+        if usable_metrics:
+            rpl.set_edge_metrics(usable_metrics)
             rpl.run_RPL()
         # Isolated external accesses remain part of a valid solution.
         rpl.G_res.add_nodes_from(

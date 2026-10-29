@@ -194,6 +194,7 @@ class MeshLinkPlanner(LinkPlanner):
             'path_selection': 'quality_first_then_cost',
             'src_interface': self.resolved[self.src_site].node_id,
             'dst_interface': self.resolved[self.dst_site].node_id,
+            'reference_rank': self.resolved[self.dst_site].rank,
             'eligible_candidates': [s for s in self.resolved if s not in (self.src_site, self.dst_site)],
             'excluded_candidates': self.excluded_candidates,
         }

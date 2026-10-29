@@ -94,6 +94,8 @@ class PlanningClient:
         """
         if self.project is None:
             raise RuntimeError("No active project. Open a project before defining a scenario.")
+        if planner not in {'graph', 'cell', 'mesh'}:
+            raise ValueError('planner must be graph, cell or mesh')
         scenario_json = self._scenario_json(scenario)
         response = self._request(
             "post",
@@ -101,6 +103,7 @@ class PlanningClient:
             json={
                 "scenario_id": name,
                 "scenario": scenario_json,
+                "planner": planner,
             },
         )
         data = response["data"]

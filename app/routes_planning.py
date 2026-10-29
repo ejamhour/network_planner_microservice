@@ -21,7 +21,7 @@ import cisei_lib.planners.planner_reports as reports
 
 router = APIRouter(prefix="/planning", tags=["planning"])
 
-PlannerKind = Literal["graph", "cell"]
+PlannerKind = Literal["graph", "cell", "mesh"]
 
 
 class MeshLinkBody(BaseModel):
@@ -36,6 +36,75 @@ class MeshLinkBody(BaseModel):
     segment_threshold: float = Field(default=2.0, ge=1, allow_inf_nan=False)
     search_heuristic: Literal['sector_band', 'dual_cone'] = 'sector_band'
     search_midpoint: bool = True
+
+
+class MeshNetworkBody(BaseModel):
+    """Progressive network construction with a shared pool of optional poles."""
+    poles: list[dict[str, Any]] = Field(default_factory=list)
+    geo_base_url: str | None = None
+    parent_candidates: int = Field(default=3, ge=1, le=20)
+    corridor_m: float = Field(default=1500.0, ge=0, allow_inf_nan=False)
+    final_degree: int = Field(default=3, ge=1, le=50)
+    max_repeaters: int = Field(default=5, ge=0, le=20)
+    max_candidates: int = Field(default=5, ge=1, le=50)
+    segment_threshold: float = Field(default=2.0, ge=1, allow_inf_nan=False)
+    search_heuristic: Literal['sector_band', 'dual_cone'] = 'sector_band'
+    search_midpoint: bool = True
+
+
+@router.post('/scenarios/{scenario_id}/mesh/plan_network')
+async def plan_mesh_network(request: Request, scenario_id: str, body: MeshNetworkBody):
+    """Construct a mesh without modifying the stored input scenario."""
+    try:
+        from cisei_lib.planners.mesh_planner import MeshPlanner
+        runtime = request.app.state.runtime
+        scenario = _stored_scenario(request, scenario_id)
+        cache = runtime.feature_caches.setdefault(scenario_id, FeatureCache())
+        geo = CachedGeo(runtime, cache, base_url=_geo_base_url(body.geo_base_url),
+                        user_prefix='mesh-network', pool_size=2, timeout=120.0)
+        options = body.model_dump(exclude={'geo_base_url'})
+        planner = MeshPlanner(scenario, geo=geo, **options)
+        graph, result = await planner.plan()
+        runtime.planning_planners[scenario_id] = graph
+        _mesh_planners(runtime)[scenario_id] = planner
+        return _ok(result)
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.post('/scenarios/{scenario_id}/mesh/add_repeaters')
+async def add_mesh_repeaters(request: Request, scenario_id: str, body: MeshNetworkBody):
+    """Run only repeater addition; common stages follow explicitly."""
+    try:
+        from cisei_lib.planners.mesh_planner import MeshPlanner
+        runtime = request.app.state.runtime
+        scenario = _stored_scenario(request, scenario_id)
+        geo = CachedGeo(runtime, runtime.feature_caches.setdefault(scenario_id, FeatureCache()),
+                        base_url=_geo_base_url(body.geo_base_url), user_prefix='mesh-network',
+                        pool_size=2, timeout=120.0)
+        engine = MeshPlanner(scenario, geo=geo, **body.model_dump(exclude={'geo_base_url'}))
+        result = await engine.add_repeaters()
+        _mesh_planners(runtime)[scenario_id] = engine
+        runtime.planning_planners[scenario_id] = engine.graph
+        return _ok(result)
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.post('/scenarios/{scenario_id}/mesh/remove_unused_repeaters')
+def remove_mesh_repeaters(request: Request, scenario_id: str):
+    """Remove optional radios unused by required terminal paths, after solve."""
+    try:
+        runtime = request.app.state.runtime
+        engine = _mesh_planners(runtime).get(scenario_id)
+        if engine is None:
+            raise ValueError('Call add_repeaters before removing unused repeaters')
+        engine.graph = _stored_planner(request, scenario_id)
+        result = engine.remove_unused_repeaters()
+        runtime.planning_planners[scenario_id] = engine.graph
+        return _ok(result)
+    except Exception as exc:
+        return _error(exc)
 
 
 @router.post('/scenarios/{scenario_id}/mesh/plan_link')
@@ -61,6 +130,7 @@ async def plan_mesh_link(request: Request, scenario_id: str, body: MeshLinkBody)
                                   search_midpoint=body.search_midpoint)
         graph, result = await planner.plan()
         runtime.planning_planners[scenario_id] = graph
+        _mesh_planners(runtime).pop(scenario_id, None)
         return _ok(result)
     except Exception as exc:
         return _error(exc)
@@ -76,6 +146,7 @@ class DefineScenarioBody(ScenarioBody):
     """Define or replace a stored planning scenario."""
 
     scenario_id: str | None = None
+    planner: PlannerKind = 'graph'
 
 
 class ScenarioConfigurationBody(BaseModel):
@@ -136,6 +207,12 @@ class MetricComputeBody(BaseModel):
     geo_user_prefix: str = "planning-api"
     geo_pool_size: int = 1
     geo_timeout: float = 120.0
+    bidirectional: bool = False
+
+
+class SolveBody(BaseModel):
+    """Optional per-edge eligibility limit; omitted preserves existing behavior."""
+    max_edge_metric: float | None = Field(default=None, ge=0, allow_inf_nan=False)
 
 
 class ResultEvaluateBody(BaseModel):
@@ -166,6 +243,7 @@ class WorkflowRunBody(
     compute/provide metrics -> solve network -> evaluate/export result.
     """
 
+    mesh: MeshNetworkBody | None = None
     tune_candidates: bool = False
     solve: bool = True
     rank_threshold: float | None = None
@@ -198,12 +276,14 @@ def define_scenario(request: Request, body: DefineScenarioBody):
         runtime = request.app.state.runtime
         runtime.planning_scenarios[scenario_id] = scenario
         runtime.planning_planners.pop(scenario_id, None)
+        _mesh_planners(runtime).pop(scenario_id, None)
         if hasattr(runtime, "feature_caches"):
             runtime.feature_caches.pop(scenario_id, None)
 
         return _ok(
             {
                 "scenario_id": scenario_id,
+                "planner": body.planner,
                 "summary": _scenario_summary(scenario),
                 "validation_errors": scenario.validate(),
                 "scenario": scenario.to_json_dict(include_sites=True),
@@ -241,6 +321,7 @@ def upload_configuration(request: Request, scenario_id: str, body: ScenarioConfi
         runtime = request.app.state.runtime
         runtime.planning_scenarios[scenario_id] = scenario
         runtime.planning_planners.pop(scenario_id, None)
+        _mesh_planners(runtime).pop(scenario_id, None)
         return _ok({
             "scenario_id": scenario_id,
             "summary": _scenario_summary(scenario),
@@ -319,6 +400,7 @@ def delete_scenario(request: Request, scenario_id: str):
     removed = scenario_id in runtime.planning_scenarios
     runtime.planning_scenarios.pop(scenario_id, None)
     runtime.planning_planners.pop(scenario_id, None)
+    _mesh_planners(runtime).pop(scenario_id, None)
     if hasattr(runtime, "feature_caches"):
         runtime.feature_caches.pop(scenario_id, None)
     return _ok({"scenario_id": scenario_id, "removed": removed})
@@ -355,8 +437,17 @@ def build_candidate_edges(
 ):
     try:
         scenario = _stored_scenario(request, scenario_id)
+        runtime = request.app.state.runtime
+        if body.planner == 'mesh':
+            engine = _mesh_planners(runtime).get(scenario_id)
+            if engine is None or not engine.repeaters_added:
+                raise ValueError('Call add_repeaters before building mesh candidates')
+            planner = engine.build_candidate_edges(preserve_existing=body.preserve_existing)
+            runtime.planning_planners[scenario_id] = planner
+            return _candidate_response(planner, body)
         planner = _build_candidate_edge_planner(scenario, body)
-        request.app.state.runtime.planning_planners[scenario_id] = planner
+        runtime.planning_planners[scenario_id] = planner
+        _mesh_planners(runtime).pop(scenario_id, None)
         return _candidate_response(planner, body)
     except Exception as exc:
         return _error(exc)
@@ -440,6 +531,7 @@ async def compute_metrics(
 ):
     try:
         planner = _stored_planner(request, scenario_id)
+        runtime = request.app.state.runtime
         await _compute_or_assign_metrics(
             planner,
             body,
@@ -483,12 +575,12 @@ def get_metrics(
     "/scenarios/{scenario_id}/solution/solve",
     summary="Stage 6 - solve the network",
 )
-def solve_network(request: Request, scenario_id: str):
+def solve_network(request: Request, scenario_id: str, body: SolveBody | None = None):
     try:
         planner = _stored_planner(request, scenario_id)
         if any(edge not in planner.edge_metrics for edge in planner.candidate_edges):
             raise RuntimeError("Metrics are incomplete. Finish all batches before solving.")
-        planner.run_rpl()
+        planner.run_rpl(max_edge_metric=body.max_edge_metric if body else None)
         return _solution_response(planner)
     except Exception as exc:
         return _error(exc)
@@ -570,6 +662,10 @@ def export_result(
     try:
         planner = _stored_planner(request, scenario_id)
         result = planner.to_result_dict(include_features=include_features)
+        mesh = _mesh_planners(request.app.state.runtime).get(scenario_id)
+        if mesh is not None and mesh.repeaters_added:
+            mesh.graph = planner
+            result['mesh_network'] = mesh.to_result_dict(include_features=include_features)['mesh_network']
         if rank_threshold is not None:
             result["evaluation"] = _evaluation_payload(
                 planner,
@@ -604,6 +700,28 @@ def export_scenario(request: Request, scenario_id: str):
 async def run_workflow(request: Request, body: WorkflowRunBody):
     try:
         scenario = _scenario_from_dict(body.scenario)
+        if body.planner == 'mesh':
+            if body.tune_candidates or body.edge_metrics is not None or body.batch_size is not None:
+                raise ValueError('Mesh workflow requires automatic metrics without tuning or fixed-size batches')
+            from cisei_lib.planners.mesh_planner import MeshPlanner
+            options = (body.mesh or MeshNetworkBody()).model_dump(exclude={'geo_base_url'})
+            engine = MeshPlanner(scenario, geo=None, **options)
+            engine.geo = CachedGeo(request.app.state.runtime, FeatureCache(),
+                                   base_url=_geo_base_url(body.geo_base_url), user_prefix='mesh-network',
+                                   pool_size=body.geo_pool_size, timeout=body.geo_timeout)
+            await engine.add_repeaters()
+            graph = engine.build_candidate_edges(preserve_existing=body.preserve_existing)
+            await graph.compute_edge_metrics(engine.geo, bidirectional=True)
+            if body.solve:
+                graph.run_rpl(max_edge_metric=engine.threshold)
+                result = engine.remove_unused_repeaters()
+                graph = engine.graph
+            else:
+                result = graph.to_result_dict(include_features=body.include_features)
+            if body.solve and body.rank_threshold is not None:
+                result['evaluation'] = _evaluation_payload(graph, rank_threshold=body.rank_threshold,
+                    primary_tech=body.primary_tech, solution_kind='mesh')
+            return _ok(result)
         planner = _build_candidate_edge_planner(scenario, body)
 
         tuning_payload = None
@@ -652,6 +770,13 @@ async def run_workflow(request: Request, body: WorkflowRunBody):
         return _ok(result)
     except Exception as exc:
         return _error(exc)
+
+
+def _mesh_planners(runtime):
+    # Preserve compatibility with lightweight runtimes used by API clients/tests.
+    if not hasattr(runtime, 'mesh_planners'):
+        runtime.mesh_planners = {}
+    return runtime.mesh_planners
 
 
 def _build_candidate_edge_planner(
@@ -704,14 +829,14 @@ async def _compute_or_assign_metrics(
         timeout=body.geo_timeout,
     )
     if body.batch_size is None:
-        await planner.compute_edge_metrics(geo, manage_geo=False)
+        await planner.compute_edge_metrics(geo, manage_geo=False, bidirectional=body.bidirectional)
     else:
         if body.batch_offset == 0:
             planner.edge_metrics = {}
             planner.edge_features = {}
             planner.rpl = None
         edges = planner.candidate_edges[body.batch_offset:body.batch_offset + body.batch_size]
-        await planner.compute_edge_metrics(geo, edges, manage_geo=False, accumulate=True)
+        await planner.compute_edge_metrics(geo, edges, manage_geo=False, accumulate=True, bidirectional=body.bidirectional)
 
 
 def _candidate_response(

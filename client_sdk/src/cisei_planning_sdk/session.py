@@ -43,6 +43,100 @@ class ScenarioSession:
     evaluation: dict[str, Any] | None = None
     result: dict[str, Any] | None = None
     project: Any = None
+    mesh_preparation: dict[str, Any] | None = None
+
+    def _mesh_network_body(self, *, poles=None, **options):
+        """Read local inputs shared by staged construction and its shortcut."""
+        import tomlkit
+        from cisei_planning_sdk.local_io import load_poles_bundle, _json_value
+        defaults = {}
+        if self.project is not None:
+            defaults = dict(tomlkit.parse(self.project.scenario_path.read_text(encoding='utf-8')).get('mesh', {}))
+            if poles is None:
+                poles = load_poles_bundle(self.project.scenario_path)
+        defaults.pop('poles', None)
+        defaults.pop('pole_sites', None)
+        network = dict(defaults.pop('network', {}))
+        controls = {**defaults, **network, **options}
+        allowed = {'parent_candidates', 'corridor_m', 'final_degree', 'max_repeaters',
+                   'max_candidates', 'segment_threshold', 'search_heuristic', 'search_midpoint'}
+        if set(controls)-allowed:
+            raise ValueError(f'Unknown mesh network controls: {sorted(set(controls)-allowed)}')
+        return _json_value({'poles': poles or [], **controls})
+
+    def add_repeaters(self, *, geo_base_url: str, poles=None, **options):
+        """Run mesh repeater addition, then use the common graph stages."""
+        if self.planner != 'mesh':
+            raise ValueError('add_repeaters requires planner="mesh"')
+        body = self._mesh_network_body(poles=poles, **options)
+        try:
+            result = self.client._request('post',
+                f'/planning/scenarios/{self.scenario_id}/mesh/add_repeaters',
+                json={**body, 'geo_base_url': geo_base_url})['data']
+        finally:
+            if self.project is not None:
+                self.save_feature_cache()
+        self.mesh_preparation = self.result = result
+        self.candidate_edges = self.metrics = self.solution = self.evaluation = None
+        if self.project is not None:
+            from cisei_planning_sdk.mesh_artifacts import save_mesh_artifacts
+            save_mesh_artifacts(self.project, result)
+        return result
+
+    def remove_unused_repeaters(self):
+        """Remove proposed repeaters unused by terminal paths after solve."""
+        if self.planner != 'mesh':
+            raise ValueError('remove_unused_repeaters requires planner="mesh"')
+        self.result = self.client._request('post',
+            f'/planning/scenarios/{self.scenario_id}/mesh/remove_unused_repeaters')['data']
+        self.candidate_edges = self.metrics = self.solution = self.evaluation = None
+        return self.result
+
+    def plan_mesh_network(self, *, geo_base_url: str, poles=None, **options):
+        """Compatibility shortcut; prefer add_repeaters followed by common stages."""
+        body = self._mesh_network_body(poles=poles, **options)
+        try:
+            result = self.client._request('post', f'/planning/scenarios/{self.scenario_id}/mesh/plan_network',
+                        json={**body, 'geo_base_url': geo_base_url})['data']
+        finally:
+            # Even a failed RF study can have completed reusable feature calls.
+            if self.project is not None:
+                self.save_feature_cache()
+        self.result = result
+        self.solution = self.metrics = self.candidate_edges = self.evaluation = None
+        if self.project is not None:
+            from cisei_planning_sdk.mesh_artifacts import save_mesh_artifacts
+            save_mesh_artifacts(self.project, result)
+        return result
+
+    def show_mesh_network(self, *, kind='final', save_path=None):
+        """Inspect the saved final forest or its retained candidate graph."""
+        from cisei_planning_sdk.visualization import plot_network
+        if self.result is None or 'mesh_network' not in self.result:
+            raise RuntimeError('Solve and export the mesh result first')
+        if kind not in {'candidate', 'final'}:
+            raise ValueError('kind must be candidate or final')
+        if save_path is None and self.project is not None:
+            save_path = self.project.path / ('mesh_candidates.html' if kind == 'candidate' else 'mesh_network.html')
+        return plot_network(self.result, kind=kind, save_path=save_path)
+
+    def show_mesh_study(self, step, *, attempt=1, kind='candidate', save_path=None):
+        """Inspect one evaluated terminal/parent study, using one-based indices."""
+        result = self.result if self.result and 'mesh_network' in self.result else self.mesh_preparation
+        if result is None:
+            raise RuntimeError('Call add_repeaters first')
+        steps = result['mesh_network']['steps']
+        if isinstance(step, bool) or not isinstance(step, int) or not 1 <= step <= len(steps):
+            raise ValueError(f'step must be between 1 and {len(steps)}')
+        attempts = steps[step-1]['attempts']
+        if isinstance(attempt, bool) or not isinstance(attempt, int) or not 1 <= attempt <= len(attempts):
+            raise ValueError(f'attempt must be between 1 and {len(attempts)}')
+        selected = attempts[attempt-1]
+        view = ScenarioSession(self.client, self.name, self.planner, self.scenario_id)
+        view.result = selected['result']
+        if save_path is None and self.project is not None:
+            save_path = self.project.path / f'mesh_step_{step:04d}_attempt_{attempt:02d}_{kind}.html'
+        return view.show_mesh_link(kind=kind, save_path=save_path)
 
     def plan_mesh_link(self, src_site: str, dst_site: str, *, geo_base_url: str,
                        pole_sites=None, poles=None, **options):
@@ -62,6 +156,7 @@ class ScenarioSession:
         if poles is None:
             poles = load_poles_bundle(self.project.scenario_path) if self.project is not None else None
         defaults.pop('poles', None)
+        defaults.pop('network', None)
         if pole_sites is None:
             pole_sites = defaults.pop('pole_sites', None)
         else:
@@ -275,11 +370,12 @@ class ScenarioSession:
             clears any downstream metrics/solution that no longer match the
             active candidate graph.
         """
+        selected = planner or self.planner
         payload = self.client._request(
             "post",
             f"/planning/scenarios/{self.scenario_id}/candidate_edges/build",
             json={
-                "planner": planner or self.planner,
+                "planner": selected,
                 "preserve_existing": preserve_existing,
                 "primary_tech": primary_tech,
                 "sector_aware": sector_aware,
@@ -288,6 +384,8 @@ class ScenarioSession:
             },
         )
         self.candidate_edges = payload["data"]
+        self.planner = selected
+        self.metrics = self.solution = self.evaluation = self.result = None
         return self.candidate_edges
 
     def get_candidate_edges(self) -> dict[str, Any]:
@@ -313,6 +411,7 @@ class ScenarioSession:
         geo_pool_size: int = 1,
         geo_timeout: float = 120.0,
         include_features: bool = False,
+        bidirectional: bool | None = None,
         batch_size: int | None = None,
         on_batch=None,
     ) -> dict[str, Any]:
@@ -342,6 +441,7 @@ class ScenarioSession:
         while True:
             body = {
                 "edge_metrics": None,
+                "bidirectional": (self.planner == "mesh") if bidirectional is None else bidirectional,
                 "include_features": include_features,
                 "geo_base_url": geo_base_url,
                 "geo_user_prefix": geo_user_prefix,
@@ -401,7 +501,7 @@ class ScenarioSession:
         options = {"save_path": destination} if destination is not None else {}
         self.metrics_view = show_metrics(report, **options)
 
-    def solve(self) -> dict[str, Any]:
+    def solve(self, *, max_edge_metric: float | None = None) -> dict[str, Any]:
         """
         Solve and save the final planned network.
 
@@ -412,9 +512,13 @@ class ScenarioSession:
         This is the step that saves the solution. Evaluation and result export
         read this saved solution.
         """
+        if max_edge_metric is None and self.planner == 'mesh' and self.mesh_preparation:
+            max_edge_metric = self.mesh_preparation['mesh_network']['segment_threshold']
+        options = {'json': {'max_edge_metric': max_edge_metric}} if max_edge_metric is not None else {}
         payload = self.client._request(
             "post",
             f"/planning/scenarios/{self.scenario_id}/solution/solve",
+            **options,
         )
         self.solution = payload["data"]
         return self.solution
@@ -569,6 +673,10 @@ class ScenarioSession:
             primary_tech=primary_tech,
             solution_kind=solution_kind,
         )
+        if 'mesh_network' in result:
+            from cisei_planning_sdk.mesh_artifacts import save_mesh_artifacts
+            save_mesh_artifacts(self.project, result)
+            return self.project.result_path
         return self.project.save_result(result)
 
     def load_result(self) -> dict[str, Any]:

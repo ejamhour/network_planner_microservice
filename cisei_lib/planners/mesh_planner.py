@@ -39,6 +39,7 @@ class MeshPlanner:
         # Network construction must not discard collinear infrastructure just
         # because a single-link directional-sector heuristic excludes it.
         self.link_options = {'sector_exclusions': [], **link_options}
+        self.assume_symmetric_features = link_options.get('assume_symmetric_features', False)
         self.threshold = float(link_options.get('segment_threshold', 2.0))
         if not isfinite(self.threshold) or self.threshold < 1:
             raise ValueError('segment_threshold must be finite and >= 1')
@@ -63,6 +64,9 @@ class MeshPlanner:
         self.selected_poles = set()
         self.steps = []
         self.iterations = []
+        self.tried = set()
+        self.expansion_status = None
+        self.expansion_fingerprint = None
         self.poles = self._pole_records(poles or [])
         internal = [deepcopy(rule) for rule in self.scenario.connectivity_rules.values()
                     if rule.get('kind', 'rf') == 'internal']
@@ -191,27 +195,150 @@ class MeshPlanner:
         """Compatibility shortcut over the explicit mesh and common stages."""
         await self.add_repeaters()
         self.build_candidate_edges()
-        await self.graph.compute_edge_metrics(self.geo, bidirectional=True)
+        await self.graph.compute_edge_metrics(self.geo, bidirectional=True,
+                                              assume_symmetric_features=self.assume_symmetric_features)
         self.graph.run_rpl(max_edge_metric=self.threshold)
         self.remove_unused_repeaters()
         return self.graph, self.to_result_dict()
 
-    async def add_repeaters(self):
+    def restore_expansion(self, report):
+        """Restore the last accepted graph, keeping the original backbone roots."""
+        iterations = report['iterations']
+        config = deepcopy(iterations[-1]['scenario'])
+        selected = {s['site_id'] for s in config['sites']} - self.original_sites
+        if not self.original_sites <= {s['site_id'] for s in config['sites']} or not selected <= self.poles.keys():
+            raise ValueError('Invalid mesh expansion checkpoint sites')
+        self.config = config
+        self.selected_poles = selected
+        for edge in config['net']['candidate_edges']:
+            self._remember(edge['src'], edge['dst'], edge['metric'],
+                           **{k: v for k, v in edge.items() if k not in {'src', 'dst', 'metric'}})
+        self.steps = deepcopy(report['steps'])
+        self.iterations = deepcopy(iterations)
+        self.tried = set(report.get('expansion_tried', ()))
+
+    def path_study_inputs(self, report, source_id=None):
+        """Identify compatible parents in the network being inspected."""
+        if report.get('path_baseline'):
+            report = dict(report, iterations=[*report['iterations'], report['path_baseline']])
+        self.restore_expansion(report)
+        snapshot = self.iterations[-1]
+        served = {row['node_id']: row for row in snapshot['result']['planned_nodes']}
+        self.graph = GraphPlanner(PlanningScenario.from_config_dict(self.config))
+        if source_id is None:
+            return sorted(n.node_id for n in self.graph.rpl_nodes
+                          if n.node_id not in self.roots and n.extra.get('medium', 'rf') == 'rf')
+        source = next((n for n in self.graph.rpl_nodes if n.node_id == source_id), None)
+        if source is None or source_id in self.roots or source.extra.get('medium', 'rf') != 'rf':
+            raise ValueError('Select a non-backbone radio interface')
+        descendants = {source_id}
+        for node_id in served:
+            current = node_id
+            while current in served and current != source_id:
+                current = served[current].get('parent')
+            if current == source_id:
+                descendants.add(node_id)
+        parents = [n for n in self.graph.rpl_nodes if n.node_id in served.keys() - descendants
+                   and n.rpl_relay and n.extra.get('medium', 'rf') == 'rf'
+                   and n.extra['site_id'] != source.extra['site_id']
+                   and n.pos_utm != source.pos_utm and self.graph._compatible(source, n)]
+        return source, served, parents
+
+    async def improve_path(self, report, source_id, destination_id):
+        source, served, parents = self.path_study_inputs(report, source_id)
+        destination = next((n for n in parents if n.node_id == destination_id), None)
+        if destination is None:
+            raise ValueError('Select a compatible connected parent outside the target branch')
+        poles = self._corridor(source, destination)
+        planner = MeshLinkPlanner(self._study_scenario(source, destination, served),
+                                  src_site=source_id, dst_site=destination_id,
+                                  geo=self.geo, poles=poles, **self.link_options)
+        _, result = await planner.plan()
+        search = result['mesh_search']
+        trial = dict(destination=destination_id, destination_rank=served[destination_id]['rank'],
+                     total_rank=served[destination_id]['rank'] + search['path_cost'],
+                     accepted=search['meets_segment_threshold'], result=result)
+        old_path = []
+        current = source_id
+        edges = self.iterations[-1]['result']['planned_edges']
+        costs = {self._pair(e['src'], e['dst']): e['metric'] for e in edges}
+        while current in served and (parent := served[current].get('parent')) is not None:
+            old_path.append(dict(src=current, dst=parent, metric=costs[self._pair(current, parent)]))
+            current = parent
+        step = dict(step=len(self.steps)+1, source=source_id, attempts=[trial],
+                    selected_destination=None, kind='improve_path', applied=False,
+                    previous_path=old_path, previous_rank=served.get(source_id, {}).get('rank'),
+                    settings={**self.link_options, 'corridor_m': self.corridor_m})
+        self.steps.append(step)
+        if not trial['accepted']:
+            return step, None
+
+        # Keep the selected forest. Remove just the target's upstream edge
+        # before adding the proposed chain, including any new repeaters.
+        old_parent = served.get(source_id, {}).get('parent')
+        self.metrics, previous_attrs = {}, self.attrs
+        self.attrs = {}
+        for edge in edges:
+            a, b = edge['src'], edge['dst']
+            key = self._pair(a, b)
+            if set(key) != {source_id, old_parent}:
+                self._remember(a, b, edge['metric'], **previous_attrs.get(key, {}))
+        for pole in poles:
+            if pole['site_id'] in search['repeaters']:
+                self.config['sites'].append(dict(pole, candidate=False))
+                self.selected_poles.add(pole['site_id'])
+        for edge in result['planned_edges']:
+            self._remember(edge['src'], edge['dst'], edge['metric'])
+        self.config.setdefault('net', {})['candidate_edges'] = [
+            dict(src=a, dst=b, metric=cost, **self.attrs[(a, b)])
+            for (a, b), cost in self.metrics.items()]
+        updated = self._solve()
+        if source_id not in updated or any(
+            updated.get(i, {}).get('parent') != row.get('parent')
+            for i, row in served.items() if i != source_id
+        ) or not served.keys() <= updated.keys():
+            raise RuntimeError('Proposed path would change other selected connections')
+        step.update(applied=True, selected_destination=destination_id)
+        self.iterations.append(self._snapshot(updated))
+        self.tried.clear()
+        self.repeaters_added = True
+        self.expanded_scenario = self.graph.scenario
+        self.expansion_fingerprint = report.get('expansion_fingerprint')
+        if self.expansion_fingerprint:
+            self.expansion_status = 'paused' if self.required - updated.keys() else 'complete'
+        return step, self.to_result_dict()
+
+    async def add_repeaters(self, *, progress=None, max_rounds=None):
         """Only the progressive repeater-addition loop; no final candidates."""
         if self.repeaters_added:
             raise RuntimeError('Create a new MeshPlanner to repeat repeater addition')
-        await self.graph.compute_edge_metrics(self.geo, list(self.graph.candidate_edges), bidirectional=True)
-        for (a, b), cost in self.graph.edge_metrics.items():
-            attrs = self.graph._edge_attrs(a, b)
-            if attrs.get('kind') == 'internal' or cost <= self.threshold:
-                self._remember(a, b, cost, **{k: v for k, v in attrs.items() if k != 'metric'})
+
+        def report(stage, served, **details):
+            if progress is not None:
+                connected = len(self.required.intersection(served))
+                progress({**dict(stage=stage, required=len(self.required),
+                                 connected=connected, pending=len(self.required)-connected,
+                                 repeaters=len(self.selected_poles), steps=len(self.steps),
+                                 source=None, destination=None, attempt=None, attempts=None),
+                          **details})
+
+        if not self.iterations:
+            report('initial_links', self.roots)
+            await self.graph.compute_edge_metrics(self.geo, list(self.graph.candidate_edges), bidirectional=True,
+                                                  assume_symmetric_features=self.assume_symmetric_features)
+            for (a, b), cost in self.graph.edge_metrics.items():
+                attrs = self.graph._edge_attrs(a, b)
+                if attrs.get('kind') == 'internal' or cost <= self.threshold:
+                    self._remember(a, b, cost, **{k: v for k, v in attrs.items() if k != 'metric'})
         served = self._solve()
-        self.iterations.append(self._snapshot(served))
-        tried = set()
+        if not self.iterations:
+            self.iterations.append(self._snapshot(served))
+        report('selecting_node', served)
+        first_step = len(self.steps)
         while True:
             choices = []
             for source in self.graph.rpl_nodes:
-                if source.node_id not in self.required or source.node_id in served or source.node_id in tried:
+                if source.node_id not in self.required or source.node_id in served or source.node_id in self.tried:
                     continue
                 destinations = self._destinations(source, served) if source.extra.get('medium', 'rf') == 'rf' else []
                 if destinations:
@@ -220,9 +347,14 @@ class MeshPlanner:
                                     source.node_id, source, destinations))
             if not choices:
                 break
+            if max_rounds is not None and len(self.steps) - first_step >= max_rounds:
+                self.expansion_status = 'paused'
+                return self.to_result_dict()
             _, _, source, destinations = min(choices, key=lambda row: row[:2])
             trials = []
-            for destination in destinations:
+            for index, destination in enumerate(destinations, 1):
+                report('link_study', served, source=source.node_id,
+                       destination=destination.node_id, attempt=index, attempts=len(destinations))
                 poles = self._corridor(source, destination)
                 study = MeshLinkPlanner(self._study_scenario(source, destination, served),
                                         src_site=source.node_id, dst_site=destination.node_id,
@@ -241,7 +373,8 @@ class MeshPlanner:
                     'selected_destination': winner['destination'] if winner else None}
             self.steps.append(step)
             if winner is None:
-                tried.add(source.node_id)
+                self.tried.add(source.node_id)
+                report('selecting_node', served)
                 continue
             result = winner['result']
             for proposed in winner['repeater_sites']:
@@ -253,10 +386,12 @@ class MeshPlanner:
                 self._remember(edge['src'], edge['dst'], edge['metric'])
             served = self._solve()
             self.iterations.append(self._snapshot(served))
+            report('selecting_node', served)
             # A new relay may make a previously unsuccessful terminal viable.
-            tried.clear()
+            self.tried.clear()
         # Keep only original fixed flags/ranks. Temporary reachability belongs
         # to the construction snapshots, not to the final solver's roots.
+        report('finalizing', served)
         config = self._snapshot(served)['scenario']
         internal = [deepcopy(r) for r in self.scenario.connectivity_rules.values()
                     if r.get('kind', 'rf') == 'internal']
@@ -275,10 +410,14 @@ class MeshPlanner:
             self.expanded_nodes = None
         self.graph = GraphPlanner(self.expanded_scenario)
         self.repeaters_added = True
+        if max_rounds is not None:
+            self.expansion_status = 'stalled' if self.required - served.keys() else 'complete'
         return self.to_result_dict()
 
     def build_candidate_edges(self, *, preserve_existing=True):
         """Delegate candidate generation, with no RF or repeater search."""
+        if self.expansion_status == 'paused':
+            raise RuntimeError('Expansion is paused; rerun add_repeaters before building final candidates')
         if not self.repeaters_added:
             raise RuntimeError('Call add_repeaters before building mesh candidates')
         self.graph = GraphPlanner(self.graph.scenario)
@@ -342,20 +481,30 @@ class MeshPlanner:
         used = self._used_repeaters() if solved else set()
         present = set(self.graph.nodes)
         result['mesh_network'] = {
-            'phase': (('pruned' if self.pruned else 'solved') if solved else
+            'phase': ('expanding' if self.expansion_status == 'paused' else
+                      ('pruned' if self.pruned else 'solved') if solved else
                       'metrics_computed' if self.graph.edge_metrics else
                       'candidates_built' if self.candidates_built else 'repeaters_added'),
             'parent_candidates': self.parent_candidates, 'corridor_m': self.corridor_m,
             'final_degree': self.final_degree, 'segment_threshold': self.threshold,
             'cost_policy': 'maximum_of_both_directions',
+            'assume_symmetric_features': self.assume_symmetric_features,
             'fixed_interfaces': sorted(self.roots), 'required_interfaces': sorted(self.required),
             'unserved_interfaces': sorted(self.required-set(served)) if solved else None,
             'selected_repeaters': sorted(self.selected_poles), 'used_repeaters': sorted(used) if solved else None,
             'removed_repeaters': sorted(self.selected_poles-present),
             'steps': self.steps, 'iterations': self.iterations,
-            'expanded_scenario': self.expanded_scenario.to_config_dict() if self.expanded_scenario else current,
+            'expanded_scenario': self.expanded_scenario.to_config_dict() if self.expanded_scenario else
+                (None if self.expansion_status == 'paused' else current),
             'expanded_nodes': getattr(self, 'expanded_nodes', None),
-            'solution_scenario': current if solved else None, 'solution_nodes': rows if solved else None,
+            'solution_scenario': current if solved and self.expansion_status != 'paused' else None,
+            'solution_nodes': rows if solved and self.expansion_status != 'paused' else None,
         }
+        if self.expansion_status is not None:
+            expansion_served = {n['node_id'] for n in self.iterations[-1]['result']['planned_nodes']}
+            result['mesh_network'].update(expansion_status=self.expansion_status,
+                                          expansion_fingerprint=self.expansion_fingerprint,
+                                          expansion_pending=sorted(self.required - expansion_served),
+                                          expansion_tried=sorted(self.tried))
         self.result = GraphPlanner._json_value(result)
         return self.result

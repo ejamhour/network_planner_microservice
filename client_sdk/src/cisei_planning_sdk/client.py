@@ -237,7 +237,7 @@ class PlanningClient:
             method,
             url,
             headers=headers,
-            timeout=self.timeout,
+            timeout=kwargs.pop("timeout", self.timeout),
             **kwargs,
         )
         response.raise_for_status()

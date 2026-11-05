@@ -59,28 +59,51 @@ class ScenarioSession:
         network = dict(defaults.pop('network', {}))
         controls = {**defaults, **network, **options}
         allowed = {'parent_candidates', 'corridor_m', 'final_degree', 'max_repeaters',
-                   'max_candidates', 'segment_threshold', 'search_heuristic', 'search_midpoint'}
+                   'max_candidates', 'segment_threshold', 'search_heuristic', 'search_midpoint',
+                   'assume_symmetric_features'}
         if set(controls)-allowed:
             raise ValueError(f'Unknown mesh network controls: {sorted(set(controls)-allowed)}')
         return _json_value({'poles': poles or [], **controls})
 
-    def add_repeaters(self, *, geo_base_url: str, poles=None, **options):
-        """Run mesh repeater addition, then use the common graph stages."""
+    def add_repeaters(self, *, geo_base_url: str, poles=None, progress=False,
+                      max_rounds=None, resume=True, **options):
+        """With max_rounds, run a finite expansion from the last saved checkpoint."""
         if self.planner != 'mesh':
             raise ValueError('add_repeaters requires planner="mesh"')
         body = self._mesh_network_body(poles=poles, **options)
+        path = f'/planning/scenarios/{self.scenario_id}/mesh'
+        body['geo_base_url'] = geo_base_url
         try:
-            result = self.client._request('post',
-                f'/planning/scenarios/{self.scenario_id}/mesh/add_repeaters',
-                json={**body, 'geo_base_url': geo_base_url})['data']
-        finally:
+            if max_rounds is not None:
+                if isinstance(max_rounds, bool) or not isinstance(max_rounds, int) or max_rounds < 1:
+                    raise ValueError('max_rounds must be a positive integer')
+                previous = self.mesh_preparation
+                if resume and previous is None and self.project is not None and self.project.result_path.exists():
+                    previous = self.project.load_result()
+                checkpoint = (previous or {}).get('mesh_network', {})
+                if resume and checkpoint.get('expansion_fingerprint'):
+                    body['checkpoint'] = checkpoint
+                from cisei_planning_sdk.mesh_progress import run_expansion
+                result = run_expansion(self.client, path + '/expansions',
+                                       dict(body, max_rounds=max_rounds), progress=progress)
+            elif progress:
+                from cisei_planning_sdk.mesh_progress import run_with_progress
+                result = run_with_progress(self.client, path + '/add_repeaters', body)
+            else:
+                result = self.client._request('post', path + '/add_repeaters', json=body)['data']
+        except Exception as exc:
             if self.project is not None:
-                self.save_feature_cache()
+                try:
+                    self.save_feature_cache()
+                except Exception as cache_error:
+                    exc.add_note(f'Feature cache could not be saved: {cache_error}')
+            raise
         self.mesh_preparation = self.result = result
         self.candidate_edges = self.metrics = self.solution = self.evaluation = None
         if self.project is not None:
             from cisei_planning_sdk.mesh_artifacts import save_mesh_artifacts
             save_mesh_artifacts(self.project, result)
+            self.save_feature_cache()
         return result
 
     def remove_unused_repeaters(self):
@@ -110,7 +133,7 @@ class ScenarioSession:
         return result
 
     def show_mesh_network(self, *, kind='final', save_path=None):
-        """Inspect the saved final forest or its retained candidate graph."""
+        """Explore complete final backbone paths, or inspect retained candidates."""
         from cisei_planning_sdk.visualization import plot_network
         if self.result is None or 'mesh_network' not in self.result:
             raise RuntimeError('Solve and export the mesh result first')
@@ -118,13 +141,50 @@ class ScenarioSession:
             raise ValueError('kind must be candidate or final')
         if save_path is None and self.project is not None:
             save_path = self.project.path / ('mesh_candidates.html' if kind == 'candidate' else 'mesh_network.html')
+        if kind == 'final':
+            from .mesh_iterations_view import MeshSolutionView
+            view = MeshSolutionView(self.result)
+            if save_path is not None:
+                view.save_html(save_path)
+            return view
         return plot_network(self.result, kind=kind, save_path=save_path)
 
-    def show_mesh_study(self, step, *, attempt=1, kind='candidate', save_path=None):
-        """Inspect one evaluated terminal/parent study, using one-based indices."""
+    def show_mesh_iterations(self, *, iteration=None, save_path=None):
+        """Browse construction snapshots; default to the last, numbered from zero."""
+        from .mesh_iterations_view import MeshIterationsView
         result = self.result if self.result and 'mesh_network' in self.result else self.mesh_preparation
         if result is None:
             raise RuntimeError('Call add_repeaters first')
+        view = MeshIterationsView(result, iteration=iteration)
+        if save_path is None and self.project is not None:
+            save_path = self.project.path / 'mesh_iterations.html'
+        if save_path is not None:
+            view.save_html(save_path)
+        return view
+
+    def show_mesh_study(self, step=None, *, node=None, attempt=1, kind='candidate', save_path=None,
+                        geo_base_url=None):
+        """Inspect one evaluated terminal/parent study, using one-based indices."""
+        result = self.result if self.result and 'mesh_network' in self.result else self.mesh_preparation
+        if result is None and self.project is not None and self.project.result_path.exists():
+            result = self.project.load_result()
+        if result is None:
+            raise RuntimeError('Call add_repeaters first')
+        if geo_base_url is not None:
+            if step is not None or save_path is not None:
+                raise ValueError('Improve path is available in the live node browser')
+            from .mesh_path_panel import mesh_path_panel
+            return mesh_path_panel(self, result, geo_base_url, node=node)
+        if step is None:
+            from .mesh_studies_view import MeshStudiesView
+            view = MeshStudiesView(result, node=node)
+            if save_path is None and self.project is not None:
+                save_path = self.project.path / 'mesh_studies.html'
+            if save_path is not None:
+                view.save_html(save_path)
+            return view
+        if node is not None:
+            raise ValueError('Use a node selector or a step number, not both')
         steps = result['mesh_network']['steps']
         if isinstance(step, bool) or not isinstance(step, int) or not 1 <= step <= len(steps):
             raise ValueError(f'step must be between 1 and {len(steps)}')
@@ -132,6 +192,15 @@ class ScenarioSession:
         if isinstance(attempt, bool) or not isinstance(attempt, int) or not 1 <= attempt <= len(attempts):
             raise ValueError(f'attempt must be between 1 and {len(attempts)}')
         selected = attempts[attempt-1]
+        if kind == 'final':
+            from .mesh_studies_view import proposal_view
+            view = proposal_view(selected['result'], accepted=selected['accepted'],
+                                 total_rank=selected['total_rank'])
+            if save_path is None and self.project is not None:
+                save_path = self.project.path / f'mesh_step_{step:04d}_attempt_{attempt:02d}_final.html'
+            if save_path is not None:
+                view.save_html(save_path)
+            return view
         view = ScenarioSession(self.client, self.name, self.planner, self.scenario_id)
         view.result = selected['result']
         if save_path is None and self.project is not None:
@@ -161,7 +230,8 @@ class ScenarioSession:
             pole_sites = defaults.pop('pole_sites', None)
         else:
             defaults.pop('pole_sites', None)
-        allowed = {'max_repeaters', 'max_candidates', 'segment_threshold', 'search_heuristic', 'search_midpoint'}
+        allowed = {'max_repeaters', 'max_candidates', 'segment_threshold', 'search_heuristic',
+                   'search_midpoint', 'assume_symmetric_features'}
         controls = {**defaults, **options}
         if set(controls) - allowed:
             raise ValueError(f'Unknown mesh controls: {sorted(set(controls) - allowed)}')
@@ -412,6 +482,7 @@ class ScenarioSession:
         geo_timeout: float = 120.0,
         include_features: bool = False,
         bidirectional: bool | None = None,
+        assume_symmetric_features: bool | None = None,
         batch_size: int | None = None,
         on_batch=None,
     ) -> dict[str, Any]:
@@ -442,6 +513,7 @@ class ScenarioSession:
             body = {
                 "edge_metrics": None,
                 "bidirectional": (self.planner == "mesh") if bidirectional is None else bidirectional,
+                "assume_symmetric_features": assume_symmetric_features,
                 "include_features": include_features,
                 "geo_base_url": geo_base_url,
                 "geo_user_prefix": geo_user_prefix,

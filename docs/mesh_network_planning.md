@@ -97,7 +97,27 @@ operações no núcleo do serviço. O fluxo recomendado é o exposto no notebook
 - `result.json` informa a fase, as propostas, os repetidores selecionados,
   os efetivamente retirados e as pendências após a solução.
 
-`show_mesh_study(step, attempt=1, kind="candidate")` inspeciona as alternativas
+`show_mesh_iterations()` abre um único visualizador da construção, com a última
+iteração selecionada. A lista permite voltar ao estado inicial `0000` ou a
+qualquer estado posterior. Os símbolos distinguem acessos, repetidores e folhas;
+as cores identificam também equipamentos ainda sem caminho. Somente enlaces
+selecionados aparecem, com métricas e ranks. Clicar em um nó destaca seu caminho
+até o backbone e apresenta os custos por salto. O parâmetro opcional
+`iteration=0` altera apenas a seleção inicial. O HTML é salvo como
+`mesh_iterations.html` na pasta do projeto e funciona sem consultar os serviços.
+
+Depois de solucionar e salvar, `show_mesh_network()` utiliza a mesma apresentação
+para a rede final, sem lista de iterações. Lê os nós, pais, ranks e enlaces do
+resultado solucionado no nível principal, e não o último estado da construção.
+O HTML é salvo como `mesh_network.html`. A seleção de um nó destaca todo o seu
+caminho até o backbone. `show_network()` continua disponível para inspeção geral
+dos enlaces vizinhos e de sua qualidade.
+
+O retorno de `add_repeaters()` é o resultado completo da construção; o notebook
+usa `construction` como nome dessa variável. A lista de repetidores está em
+`construction["mesh_network"]["selected_repeaters"]`.
+
+Para investigação detalhada, `show_mesh_study(step, attempt=1, kind="candidate")` inspeciona as alternativas
 calculadas durante a inclusão. Todos os postes disponíveis no corredor são
 exibidos; somente os enlaces avaliados têm linhas. Essa inspeção já está
  disponível depois de `add_repeaters`. `show_network(kind="candidate")` mostra

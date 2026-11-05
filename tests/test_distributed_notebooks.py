@@ -76,6 +76,11 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             poles.write_text('\n'.join(poles.read_text().splitlines()[:6]) + '\n')
     else:
         shutil.copytree(NOTEBOOKS.parent / "projects", tmp_path / "cisei_workspace/projects")
+        if notebook.stem == 'e06_01_agu_projeto_completo':
+            # The separate input test validates the entire 22,078-pole inventory.
+            # Controlled RF makes direct links feasible; keep this execution small.
+            poles = tmp_path / 'cisei_workspace/projects/e06_agu_redesign/poles.csv'
+            poles.write_text('\n'.join(poles.read_text().splitlines()[:6]) + '\n')
     for directory in ("antennas", "metrics", "data"):
         source = NOTEBOOKS.parent / directory
         destination = tmp_path / "cisei_workspace" / directory
@@ -159,6 +164,11 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             seed_project.save_result(baseline)
             baseline_extractions = len(geo_calls)
         namespace = {"__name__": "__main__"}
+        agu_expansion = notebook.stem == 'e06_01_agu_projeto_completo'
+        if agu_expansion:
+            from time import sleep
+            from cisei_planning_sdk import mesh_progress
+            monkeypatch.setattr(mesh_progress, 'sleep', lambda _: sleep(0.02))
         document = json.loads(notebook.read_text(encoding="utf-8"))
         for index, cell in enumerate(document["cells"]):
             if cell["cell_type"] == "code":
@@ -169,6 +179,13 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
                 source = "".join(cell["source"])
                 assert "from cisei_lib" not in source
                 exec(compile(source, f"{notebook.name}:cell-{index}", "exec"), namespace)
+                if agu_expansion and 'construction = scenario.add_repeaters(' in source:
+                    # Re-execute the cell as the notebook instructs the reader to do.
+                    for _ in range(64):
+                        if namespace['construction']['mesh_network']['expansion_status'] != 'paused':
+                            break
+                        exec(source, namespace)
+                    assert namespace['construction']['mesh_network']['expansion_status'] == 'complete'
         assert list(result_dir.rglob("*result.json"))
         if notebook.stem in LTE_NOTEBOOKS:
             assert (result_dir / "candidate_network.html").exists()
@@ -184,7 +201,7 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             assert (derived / "solution_network.html").exists()
             assert (derived / "evaluation.html").exists()
             assert (derived / "metrics.html").exists()
-        if notebook.stem in LTE_NOTEBOOKS | E07_NOTEBOOKS | {"custom_configuration", "example_3_LTE_hybrid", "e09_diagnostico_bro", "e13_diagnostico", "e13_replanejamento", "exemple_4_Mesh_basic", "example_5_Mesh_network"}:
+        if notebook.stem in LTE_NOTEBOOKS | E07_NOTEBOOKS | {"custom_configuration", "example_3_LTE_hybrid", "e09_diagnostico_bro", "e13_diagnostico", "e13_replanejamento", "exemple_4_Mesh_basic", "example_5_Mesh_network", "e06_01_agu_projeto_completo"}:
             assert geo_calls, "The custom example must actually evaluate uploaded models and metrics"
         else:
             assert not geo_calls, "Synthetic smoke cases must not require geo data"
@@ -234,22 +251,28 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             assert namespace["proposal_italia"]["mesh_search"]["dst_site"] == "italia"
             assert len(runtime.planning_scenarios[namespace["scenario"].scenario_id].site_nodes) == 3
             assert (result_dir / "exemple_4_Mesh_basic/poles.csv").exists()
-        elif notebook.stem == 'example_5_Mesh_network':
+        elif notebook.stem in {'example_5_Mesh_network', 'e06_01_agu_projeto_completo'}:
             assert namespace['scenario'].planner == 'mesh'
             assert not any('/mesh/plan_network' in path for _, path in calls)
-            assert sum('/mesh/add_repeaters' in path for _, path in calls) == 1
+            if agu_expansion:
+                assert sum(method == 'post' and path.endswith('/mesh/expansions')
+                           for method, path in calls) > 1
+            else:
+                assert sum('/mesh/add_repeaters' in path for _, path in calls) == 1
             assert sum('/mesh/remove_unused_repeaters' in path for _, path in calls) == 1
             assert any('/candidate_edges/build' in path for _, path in calls)
             assert any('/metrics/compute' in path for _, path in calls)
             assert any('/solution/solve' in path for _, path in calls)
             result = namespace['result']
             assert result['mesh_network']['unserved_interfaces'] == []
-            assert len(result['rpl_nodes']) == 5
-            assert sum(n['connected'] for n in result['planned_nodes']) == 2
-            derived = result_dir / 'example_5_Mesh_network'
+            agu = notebook.stem == 'e06_01_agu_projeto_completo'
+            assert len(result['rpl_nodes']) == (33 if agu else 5)
+            assert sum(n['connected'] for n in result['planned_nodes']) == (1 if agu else 2)
+            derived = result_dir / ('e06_agu_redesign' if agu else 'example_5_Mesh_network')
             assert (derived / 'mesh_solution/scenario.toml').exists()
             assert (derived / 'mesh_solution/nodes.csv').exists()
-            assert (derived / 'mesh_step_0001_attempt_01_candidate.html').exists()
+            assert (derived / 'mesh_iterations.html').exists()
+            assert namespace['construction_network'].iteration == len(namespace['construction']['mesh_network']['iterations']) - 1
         elif repair:
             assert namespace['replanning']['accepted_links'] == 4
             assert namespace['preparation']['installed_radios'] == 65

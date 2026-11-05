@@ -83,6 +83,61 @@ def test_progressive_repeater_reuse_and_only_original_roots():
     assert {s['site_id'] for s in report['solution_scenario']['sites']} == {'root', 'a', 'b', 'p'}
 
 
+def test_improve_path_preserves_downstream_parent_and_history(tmp_path):
+    scenario, poles = inputs([('root', 0, True, 'relay', 0), ('other', 400, True, 'relay', 0),
+                             ('a', 100, False, 'relay', None), ('b', 120, False, 'relay', None)], [])
+    geo = Geo(scenario, poles, [(('root', 'a'), 2), (('a', 'b'), 1), (('a', 'other'), 1)])
+    initial = MeshPlanner(scenario, geo=geo, parent_candidates=1, max_repeaters=0)
+    report = asyncio.run(initial.add_repeaters())['mesh_network']
+    before = deepcopy(report)
+    engine = MeshPlanner(scenario, geo=geo, max_repeaters=0)
+    _, _, parents = engine.path_study_inputs(report, 'a:d0:i0')
+    assert {n.node_id for n in parents} == {'root:d0:i0', 'other:d0:i0'}
+    app = FastAPI()
+    app.include_router(router)
+    runtime = app.state.runtime = UserRuntime()
+
+    async def pool(**kwargs):
+        return geo
+
+    runtime.get_geo_pool = pool
+    with TestClient(app) as api:
+        from cisei_planning_sdk.mesh_progress import run_expansion
+        (tmp_path / 'projects').mkdir()
+        sdk = PlanningClient('http://testserver', workspace=tmp_path, auto_register=False)
+
+        def request(method, path, **kwargs):
+            kwargs.pop('timeout', None)
+            response = api.request(method, path, **kwargs)
+            response.raise_for_status()
+            payload = response.json()
+            assert payload['status'] == 'OK', payload
+            return payload
+
+        sdk._request = request
+        request('post', '/planning/scenarios/define', json={
+            'scenario_id': 'study', 'planner': 'mesh', 'scenario': scenario.to_json_dict()})
+        path = '/planning/scenarios/study/mesh'
+        payload = dict(checkpoint=report, path_source='a:d0:i0', max_repeaters=0,
+                       geo_base_url='http://features:8080')
+        rows = request('post', path + '/path_options', json=payload)['data']
+        assert {row['id'] for row in rows} == {'root:d0:i0', 'other:d0:i0'}
+        job = run_expansion(sdk, path + '/expansions',
+                            dict(payload, path_parent='other:d0:i0'), progress=False)
+        assert job['can_apply'] and not job['step']['applied']
+        assert 'study' not in runtime.planning_planners
+        proposed = request('post', f"{path}/expansions/{job['run_id']}/apply_path")['data']
+    assert report == before
+    updated = proposed['mesh_network']
+    assert updated['iterations'][:-1] == before['iterations']
+    step = updated['steps'][-1]
+    assert step['applied'] and step['previous_rank'] == 2
+    nodes = {n['node_id']: n for n in proposed['planned_nodes']}
+    assert nodes['a:d0:i0']['parent'] == 'other:d0:i0'
+    assert nodes['b:d0:i0']['parent'] == 'a:d0:i0'
+    assert nodes['b:d0:i0']['rank'] == 2
+
+
 def test_final_pass_removes_repeater_unused_by_any_required_path():
     scenario, poles = inputs([('root', 0, True, 'relay', 0), ('other', 1000, True, 'relay', 0),
                              ('a', 200, False, 'leaf', None)])
@@ -191,6 +246,64 @@ def test_common_metrics_preserve_default_direction_and_optional_eligibility():
     graph.run_rpl()
     assert len(graph.to_result_dict()['planned_nodes']) == 2
     assert set(graph.nodes) == nodes
+    asyncio.run(graph.compute_edge_metrics(geo, bidirectional=True, assume_symmetric_features=True))
+    assert list(graph.edge_metrics.values()) == [1]
+    assert len(geo.calls) == 4
+
+
+def test_expansion_resumes_saved_round_after_reopening_project(tmp_path):
+    scenario, poles = inputs()
+    project = PlanningProject(tmp_path / 'projects/expansion')
+    project.save_scenario(scenario.to_json_dict())
+    app = FastAPI()
+    app.include_router(router)
+    runtime = UserRuntime()
+    app.state.runtime = runtime
+    geo = Geo(scenario, poles, [(('root', 'p'), 1), (('p', 'a'), 1), (('p', 'b'), 1)])
+
+    async def pool(**kwargs):
+        return geo
+
+    runtime.get_geo_pool = pool
+    with TestClient(app) as api:
+        sdk = PlanningClient('http://testserver', workspace=tmp_path, auto_register=False)
+        methods = []
+
+        def request(method, path, **kwargs):
+            response = api.request(method, path, **kwargs)
+            methods.append((method, path, response.status_code))
+            response.raise_for_status()
+            payload = response.json()
+            if payload['status'] != 'OK':
+                raise RuntimeError(payload['data'])
+            return payload
+
+        sdk._request = request
+        options = dict(poles=poles, geo_base_url='http://features:8080',
+                       max_rounds=1, parent_candidates=1, corridor_m=10, max_repeaters=1)
+        session = sdk.open_project(project, planner='mesh')
+        first = session.add_repeaters(**options)['mesh_network']
+        assert first['expansion_status'] == 'paused'
+        assert len(first['steps']) == 1
+        assert len(first['iterations']) == 2
+        assert session.show_mesh_iterations().iteration == 1
+        with pytest.raises(RuntimeError, match='rerun add_repeaters'):
+            session.build_candidate_edges()
+        assert project.load_result()['mesh_network']['expansion_status'] == 'paused'
+
+        session = sdk.open_project(project, planner='mesh')
+        with pytest.raises(RuntimeError, match='does not match the current inputs'):
+            session.add_repeaters(**{**options, 'corridor_m': 20})
+        final = session.add_repeaters(**options)['mesh_network']
+        assert final['expansion_status'] == 'complete'
+        assert final['phase'] == 'repeaters_added'
+        assert final['fixed_interfaces'] == ['root:d0:i0']
+        assert final['selected_repeaters'] == ['p']
+        assert final['iterations'][:2] == first['iterations']
+        assert len(final['steps']) == 2
+        session.build_candidate_edges()
+        assert any(method == 'post' and path.endswith('/expansions') and status == 202
+                   for method, path, status in methods)
 
 
 @pytest.mark.parametrize('solve', [False, True])
@@ -250,6 +363,10 @@ def test_sdk_endpoint_persists_iterations_and_reuses_portable_features(tmp_path,
             addition = session.add_repeaters(poles=poles, geo_base_url='http://features:8080',
                                               parent_candidates=1, corridor_m=10, max_repeaters=1)
             assert addition['mesh_network']['phase'] == 'repeaters_added'
+            progress = sdk._request('get', f'/planning/scenarios/{session.scenario_id}/mesh/add_repeaters/progress')['data']
+            assert progress['status'] == 'complete'
+            assert progress['connected'] == progress['required'] == 3
+            assert progress['pending'] == 0 and progress['repeaters'] == 1
             assert addition['mesh_network']['solution_scenario'] is None
             assert (root / 'mesh_expanded/scenario.toml').exists()
             expanded_nodes = set(runtime.planning_planners[session.scenario_id].nodes)

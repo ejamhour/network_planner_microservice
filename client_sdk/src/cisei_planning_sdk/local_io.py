@@ -83,6 +83,8 @@ def load_scenario_bundle(path: str | Path) -> dict[str, Any]:
     config.pop("mesh", None)  # Local SDK search settings and file references.
     config.pop("attachments", None)  # Descriptive inventory, not RF input.
     _apply_interface_overrides(config)
+    from .antenna_placements import apply_antenna_placements
+    apply_antenna_placements(config, path)
     return _json_value(config)
 
 

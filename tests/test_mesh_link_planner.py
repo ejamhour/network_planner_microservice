@@ -121,14 +121,18 @@ def test_endpoint_sdk_and_portable_cache(tmp_path):
         assert runtime.planning_scenarios[session.scenario_id].site_nodes['guaira'].devices[0].connected
 
 
-def test_metric_uses_instance_radio_configuration_and_conservative_direction():
+@pytest.mark.parametrize('symmetric', [False, True])
+def test_metric_uses_instance_radio_configuration_and_conservative_direction(symmetric):
     s = scenario()
-    s.site_nodes['copel'].interfaces[0].tx_power_dbm = 42.
+    s.site_nodes['guaira'].interfaces[0].tx_power_dbm = 42.
     s.metric_specs_by_tech['mesh'] = lambda record: record['tx']['pw'] / 10.
+    geo = Geo()
     planner = MeshLinkPlanner(s, src_site='copel', dst_site='guaira',
-                              pole_sites=['barigui'], geo=Geo(), max_repeaters=0)
+                              pole_sites=[], geo=geo, max_repeaters=0,
+                              assume_symmetric_features=symmetric)
     _, result = asyncio.run(planner.plan())
     assert result['mesh_search']['path_cost'] == pytest.approx(4.2)
+    assert geo.calls == (1 if symmetric else 2)
 
 
 def test_feature_errors_are_reported_instead_of_accepting_a_partial_graph():
@@ -139,6 +143,31 @@ def test_feature_errors_are_reported_instead_of_accepting_a_partial_graph():
                               pole_sites=['barigui'], geo=BrokenGeo())
     with pytest.raises(RuntimeError, match='No raster coverage'):
         asyncio.run(planner.plan())
+
+
+def test_features_without_terrain_peak_list_are_usable():
+    class NoPeakListGeo(Geo):
+        async def get_features(self, *args, **kwargs):
+            result = await super().get_features(*args, **kwargs)
+            result.pop('terrain_peaks_vv')
+            return result
+
+    planner = MeshLinkPlanner(scenario(), src_site='copel', dst_site='guaira',
+                              pole_sites=['barigui'], geo=NoPeakListGeo(),
+                              max_repeaters=0)
+    _, result = asyncio.run(planner.plan())
+    assert result['mesh_search']['node_path'] == ['copel', 'guaira']
+
+
+def test_missing_pole_height_identifies_interface_before_rf_calls():
+    config = scenario().to_config_dict()
+    pole = next(site for site in config['sites'] if site['site_id'] == 'barigui')
+    pole['devices'][0].pop('mount_height_m', None)
+    geo = Geo()
+    with pytest.raises(ValueError, match='mount_height_m.*barigui:d0:i0'):
+        MeshLinkPlanner(PlanningScenario.from_config_dict(config), src_site='copel',
+                        dst_site='guaira', pole_sites=['barigui'], geo=geo)
+    assert geo.calls == 0
 
 
 def test_auto_candidates_filter_technology_and_select_device_interface():

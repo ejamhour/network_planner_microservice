@@ -372,9 +372,14 @@ class PoleGraph:
                 ))
 
         if pending:
-            edge_results = await asyncio.gather(
-                *(request for _, _, request in pending)
-            )
+            tasks = [asyncio.create_task(request) for _, _, request in pending]
+            try:
+                edge_results = await asyncio.gather(*tasks)
+            except BaseException:
+                for task in tasks:
+                    task.cancel()
+                await asyncio.gather(*tasks, return_exceptions=True)
+                raise
 
             # NetworkX is updated sequentially in the event-loop thread.
             for (src_node, dst_node, _), edge_data in zip(
@@ -1008,7 +1013,9 @@ class PoleGraph:
 
     # this will required update when new features are added (TODO)
     def _top_peak_coordinates(self, src_pos, dst_pos, features):
-        peaks = features["terrain_peaks_vv"]        
+        # Some feature records omit the optional list when no peaks were reported.
+        # Leave the obstacle position unknown so the configured midpoint search can run.
+        peaks = features.get("terrain_peaks_vv") or []
 
         if not peaks:
             obs_position  = None

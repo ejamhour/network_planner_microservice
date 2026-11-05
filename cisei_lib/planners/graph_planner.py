@@ -417,6 +417,7 @@ class GraphPlanner:
         manage_geo: bool = False,
         accumulate: bool = False,
         bidirectional: bool = False,
+        assume_symmetric_features: bool = False,
     ) -> dict[tuple[str, str], float]:
         """
         Extract geo features and compute one metric per candidate edge.
@@ -427,6 +428,8 @@ class GraphPlanner:
         metrics and the expanded metric records. Internal edges use their rule
         metric directly and do not call the geo service.
 
+        ``assume_symmetric_features=True`` reuses raw features for the reverse
+        score while still exchanging the transmitter and receiver inputs.
         ``bidirectional=True`` evaluates both RF directions and uses the
         greater cost. The default preserves the original one-direction policy.
 
@@ -535,7 +538,7 @@ class GraphPlanner:
                 edge_metrics[(src, dst)] = float(metric_function(metric_record))
                 if bidirectional:
                     try:
-                        reverse = await geo.get_features(
+                        reverse = features if assume_symmetric_features else await geo.get_features(
                             dst_site.geo_pos, src_site.geo_pos,
                             tx_ha=dst_height, rx_ha=src_height, freq_mhz=src_freq_mhz)
                     except Exception as exc:
@@ -548,6 +551,8 @@ class GraphPlanner:
                         raise ValueError(f'Nonfinite bidirectional metric for {src} -> {dst}')
                     edge_metrics[(src, dst)] = max(edge_metrics[(src, dst)], reverse_cost)
                     metric_record['reverse'] = reverse_record
+                    if assume_symmetric_features:
+                        metric_record['reverse_features_reused'] = True
                 edge_features[(src, dst)] = metric_record
 
         finally:

@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import asyncio
+import hashlib
+import json
 import os
 import uuid
+from time import monotonic
 from collections.abc import Mapping
 from typing import Any, Literal
 
@@ -36,6 +40,7 @@ class MeshLinkBody(BaseModel):
     segment_threshold: float = Field(default=2.0, ge=1, allow_inf_nan=False)
     search_heuristic: Literal['sector_band', 'dual_cone'] = 'sector_band'
     search_midpoint: bool = True
+    assume_symmetric_features: bool = False
 
 
 class MeshNetworkBody(BaseModel):
@@ -50,6 +55,29 @@ class MeshNetworkBody(BaseModel):
     segment_threshold: float = Field(default=2.0, ge=1, allow_inf_nan=False)
     search_heuristic: Literal['sector_band', 'dual_cone'] = 'sector_band'
     search_midpoint: bool = True
+    assume_symmetric_features: bool = False
+
+
+class MeshExpansionBody(MeshNetworkBody):
+    max_rounds: int = Field(default=1, ge=1)
+    checkpoint: dict[str, Any] | None = None
+    path_source: str | None = None
+    path_parent: str | None = None
+
+
+@router.post('/scenarios/{scenario_id}/mesh/path_options')
+def mesh_path_options(request: Request, scenario_id: str, body: MeshExpansionBody):
+    try:
+        from cisei_lib.planners.mesh_planner import MeshPlanner
+        scenario = _stored_scenario(request, scenario_id)
+        engine = MeshPlanner(scenario, geo=None, **body.model_dump(exclude={
+            'geo_base_url', 'checkpoint', 'max_rounds', 'path_source', 'path_parent'}))
+        if not body.path_source:
+            return _ok(engine.path_study_inputs(body.checkpoint))
+        _, served, parents = engine.path_study_inputs(body.checkpoint, body.path_source)
+        return _ok([dict(id=n.node_id, rank=served[n.node_id]['rank']) for n in parents])
+    except Exception as exc:
+        return _error(exc)
 
 
 @router.post('/scenarios/{scenario_id}/mesh/plan_network')
@@ -75,20 +103,157 @@ async def plan_mesh_network(request: Request, scenario_id: str, body: MeshNetwor
 @router.post('/scenarios/{scenario_id}/mesh/add_repeaters')
 async def add_mesh_repeaters(request: Request, scenario_id: str, body: MeshNetworkBody):
     """Run only repeater addition; common stages follow explicitly."""
+    state = None
     try:
         from cisei_lib.planners.mesh_planner import MeshPlanner
         runtime = request.app.state.runtime
         scenario = _stored_scenario(request, scenario_id)
+        previous = runtime.mesh_progress.get(scenario_id)
+        if previous and previous['status'] == 'running':
+            raise RuntimeError('Repeater addition is already running for this scenario')
+        now = monotonic()
+        state = dict(run_id=request.headers.get('X-Mesh-Run-ID'), status='running',
+                     stage='preparing', started=now, updated=now)
+        runtime.mesh_progress[scenario_id] = state
+
+        def progress(update):
+            state.update(update, updated=monotonic())
+
         geo = CachedGeo(runtime, runtime.feature_caches.setdefault(scenario_id, FeatureCache()),
                         base_url=_geo_base_url(body.geo_base_url), user_prefix='mesh-network',
                         pool_size=2, timeout=120.0)
         engine = MeshPlanner(scenario, geo=geo, **body.model_dump(exclude={'geo_base_url'}))
-        result = await engine.add_repeaters()
+        result = await engine.add_repeaters(progress=progress)
         _mesh_planners(runtime)[scenario_id] = engine
         runtime.planning_planners[scenario_id] = engine.graph
+        progress(dict(status='complete'))
         return _ok(result)
     except Exception as exc:
+        if state is not None:
+            state.update(status='failed', error=str(exc), updated=monotonic())
         return _error(exc)
+    finally:
+        if state is not None and state['status'] == 'running':
+            state.update(status='cancelled', updated=monotonic())
+
+
+@router.get('/scenarios/{scenario_id}/mesh/add_repeaters/progress')
+async def mesh_repeater_progress(request: Request, scenario_id: str):
+    """Return a small read-only snapshot for the current repeater run."""
+    state = request.app.state.runtime.mesh_progress.get(scenario_id)
+    run_id = request.headers.get('X-Mesh-Run-ID')
+    if state is None or (run_id and state['run_id'] != run_id):
+        return _ok(dict(status='waiting'))
+    now = monotonic()
+    end = now if state['status'] == 'running' else state['updated']
+    public = {key: value for key, value in state.items()
+              if key not in {'started', 'updated', 'run_id', 'result', 'task',
+                             'path_engine', 'path_scenario', 'path_proposal', 'path_baseline_graph'}}
+    return _ok(dict(public, elapsed_s=end-state['started'],
+                    last_update_s=now-state['updated']))
+
+
+@router.post('/scenarios/{scenario_id}/mesh/expansions', status_code=202)
+async def start_mesh_expansion(request: Request, scenario_id: str, body: MeshExpansionBody):
+    """Schedule a finite batch and acknowledge it before any RF work."""
+    try:
+        runtime = request.app.state.runtime
+        scenario = _stored_scenario(request, scenario_id)
+        geo_url = _geo_base_url(body.geo_base_url)
+        baseline_graph = runtime.planning_planners.get(scenario_id)
+        previous = runtime.mesh_progress.get(scenario_id)
+        if previous and previous['status'] == 'running':
+            raise RuntimeError('Repeater addition is already running for this scenario')
+        run_id = uuid.uuid4().hex
+        now = monotonic()
+        state = dict(run_id=run_id, status='running', stage='preparing', started=now, updated=now)
+        runtime.mesh_progress[scenario_id] = state
+
+        def progress(update):
+            state.update(update, updated=monotonic())
+
+        def prepare(geo):
+            from cisei_lib.planners.mesh_planner import MeshPlanner
+            options = body.model_dump(exclude={'geo_base_url', 'max_rounds', 'checkpoint',
+                                               'path_source', 'path_parent'})
+            fingerprint = hashlib.sha256(json.dumps(
+                [scenario.to_json_dict(), options, geo_url], sort_keys=True,
+                separators=(',', ':'), allow_nan=False).encode()).hexdigest()
+            checkpoint = body.checkpoint
+            if body.path_source is not None:
+                return MeshPlanner(scenario, geo=geo, **options), fingerprint
+            if checkpoint is not None and (checkpoint.get('expansion_fingerprint') != fingerprint
+                                           or checkpoint.get('expansion_status') not in {'paused', 'complete', 'stalled'}):
+                raise ValueError('Saved expansion does not match the current inputs; use resume=False to start again')
+            engine = MeshPlanner(scenario, geo=geo, **options)
+            if checkpoint is not None:
+                engine.restore_expansion(checkpoint)
+            return engine, fingerprint
+
+        async def run():
+            try:
+                geo = CachedGeo(runtime, runtime.feature_caches.setdefault(scenario_id, FeatureCache()),
+                                base_url=geo_url, user_prefix='mesh-network', pool_size=2, timeout=120.0)
+                engine, fingerprint = await asyncio.to_thread(prepare, geo)
+                if body.path_source is not None:
+                    step, proposed = await engine.improve_path(
+                        body.checkpoint, body.path_source, body.path_parent)
+                    state.update(path_engine=engine, path_scenario=scenario, path_proposal=proposed,
+                                 path_baseline_graph=baseline_graph)
+                    progress(dict(status='complete', result=dict(
+                        run_id=run_id, step=dict(step, applied=False, selected_destination=None),
+                        can_apply=proposed is not None)))
+                    return
+                engine.expansion_fingerprint = fingerprint
+                result = await engine.add_repeaters(progress=progress, max_rounds=body.max_rounds)
+                if _stored_scenario(request, scenario_id) is not scenario:
+                    raise RuntimeError('Scenario changed during expansion; reopen the project')
+                _mesh_planners(runtime)[scenario_id] = engine
+                runtime.planning_planners[scenario_id] = engine.graph
+                progress(dict(status='complete', result=result))
+            except Exception as exc:
+                progress(dict(status='failed', error=str(exc)))
+            finally:
+                if state['status'] == 'running':
+                    progress(dict(status='cancelled'))
+
+        state['task'] = asyncio.create_task(run())
+        return _ok(dict(run_id=run_id))
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.post('/scenarios/{scenario_id}/mesh/expansions/{run_id}/apply_path')
+async def apply_mesh_path(request: Request, scenario_id: str, run_id: str):
+    try:
+        runtime = request.app.state.runtime
+        state = runtime.mesh_progress.get(scenario_id, {})
+        if (state.get('run_id') != run_id or state.get('path_proposal') is None
+                or state.get('path_scenario') is not _stored_scenario(request, scenario_id)):
+            raise ValueError('No applicable path proposal for this scenario')
+        engine = state['path_engine']
+        current = runtime.planning_planners.get(scenario_id)
+        if current is not state['path_baseline_graph'] and current is not engine.graph:
+            raise ValueError('The network changed after this proposal was started')
+        _mesh_planners(runtime)[scenario_id] = engine
+        runtime.planning_planners[scenario_id] = engine.graph
+        return _ok(state['path_proposal'])
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.get('/scenarios/{scenario_id}/mesh/expansions/{run_id}')
+async def get_mesh_expansion(request: Request, scenario_id: str, run_id: str):
+    state = request.app.state.runtime.mesh_progress.get(scenario_id)
+    if state is None or state['run_id'] != run_id:
+        return _error(RuntimeError('Expansion job is no longer available on this worker'))
+    response = await mesh_repeater_progress(request, scenario_id)
+    if state['status'] == 'complete':
+        if 'mesh_network' in state['result']:
+            response['data']['expansion_status'] = state['result']['mesh_network']['expansion_status']
+        if request.query_params.get('result') == 'true':
+            response['data']['result'] = state['result']
+    return response
 
 
 @router.post('/scenarios/{scenario_id}/mesh/remove_unused_repeaters')
@@ -127,7 +292,8 @@ async def plan_mesh_link(request: Request, scenario_id: str, body: MeshLinkBody)
                                   max_candidates=body.max_candidates,
                                   segment_threshold=body.segment_threshold,
                                   search_heuristic=body.search_heuristic,
-                                  search_midpoint=body.search_midpoint)
+                                  search_midpoint=body.search_midpoint,
+                                  assume_symmetric_features=body.assume_symmetric_features)
         graph, result = await planner.plan()
         runtime.planning_planners[scenario_id] = graph
         _mesh_planners(runtime).pop(scenario_id, None)
@@ -208,6 +374,7 @@ class MetricComputeBody(BaseModel):
     geo_pool_size: int = 1
     geo_timeout: float = 120.0
     bidirectional: bool = False
+    assume_symmetric_features: bool | None = None
 
 
 class SolveBody(BaseModel):
@@ -440,7 +607,7 @@ def build_candidate_edges(
         runtime = request.app.state.runtime
         if body.planner == 'mesh':
             engine = _mesh_planners(runtime).get(scenario_id)
-            if engine is None or not engine.repeaters_added:
+            if engine is None:
                 raise ValueError('Call add_repeaters before building mesh candidates')
             planner = engine.build_candidate_edges(preserve_existing=body.preserve_existing)
             runtime.planning_planners[scenario_id] = planner
@@ -532,6 +699,10 @@ async def compute_metrics(
     try:
         planner = _stored_planner(request, scenario_id)
         runtime = request.app.state.runtime
+        if body.assume_symmetric_features is None:
+            engine = _mesh_planners(runtime).get(scenario_id)
+            body = body.model_copy(update={'assume_symmetric_features':
+                bool(engine and engine.assume_symmetric_features)})
         await _compute_or_assign_metrics(
             planner,
             body,
@@ -711,7 +882,8 @@ async def run_workflow(request: Request, body: WorkflowRunBody):
                                    pool_size=body.geo_pool_size, timeout=body.geo_timeout)
             await engine.add_repeaters()
             graph = engine.build_candidate_edges(preserve_existing=body.preserve_existing)
-            await graph.compute_edge_metrics(engine.geo, bidirectional=True)
+            await graph.compute_edge_metrics(engine.geo, bidirectional=True,
+                                             assume_symmetric_features=engine.assume_symmetric_features)
             if body.solve:
                 graph.run_rpl(max_edge_metric=engine.threshold)
                 result = engine.remove_unused_repeaters()
@@ -829,14 +1001,17 @@ async def _compute_or_assign_metrics(
         timeout=body.geo_timeout,
     )
     if body.batch_size is None:
-        await planner.compute_edge_metrics(geo, manage_geo=False, bidirectional=body.bidirectional)
+        await planner.compute_edge_metrics(geo, manage_geo=False, bidirectional=body.bidirectional,
+                                           assume_symmetric_features=bool(body.assume_symmetric_features))
     else:
         if body.batch_offset == 0:
             planner.edge_metrics = {}
             planner.edge_features = {}
             planner.rpl = None
         edges = planner.candidate_edges[body.batch_offset:body.batch_offset + body.batch_size]
-        await planner.compute_edge_metrics(geo, edges, manage_geo=False, accumulate=True, bidirectional=body.bidirectional)
+        await planner.compute_edge_metrics(geo, edges, manage_geo=False, accumulate=True,
+                                           bidirectional=body.bidirectional,
+                                           assume_symmetric_features=bool(body.assume_symmetric_features))
 
 
 def _candidate_response(

@@ -18,6 +18,9 @@ EdgeKey = tuple[Any, ...]
 class GeoServiceError(RuntimeError):
     pass
 
+class GeoWorkerUnregistered(GeoServiceError):
+    pass
+
 class GeoServiceBusy(RuntimeError):
     def __init__(self, retry_after: float):
         self.retry_after = retry_after
@@ -269,15 +272,34 @@ class AsyncGeoServicePool:
 
         client = await self._clients.get()
         try:
-            result = await self._run_blocking(
-                client.point_samples,
+            return await self._run_blocking(
+                self._with_worker_recovery,
+                client,
+                self._point_samples_blocking,
                 points,
                 ds_string=ds_string,
                 nodata_value=nodata_value,
             )
-            return self._extract_payload(result, "point_samples")
         finally:
             self._clients.put_nowait(client)
+
+    def _point_samples_blocking(self, client, points, **options):
+        return self._extract_payload(client.point_samples(points, **options), "point_samples")
+
+    @staticmethod
+    def _with_worker_recovery(client, operation, *args, **kwargs):
+        try:
+            return operation(client, *args, **kwargs)
+        except GeoWorkerUnregistered:
+            worker_id, token = client.user_id, client.token
+            # Registration is a hub operation, not a request to the lost worker.
+            client.user_id = client.token = None
+            try:
+                client.register(user_id=worker_id)
+            except Exception:
+                client.user_id, client.token = worker_id, token
+                raise
+            return operation(client, *args, **kwargs)
 
     async def _calculate_and_cache(
         self,
@@ -299,8 +321,9 @@ class AsyncGeoServicePool:
 
             try:
                 return await self._run_blocking(
-                    self._extract_blocking,
+                    self._with_worker_recovery,
                     client,
+                    self._extract_blocking,
                     request,
                 )
 
@@ -380,6 +403,13 @@ class AsyncGeoServicePool:
 
     @staticmethod
     def _validate_result(result: APIResult, operation: str) -> None:
+        if result.response is not None and result.response.status_code == 404:
+            try:
+                detail = result.response.json()
+            except ValueError:
+                detail = None
+            if isinstance(detail, dict) and detail.get("detail") == "User not registered":
+                raise GeoWorkerUnregistered(f"{operation} failed: feature worker is not registered")
         if result.kind in {"http_error", "request_error", "error"}:
             raise GeoServiceError(f"{operation} failed: {result.data}")
 

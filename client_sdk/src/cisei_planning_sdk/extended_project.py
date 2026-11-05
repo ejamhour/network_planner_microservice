@@ -43,7 +43,7 @@ class ExtendedPlanningProject(PlanningProject):
         self.extension_path = (self.path / extension_file).resolve()
         if not self.extension_path.is_relative_to(self.path):
             raise ValueError("Extension recipe must remain inside its project")
-        if self.extension_path.name in {"scenario.toml", "nodes.csv", "features.json", "replacement_report.json"}:
+        if self.extension_path.name in {"scenario.toml", "nodes.csv", "features.json", "replacement_report.json", "antenna_placements.toml"}:
             raise ValueError("Extension recipe must not use a generated output filename")
 
     def prepare(self, *, result=None, overwrite=False):
@@ -112,12 +112,15 @@ class ExtendedPlanningProject(PlanningProject):
                 raise ValueError("Source result does not match source interface IDs")
             for node in result["planned_nodes"]:
                 ranks.setdefault(node["site_id"], []).append(node.get("rank"))
+        from .antenna_placements import placement_source
+        placements = placement_source(self.source.scenario_path, config)
         identity = {
             "source_project": str(self.source.path),
             "source_scenario_sha256": hashlib.sha256(self.source.scenario_path.read_bytes()).hexdigest(),
             "source_csv_sha256": hashlib.sha256(source_csv.read_bytes()).hexdigest(),
             "source_result_sha256": hashlib.sha256(json.dumps(result, sort_keys=True).encode()).hexdigest() if result is not None else None,
             "extension_sha256": hashlib.sha256(self.extension_path.read_bytes()).hexdigest(),
+            "source_antenna_placements_sha256": hashlib.sha256(placements.read_bytes()).hexdigest() if placements is not None else None,
         }
         if existing and not overwrite:
             report_path = self.path / "replacement_report.json"
@@ -205,8 +208,12 @@ class ExtendedPlanningProject(PlanningProject):
                 records[key] = entry
             cache = {"format": "cisei-feature-cache", "version": 1, "entries": list(records.values())}
         provenance = {**identity, "rules": rules, "replacements": report}
+        if placements is not None:
+            config['antenna_placements'] = {'source': 'antenna_placements.toml'}
         with TemporaryDirectory(dir=self.path, prefix=".prepare-") as temporary:
             stage = Path(temporary)
+            if placements is not None:
+                shutil.copy2(placements, stage / 'antenna_placements.toml')
             (stage / "scenario.toml").write_text(tomlkit.dumps(config), encoding="utf-8")
             with (stage / "nodes.csv").open("w", encoding="utf-8", newline="") as handle:
                 writer = csv.DictWriter(handle, fieldnames=fields)
@@ -229,7 +236,11 @@ class ExtendedPlanningProject(PlanningProject):
                 backup = self.path / "preparation_backups" / datetime.now().strftime("%Y%m%d-%H%M%S-%f")
                 backup.mkdir(parents=True)
                 stale = [self.result_path, self.path / "candidate_network.html", self.path / "solution_network.html", self.path / "evaluation.html", self.path / "metrics.html"]
-                for old in [self.scenario_path, self.path / "nodes.csv", self.path / "replacement_report.json", *stale]:
+                previous_report = self.path / 'replacement_report.json'
+                if (placements is None and previous_report.exists()
+                        and json.loads(previous_report.read_text(encoding='utf-8')).get('source_antenna_placements_sha256')):
+                    stale.append(self.path / 'antenna_placements.toml')
+                for old in [self.scenario_path, self.path / "nodes.csv", self.path / "antenna_placements.toml", self.path / "replacement_report.json", *stale]:
                     if old.exists():
                         shutil.copy2(old, backup / old.name)
                 provenance["previous_study_backup"] = str(backup)

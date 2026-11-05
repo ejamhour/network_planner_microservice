@@ -27,6 +27,7 @@ class UserRuntime:
         self.planning_scenarios = {}
         self.planning_planners = {}
         self.mesh_planners = {}
+        self.mesh_progress = {}
         self.feature_caches = {}
         self.geo_pools: dict[tuple[Any, ...], AsyncGeoServicePool] = {}
 

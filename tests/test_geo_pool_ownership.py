@@ -8,6 +8,70 @@ from cisei_lib.io import async_geo_service_pool as pool_module
 from cisei_lib.io.geo_service_client import APIResult
 
 
+@pytest.mark.parametrize('operation', ['point_samples', 'link_features'])
+def test_pool_recovers_lost_registration_once(monkeypatch, operation):
+    class Client:
+        user_id = token = None
+        registrations = 0
+        link_calls = 0
+        missing = False
+        detail = 'User not registered'
+
+        def __init__(self, **kwargs):
+            pass
+
+        def register(self, user_id):
+            assert self.user_id is None
+            self.registrations += 1
+            self.user_id, self.token = user_id, str(self.registrations)
+            self.missing = False
+            return APIResult('json', {})
+
+        def response(self, payload):
+            if self.missing:
+                response = SimpleNamespace(status_code=404, json=lambda: {'detail': self.detail})
+                return APIResult('http_error', '404', response)
+            return APIResult('json', {'status': 'OK', 'data': payload})
+
+        def point_samples(self, *args, **kwargs):
+            return self.response([123.])
+
+        def link(self, *args, **kwargs):
+            self.link_calls += 1
+            return APIResult('json', {})
+
+        def request(self, *args, **kwargs):
+            return APIResult('json', {})
+
+        def link_features(self):
+            return self.response({'dist_m': 10.})
+
+        def close_worker(self):
+            return APIResult('json', {})
+
+    monkeypatch.setattr(pool_module, 'GeoServiceClient', Client)
+
+    async def exercise():
+        async with pool_module.AsyncGeoServicePool('http://features', 'mesh', pool_size=1) as pool:
+            client = await pool._clients.get()
+            pool._clients.put_nowait(client)
+            worker_id = client.user_id
+            client.missing = True
+            if operation == 'point_samples':
+                assert await pool.point_samples([(1, 2)]) == [123.]
+            else:
+                result = await pool.get_features((1, 2), (3, 4), tx_ha=7, rx_ha=7)
+                assert result == {'dist_m': 10.}
+                assert client.link_calls == 2
+            assert client.registrations == 2 and client.user_id == worker_id
+            client.missing, client.detail = True, 'Not Found'
+            with pytest.raises(RuntimeError, match='404'):
+                await pool.point_samples([(1, 2)])
+            assert client.registrations == 2
+
+    asyncio.run(exercise())
+
+
 @pytest.fixture
 def workers(monkeypatch):
     registry = {}

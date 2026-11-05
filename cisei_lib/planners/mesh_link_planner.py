@@ -17,7 +17,9 @@ class MeshLinkPlanner(LinkPlanner):
     Candidate sites describe proposed equipment, not installed repeaters.
     """
 
-    def __init__(self, scenario, *, src_site, dst_site, geo, pole_sites=None, poles=None, **options):
+    def __init__(self, scenario, *, src_site, dst_site, geo, pole_sites=None, poles=None,
+                 assume_symmetric_features=False, **options):
+        self.assume_symmetric_features = assume_symmetric_features
         if poles is not None:
             # Keep the stored network scenario unchanged. These hypothetical
             # interfaces exist only in this link study and its search snapshot.
@@ -105,6 +107,9 @@ class MeshLinkPlanner(LinkPlanner):
         self.geo = geo  # The service owns this resource.
         self.position_nodes = {}
         for site_id, node in resolved.items():
+            height = node.extra.get('mount_height_m')
+            if height is None or not isfinite(height):
+                raise ValueError(f'Missing or invalid mount_height_m for mesh interface {node.node_id}')
             site = self.input_graph.nodes[site_id]
             pos = (float(site.site.lat), float(site.site.lon))
             if pos in self.position_nodes:
@@ -141,10 +146,18 @@ class MeshLinkPlanner(LinkPlanner):
         if src_pos == dst_pos:
             raise ValueError('Coincident endpoints cannot form an RF link')
         src, dst = self.position_nodes[src_pos], self.position_nodes[dst_pos]
-        raw = await self.geo.get_features(src_pos, dst_pos, tx_ha=src_ha,
-                                          rx_ha=dst_ha, freq_mhz=self.context['freq_mhz'])
-        reverse = await self.geo.get_features(dst_pos, src_pos, tx_ha=dst_ha,
-                                              rx_ha=src_ha, freq_mhz=self.context['freq_mhz'])
+        async def extract(tx, rx, tx_pos, rx_pos, tx_height, rx_height):
+            try:
+                return await self.geo.get_features(
+                    tx_pos, rx_pos, tx_ha=tx_height, rx_ha=rx_height,
+                    freq_mhz=self.context['freq_mhz'])
+            except Exception as exc:
+                raise RuntimeError(f'Feature extraction failed for {tx.node_id} -> {rx.node_id} '
+                                   f'(tx={tx_pos}, rx={rx_pos}): {exc}') from exc
+
+        raw = await extract(src, dst, src_pos, dst_pos, src_ha, dst_ha)
+        reverse = raw if self.assume_symmetric_features else await extract(
+            dst, src, dst_pos, src_pos, dst_ha, src_ha)
         values = [float(self.metric(self.input_graph._metric_record(src, dst, raw))),
                   float(self.metric(self.input_graph._metric_record(dst, src, reverse)))]
         if any(not isfinite(v) or v < 1 for v in values):

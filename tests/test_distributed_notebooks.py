@@ -133,7 +133,7 @@ def test_distributed_notebook(notebook, tmp_path, monkeypatch):
             if path == "/register":
                 response = requests.Response()
                 response.status_code = 200
-                response._content = json.dumps({"user_id": kwargs["params"]["user_id"], "token": "test-token"}).encode()
+                response._content = json.dumps({"user_id": "issued-session", "token": "test-token"}).encode()
                 return response
             if "/planning/" in path:
                 assert kwargs["headers"]["X-Token"] == "test-token"

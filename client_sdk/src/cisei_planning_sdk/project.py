@@ -72,6 +72,50 @@ class PlanningProject:
         from cisei_planning_sdk.visualization import plot_network
         return plot_network(self.load_result(), save_path=save_path or self.path / "solution_network.html")
 
+    def import_solution(self, source: "PlanningProject"):
+        """Import a saved solution and its inputs into this project."""
+        from csv import DictWriter
+        from .attachments import load_attached_equipment
+        from .local_io import load_scenario_bundle
+
+        if source.path == self.path:
+            raise ValueError("Choose a different project directory for the solution copy")
+        if self.result_path.exists():
+            if (self.scenario_path.is_file()
+                    and self.load_result().get("source_project") == source.name):
+                return self
+            raise FileExistsError(f"Destination already contains a result: {self.result_path}")
+        if self.scenario_path.exists():
+            raise FileExistsError(f"Destination already contains a scenario: {self.scenario_path}")
+
+        result = source.load_result()
+        report = result.get("mesh_network")
+        if not result.get("planned_nodes") or (report is not None and not report.get("solution_scenario")):
+            raise ValueError("Save a final solution before importing it")
+        equipment = load_attached_equipment(source.scenario_path)
+        config = (dict(report["solution_scenario"]) if report is not None
+                  else load_scenario_bundle(source.scenario_path))
+        if equipment is not None:
+            filename = "attached_equipment.csv"
+            columns = list(dict.fromkeys(
+                key for row in equipment for key in row
+            )) or ["equipment_id", "equipment_type", "device_id"]
+            with (self.path / filename).open("w", encoding="utf-8", newline="") as handle:
+                writer = DictWriter(handle, fieldnames=columns)
+                writer.writeheader()
+                writer.writerows(equipment)
+            config["attachments"] = {"source": filename, "format": "csv"}
+        self.save_scenario(config)
+        result["source_project"] = source.name
+        if report is not None:
+            result["mesh_network"] = {key: report[key] for key in (
+                "phase", "fixed_interfaces", "required_interfaces", "unserved_interfaces",
+                "selected_repeaters", "used_repeaters", "segment_threshold",
+                "solution_scenario", "solution_nodes",
+            ) if key in report}
+        self.save_result(result)
+        return self
+
     def show_dependencies(self, *, save_path=None):
         """Display an interactive descendant explorer for the saved solution."""
         from IPython.display import display

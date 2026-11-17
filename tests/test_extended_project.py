@@ -161,8 +161,8 @@ def test_copy_without_rank_predicate_requires_usable_source_rank(study):
 
 
 def test_lower_initial_gateway_rank_is_more_attractive():
-    from cisei_lib.planners.geo_rpl_agnostic import GeoRPL
-    from cisei_lib.planners.planner_classes import RPLNode
+    from cisei_lib.planners.graph.geo_rpl_agnostic import GeoRPL
+    from cisei_lib.planners.shared.planner_classes import RPLNode
     rpl = GeoRPL()
     rpl.set_nodes([RPLNode("a", connected=True, rpl_relay=True, rank=0.5),
                    RPLNode("b", connected=True, rpl_relay=True, rank=2.0),

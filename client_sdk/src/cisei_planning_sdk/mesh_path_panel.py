@@ -2,12 +2,10 @@
 
 def mesh_path_panel(session, result, geo_base_url, *, node=None):
     import ipywidgets as widgets
-    from IPython.display import display
-    from .mesh_artifacts import save_mesh_artifacts
+    from .mesh_artifacts import compact_mesh_result, save_mesh_artifacts
     from .mesh_progress import run_expansion
     from .mesh_studies_view import MeshStudiesView, proposal_view
 
-    report = result['mesh_network']
     defaults = session._mesh_network_body()
     path = f'/planning/scenarios/{session.scenario_id}/mesh'
     current = result
@@ -23,14 +21,17 @@ def mesh_path_panel(session, result, geo_base_url, *, node=None):
     run = widgets.Button(description='Try path', button_style='primary')
     apply = widgets.Button(description='Apply proposal', disabled=True)
     output = widgets.Output()
-    history = widgets.Output()
+    preview = widgets.HTML()
+    history = widgets.HTML()
 
     def request_options(source_id=None):
         return session.client._request('post', path + '/path_options', json={
             **defaults, 'checkpoint': checkpoint, 'path_source': source_id})['data']
 
     def refresh():
-        nonlocal checkpoint
+        nonlocal checkpoint, current
+        if session.project is not None:
+            current = compact_mesh_result(session.project, current)
         checkpoint = dict(current['mesh_network'])
         solution = checkpoint.get('solution_scenario')
         snapshots = checkpoint['iterations']
@@ -48,10 +49,7 @@ def mesh_path_panel(session, result, geo_base_url, *, node=None):
         selected = preferred if any(
             step['source'] == preferred or step['source'].rsplit(':d', 1)[0] == preferred
             for step in steps) else None
-        with history:
-            history.clear_output(wait=True)
-            if steps:
-                display(MeshStudiesView(current, node=selected))
+        history.value = MeshStudiesView(current, node=selected)._repr_html_() if steps else ''
 
     def load_parents(_=None):
         run.disabled = True
@@ -72,8 +70,9 @@ def mesh_path_panel(session, result, geo_base_url, *, node=None):
                 print(str(exc))
 
     def try_path(_):
-        nonlocal proposal, checkpoint
+        nonlocal proposal, checkpoint, current
         run.disabled = apply.disabled = source.disabled = parent.disabled = True
+        preview.value = ''
         with output:
             output.clear_output(wait=True)
             try:
@@ -93,11 +92,16 @@ def mesh_path_panel(session, result, geo_base_url, *, node=None):
                     print(' → '.join([edge['src'] for edge in previous] + [previous[-1]['dst']]))
                 else:
                     print('Current path · unconnected')
-                display(proposal_view(trial['result'], accepted=trial['accepted'],
-                                      total_rank=trial['total_rank']))
+                preview.value = proposal_view(trial['result'], accepted=trial['accepted'],
+                                              total_rank=trial['total_rank'])._repr_html_()
                 checkpoint = dict(checkpoint, steps=[*checkpoint['steps'], step])
                 current['mesh_network'] = dict(current['mesh_network'], steps=checkpoint['steps'])
+                if session.project is not None:
+                    current = compact_mesh_result(session.project, current)
+                    checkpoint = dict(checkpoint, steps=current['mesh_network']['steps'])
                 session.result = current
+                if session.mesh_preparation is not None:
+                    session.mesh_preparation['mesh_network']['steps'] = checkpoint['steps']
                 if session.project is not None:
                     session.project.save_result(current)
                 update_history()
@@ -119,7 +123,8 @@ def mesh_path_panel(session, result, geo_base_url, *, node=None):
                 session.result = session.mesh_preparation = current
                 session.candidate_edges = session.metrics = session.solution = session.evaluation = None
                 if session.project is not None:
-                    save_mesh_artifacts(session.project, current)
+                    current = session.result = session.mesh_preparation = save_mesh_artifacts(
+                        session.project, current)
                     session.save_feature_cache()
                 refresh()
                 print(f"Applied to iteration {len(checkpoint['iterations']) - 1}.")
@@ -139,4 +144,4 @@ def mesh_path_panel(session, result, geo_base_url, *, node=None):
     apply.on_click(apply_path)
     return widgets.VBox([widgets.HTML('<b>Improve path</b>'), widgets.HBox([source, parent]),
                          widgets.HBox([candidates, repeaters, corridor]),
-                         widgets.HBox([run, apply]), output, history])
+                         widgets.HBox([run, apply]), output, preview, history])

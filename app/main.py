@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.routes_planning import router as planning_router
 from app.routes_sdk import router as sdk_router
 from app.routes_examples import router as examples_router
+from app.routes_project_schemas import discovery_router, validation_router
 from app.session import UserRuntime
 from app.version import __version__
 
@@ -27,6 +28,8 @@ app = FastAPI(
 app.include_router(planning_router)
 app.include_router(sdk_router)
 app.include_router(examples_router)
+app.include_router(discovery_router)
+app.include_router(validation_router)
 app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 
 # --------------------------------------------------------------

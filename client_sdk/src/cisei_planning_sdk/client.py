@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
-from uuid import uuid4
 
 import requests
 
@@ -35,7 +34,8 @@ class PlanningClient:
         self.base_url = base_url.rstrip("/")
         self.workspace = _find_workspace(workspace)
         self.project: PlanningProject | None = None
-        self.user_id = user_id or f"notebook-{uuid4().hex[:12]}"
+        self._user_label = user_id if token is None else None
+        self.user_id = user_id if token is not None else None
         self.token = token
         self.timeout = timeout
         self.session = requests.Session()
@@ -54,15 +54,26 @@ class PlanningClient:
 
     def connect(self, *, reset: bool = True) -> "PlanningClient":
         """
-        Register this notebook session with the planning hub.
+        Register a session or reconnect using its issued ID and token.
 
-        The hub returns a per-user token and starts/refreshes the worker on the
-        first authenticated planning request. ``reset=True`` keeps the current
-        hub behavior: registering the same user id replaces its worker state.
+        With existing credentials, reset=True clears the server worker state.
+        With reset=False, reuse the credentials and preserve worker state.
         """
+        if self.token is not None:
+            if not self.user_id:
+                raise ValueError("A session ID is required with an existing token")
+            if reset:
+                response = self.session.post(
+                    f"{self.base_url}/{self.user_id}/session/reset",
+                    headers={"X-Token": self.token},
+                    timeout=self.timeout,
+                )
+                response.raise_for_status()
+            return self
+
         response = self.session.post(
             f"{self.base_url}/register",
-            params={"user_id": self.user_id},
+            params={"user_id": self._user_label} if self._user_label is not None else {},
             timeout=self.timeout,
         )
         response.raise_for_status()
@@ -143,7 +154,8 @@ class PlanningClient:
         if not project.scenario_path.is_file():
             raise FileNotFoundError(f"Project scenario not found: {project.scenario_path}")
 
-        cache = project.load_features() if project.features_path.exists() else None
+        cache_file = ScenarioSession._feature_file_state(project.features_path)
+        cache = project.load_features() if cache_file is not None else None
         previous_project = self.project
         self.project = project
         try:
@@ -153,7 +165,9 @@ class PlanningClient:
                 planner=planner,
             )
             if cache is not None:
-                scenario.import_feature_cache(cache)
+                imported = scenario.import_feature_cache(cache)
+                scenario._saved_feature_file = cache_file
+                scenario._saved_feature_revision = imported.get("revision")
             return scenario
         except Exception:
             self.project = previous_project

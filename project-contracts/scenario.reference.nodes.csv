@@ -1,0 +1,5 @@
+site_id,device_profile,lat,lon,mount_height_m
+lte_access,lte_access,-25.43,-49.34,20
+lte_client,lte_client,-25.43,-49.33,6
+dual_radio,dual_radio_router,-25.43,-49.32,8
+remote,wisun_remote,-25.43,-49.31,7

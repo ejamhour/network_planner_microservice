@@ -60,9 +60,10 @@ def test_final_view_uses_solved_network_instead_of_construction_snapshots(tmp_pa
     result = construction()
     final = copy.deepcopy(result['mesh_network']['iterations'][-1]['result'])
     # Final selection can differ from the construction path.
-    final['planned_nodes'][1].update(parent='root', rank=0.5)
+    final['planned_nodes'][1].update(parent='root', rank=0.5, alternate_parents=['relay'])
     final['planned_edges'] = [dict(src='leaf', dst='root', metric=0.5),
                               dict(src='relay', dst='root', metric=1)]
+    final['metric_edges'] = [*final['planned_edges'], dict(src='relay', dst='leaf', metric=1.5)]
     result.update(final)
     result['mesh_network']['phase'] = 'solved'
     original = copy.deepcopy(result)
@@ -71,6 +72,10 @@ def test_final_view_uses_solved_network_instead_of_construction_snapshots(tmp_pa
     assert isinstance(view, MeshSolutionView)
     assert view.final and len(view.snapshots) == 1
     assert view.snapshots[0]['planned_nodes'][1]['parent'] == 'root'
+    assert view.snapshots[0]['alternate_edges'] == [dict(src='relay', dst='leaf', metric=1.5)]
+    assert 'Preferred path metric:' in view.to_html()
+    assert 'Alternate parents for the selected radio:' in view.to_html()
+    assert 'Alternate parents for upstream radios:' in view.to_html()
     assert session.show_mesh_iterations().snapshots[-1]['planned_nodes'][1]['parent'] == 'relay'
     assert (tmp_path/'final.html').exists()
     assert result == original

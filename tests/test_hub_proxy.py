@@ -4,8 +4,39 @@ from types import SimpleNamespace
 import httpx
 import pytest
 from fastapi import HTTPException
+from fastapi.testclient import TestClient
 
 from app import main_hub as hub
+from cisei_planning_sdk import PlanningClient
+
+
+def test_registration_issues_unique_sessions_and_requires_token_to_reset(monkeypatch):
+    monkeypatch.setattr(hub, "user_registry", {})
+    client = TestClient(hub.hub_app)
+    first = client.post("/register", params={"user_id": "label"}).json()
+    second = client.post("/register", params={"user_id": first["user_id"]}).json()
+    anonymous = client.post("/register").json()
+    assert len({entry["user_id"] for entry in (first, second, anonymous)}) == 3
+    assert first["user_id"] != "label"
+    assert first["token"] != second["token"]
+    assert hub.user_registry[first["user_id"]]["label"] == "label"
+    path = f"/{first['user_id']}/session/reset"
+    assert client.post(path, headers={"X-Token": second["token"]}).status_code == 401
+    assert client.post(path, headers={"X-Token": first["token"]}).status_code == 200
+
+
+def test_sdk_uses_issued_id_and_token_for_reset(monkeypatch, tmp_path):
+    monkeypatch.setattr(hub, "user_registry", {})
+    (tmp_path / "projects").mkdir()
+    client = PlanningClient("http://testserver", workspace=tmp_path, user_id="label", auto_register=False)
+    client.session = TestClient(hub.hub_app, base_url="http://testserver")
+    client.connect()
+    session_id, token = client.user_id, client.token
+    assert hub.user_registry[session_id]["label"] == "label"
+    client.connect(reset=False)
+    client.connect()
+    assert (client.user_id, client.token) == (session_id, token)
+    assert list(hub.user_registry) == [session_id]
 
 
 @pytest.mark.parametrize("error,status", [(httpx.ReadTimeout(""), 504), (httpx.ConnectError("worker unavailable"), 502)])

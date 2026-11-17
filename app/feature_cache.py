@@ -1,7 +1,10 @@
 """Portable raw-feature cache, independent of metric formulas and planner state."""
 from copy import deepcopy
 import json
+from itertools import islice
 from math import isfinite
+from threading import Lock
+from uuid import uuid4
 
 from cisei_lib.io.async_geo_service_pool import AsyncGeoServicePool, FeatureRequest
 
@@ -9,14 +12,34 @@ from cisei_lib.io.async_geo_service_pool import AsyncGeoServicePool, FeatureRequ
 class FeatureCache:
     def __init__(self):
         self.records = {}
+        self.generation = uuid4().hex
+        self._lock = Lock()
+
+    @property
+    def revision(self):
+        return f"{self.generation}:{len(self.records)}"
 
     @staticmethod
     def key(source, request):
         return (source.rstrip("/"), AsyncGeoServicePool._make_key(request))
 
     def export(self):
+        return self.export_since()[0]
+
+    def export_since(self, *, cursor=None, if_revision=None):
+        with self._lock:
+            revision = self.revision
+            generation, _, offset = (cursor or "").partition(":")
+            start = 0
+            partial = False
+            if generation == self.generation and offset.isascii() and offset.isdecimal() and len(offset) <= 20:
+                start = int(offset)
+                partial = start <= len(self.records)
+            if if_revision == revision or (partial and cursor == revision):
+                return None, revision, False
+            entries = list(islice(self.records.values(), start if partial else 0, None))
         return {"format": "cisei-feature-cache", "version": 1,
-                "entries": deepcopy(list(self.records.values()))}
+                "entries": deepcopy(entries)}, revision, partial
 
     @classmethod
     def from_document(cls, document):
@@ -69,7 +92,8 @@ class CachedGeo:
                 "freq_mhz": freq_mhz, "options": deepcopy(options)}, "features": deepcopy(features)}
             # Never persist a cache artifact that cannot be imported later.
             FeatureCache.from_document({"format": "cisei-feature-cache", "version": 1, "entries": [entry]})
-            self.cache.records[key] = entry
+            with self.cache._lock:
+                self.cache.records.setdefault(key, entry)
         return deepcopy(self.cache.records[key]["features"])
 
     async def point_samples(self, points, **options):

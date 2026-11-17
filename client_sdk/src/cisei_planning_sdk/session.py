@@ -44,6 +44,8 @@ class ScenarioSession:
     result: dict[str, Any] | None = None
     project: Any = None
     mesh_preparation: dict[str, Any] | None = None
+    _saved_feature_revision: str | None = field(default=None, init=False, repr=False)
+    _saved_feature_file: tuple | None = field(default=None, init=False, repr=False)
 
     def _mesh_network_body(self, *, poles=None, **options):
         """Read local inputs shared by staged construction and its shortcut."""
@@ -66,10 +68,12 @@ class ScenarioSession:
         return _json_value({'poles': poles or [], **controls})
 
     def add_repeaters(self, *, geo_base_url: str, poles=None, progress=False,
-                      max_rounds=None, resume=True, **options):
+                      max_rounds=None, resume=True, retry_unserved=False, **options):
         """With max_rounds, run a finite expansion from the last saved checkpoint."""
         if self.planner != 'mesh':
             raise ValueError('add_repeaters requires planner="mesh"')
+        if retry_unserved and (max_rounds is None or not resume):
+            raise ValueError('retry_unserved requires max_rounds and resume=True')
         body = self._mesh_network_body(poles=poles, **options)
         path = f'/planning/scenarios/{self.scenario_id}/mesh'
         body['geo_base_url'] = geo_base_url
@@ -82,7 +86,19 @@ class ScenarioSession:
                     previous = self.project.load_result()
                 checkpoint = (previous or {}).get('mesh_network', {})
                 if resume and checkpoint.get('expansion_fingerprint'):
+                    if self.project is not None and any(
+                        'artifact' not in attempt for step in checkpoint['steps']
+                        for attempt in step['attempts']
+                    ):
+                        from .mesh_artifacts import compact_mesh_result
+                        previous = compact_mesh_result(self.project, previous)
+                        self.project.save_result(previous)
+                        checkpoint = previous['mesh_network']
                     body['checkpoint'] = checkpoint
+                elif retry_unserved:
+                    raise ValueError('retry_unserved requires a saved expansion checkpoint')
+                if retry_unserved:
+                    body['retry_unserved'] = True
                 from cisei_planning_sdk.mesh_progress import run_expansion
                 result = run_expansion(self.client, path + '/expansions',
                                        dict(body, max_rounds=max_rounds), progress=progress)
@@ -102,8 +118,27 @@ class ScenarioSession:
         self.candidate_edges = self.metrics = self.solution = self.evaluation = None
         if self.project is not None:
             from cisei_planning_sdk.mesh_artifacts import save_mesh_artifacts
-            save_mesh_artifacts(self.project, result)
+            result = self.mesh_preparation = self.result = save_mesh_artifacts(self.project, result)
             self.save_feature_cache()
+        return result
+
+    def load_mesh_expansion(self):
+        """Load the saved expanded mesh into Network for final planning."""
+        if self.planner != 'mesh' or self.project is None:
+            raise ValueError('Open a project with planner="mesh" to load its expansion')
+        from .mesh_artifacts import compact_mesh_result
+        saved = self.project.load_result()
+        report = saved.get('mesh_network', {})
+        if not report.get('expanded_scenario'):
+            raise ValueError('The project has no saved expanded mesh network')
+        compact = compact_mesh_result(self.project, saved)
+        result = self.client._request('post',
+            f'/planning/scenarios/{self.scenario_id}/mesh/load_expansion',
+            json=compact['mesh_network'])['data']
+        self.mesh_preparation = self.result = result
+        self.candidate_edges = self.metrics = self.solution = self.evaluation = None
+        if compact != saved:
+            self.project.save_result(compact)
         return result
 
     def remove_unused_repeaters(self):
@@ -129,7 +164,7 @@ class ScenarioSession:
         self.solution = self.metrics = self.candidate_edges = self.evaluation = None
         if self.project is not None:
             from cisei_planning_sdk.mesh_artifacts import save_mesh_artifacts
-            save_mesh_artifacts(self.project, result)
+            result = self.result = save_mesh_artifacts(self.project, result)
         return result
 
     def show_mesh_network(self, *, kind='final', save_path=None):
@@ -155,6 +190,12 @@ class ScenarioSession:
         result = self.result if self.result and 'mesh_network' in self.result else self.mesh_preparation
         if result is None:
             raise RuntimeError('Call add_repeaters first')
+        if self.project is not None:
+            from .mesh_artifacts import load_mesh_artifact
+            report = result['mesh_network']
+            result = {**result, 'mesh_network': {**report, 'iterations': [
+                {'result': load_mesh_artifact(self.project, row)} if 'artifact' in row else row
+                for row in report['iterations']]}}
         view = MeshIterationsView(result, iteration=iteration)
         if save_path is None and self.project is not None:
             save_path = self.project.path / 'mesh_iterations.html'
@@ -202,7 +243,11 @@ class ScenarioSession:
                 view.save_html(save_path)
             return view
         view = ScenarioSession(self.client, self.name, self.planner, self.scenario_id)
-        view.result = selected['result']
+        if self.project is not None and 'artifact' in selected:
+            from .mesh_artifacts import load_mesh_artifact
+            view.result = load_mesh_artifact(self.project, selected)
+        else:
+            view.result = selected['result']
         if save_path is None and self.project is not None:
             save_path = self.project.path / f'mesh_step_{step:04d}_attempt_{attempt:02d}_{kind}.html'
         return view.show_mesh_link(kind=kind, save_path=save_path)
@@ -360,7 +405,32 @@ class ScenarioSession:
     def save_feature_cache(self) -> Path:
         if self.project is None:
             raise ValueError("Open a project before saving its feature cache")
-        return self.project.save_features(self.export_feature_cache())
+        path = self.project.features_path
+        file_state = self._feature_file_state(path)
+        revision = self._saved_feature_revision if file_state == self._saved_feature_file else None
+        endpoint = f"/planning/scenarios/{self.scenario_id}/features/cache"
+        query = {"params": {"after": revision, "if_revision": revision}} if revision else {}
+        payload = self.client._request("get", endpoint, **query)
+        if revision and self._feature_file_state(path) != file_state:
+            payload = self.client._request("get", endpoint)
+        if payload["data"] is None and revision and payload.get("revision") == revision:
+            return path
+        document = payload["data"]
+        if payload.get("partial"):
+            document = self.project.load_features()
+            document["entries"].extend(payload["data"]["entries"])
+        saved = self.project.save_features(document)
+        self._saved_feature_file = self._feature_file_state(saved)
+        self._saved_feature_revision = payload.get("revision")
+        return saved
+
+    @staticmethod
+    def _feature_file_state(path):
+        try:
+            stat = path.stat()
+        except FileNotFoundError:
+            return None
+        return path, stat.st_ino, stat.st_size, stat.st_mtime_ns
 
     @property
     def ok(self) -> bool:
@@ -573,7 +643,8 @@ class ScenarioSession:
         options = {"save_path": destination} if destination is not None else {}
         self.metrics_view = show_metrics(report, **options)
 
-    def solve(self, *, max_edge_metric: float | None = None) -> dict[str, Any]:
+    def solve(self, *, max_edge_metric: float | None = None,
+              parent_set_size: int = 1) -> dict[str, Any]:
         """
         Solve and save the final planned network.
 
@@ -583,16 +654,26 @@ class ScenarioSession:
 
         This is the step that saves the solution. Evaluation and result export
         read this saved solution.
+
+        parent_set_size includes the preferred parent. With additional parents,
+        planned nodes also retain their alternatives and conservative rank.
         """
         if max_edge_metric is None and self.planner == 'mesh' and self.mesh_preparation:
             max_edge_metric = self.mesh_preparation['mesh_network']['segment_threshold']
-        options = {'json': {'max_edge_metric': max_edge_metric}} if max_edge_metric is not None else {}
+        options = {}
+        if max_edge_metric is not None:
+            options['json'] = {'max_edge_metric': max_edge_metric}
+        if type(parent_set_size) is not int or parent_set_size != 1:
+            options.setdefault('json', {})['parent_set_size'] = parent_set_size
         payload = self.client._request(
             "post",
             f"/planning/scenarios/{self.scenario_id}/solution/solve",
             **options,
         )
         self.solution = payload["data"]
+        if self.result is not None and "path_scores" in self.result:
+            self.result = {key: value for key, value in self.result.items()
+                           if key not in ("path_scores", "path_metric", "network_evaluation")}
         return self.solution
 
     def get_solution(self) -> dict[str, Any]:
@@ -725,8 +806,76 @@ class ScenarioSession:
             f"/planning/scenarios/{self.scenario_id}/export/result",
             params=params,
         )
-        self.result = payload["data"]
+        result = payload["data"]
+        previous = self.result
+        if (previous is not None and "path_scores" in previous
+                and previous["planned_nodes"] == result["planned_nodes"]
+                and previous["planned_edges"] == result["planned_edges"]):
+            result.update(path_scores=previous["path_scores"], path_metric=previous["path_metric"])
+            if "network_evaluation" in previous:
+                result["network_evaluation"] = previous["network_evaluation"]
+        self.result = result
         return self.result
+
+    def evaluate_paths(self, *, metric: str = "default_path") -> dict[str, float]:
+        """Score the current preferred paths and attach the scores to the result."""
+        from .attachments import load_attached_equipment
+        spec = (self.client.metric_path(metric).read_text(encoding="utf-8")
+                if metric.endswith(".toml") else metric)
+        equipment = load_attached_equipment(self.project.scenario_path) if self.project is not None else None
+        result = self.export_result()
+        scores = self.client._request(
+            "post", f"/planning/scenarios/{self.scenario_id}/paths/score",
+            json={"metric_spec": spec, "attached_equipment": equipment},
+        )["data"]
+        result.update(path_scores=scores, path_metric=metric)
+        result.pop("network_evaluation", None)
+        return scores
+
+    def network_metric(self, *, metric: str = "default_network") -> dict[str, Any]:
+        """Evaluate the current path scores and attach a network summary to the result."""
+        from .attachments import load_attached_equipment
+
+        result = self.result or {}
+        if "path_scores" not in result:
+            raise ValueError("Evaluate paths or load an evaluated result first")
+        spec = (self.client.metric_path(metric).read_text(encoding="utf-8")
+                if metric.endswith(".toml") else metric)
+        equipment = load_attached_equipment(self.project.scenario_path) if self.project is not None else None
+        scores = result["path_scores"]
+        if equipment is not None:
+            attached_devices = {row["device_id"] for row in equipment}
+            endpoints = {}
+            for node in sorted(result["planned_nodes"], key=lambda row: (row["rank"], row["node_id"])):
+                if node["device_id"] in attached_devices and node["node_id"] in scores:
+                    endpoints.setdefault(node["device_id"], node["node_id"])
+            scores = {node_id: scores[node_id] for node_id in endpoints.values()}
+        evaluation = self.client._request("post", "/planning/results/network-metric", json={
+            "metric_spec": spec, "network_metric": metric, "path_metric": result["path_metric"],
+            "path_scores": scores,
+        })["data"]
+        result["network_evaluation"] = evaluation
+        return evaluation
+
+    def optimize_parents(self, *, path_metric: str, network_metric: str) -> dict[str, Any]:
+        """Evaluate and improve the loaded solution within its saved parent sets."""
+        from .attachments import load_attached_equipment
+
+        if self.result is None:
+            raise ValueError("Load a solved result before optimizing its parents")
+        path_spec = (self.client.metric_path(path_metric).read_text(encoding="utf-8")
+                     if path_metric.endswith(".toml") else path_metric)
+        network_spec = (self.client.metric_path(network_metric).read_text(encoding="utf-8")
+                        if network_metric.endswith(".toml") else network_metric)
+        equipment = load_attached_equipment(self.project.scenario_path) if self.project is not None else None
+        output = self.client._request("post", "/planning/results/optimize-parents", json={
+            "result": self.result, "attached_equipment": equipment,
+            "path_metric": path_spec, "network_metric": network_spec,
+        })["data"]
+        result = output.pop("result")
+        result["path_metric"] = path_metric
+        self.result = result
+        return output
 
     def save_result(
         self,
@@ -735,10 +884,13 @@ class ScenarioSession:
         rank_threshold: float | None = None,
         primary_tech: str = "lte",
         solution_kind: str | None = None,
+        path_metric: str | None = None,
     ) -> Path:
-        """Export the live result into the active project's ``result.json``."""
+        """Save the result with any evaluated path scores for the current solution."""
         if self.project is None:
             raise ValueError("Open a project before saving its result")
+        if path_metric is not None:
+            self.evaluate_paths(metric=path_metric)
         result = self.export_result(
             include_features=include_features,
             rank_threshold=rank_threshold,

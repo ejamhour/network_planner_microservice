@@ -2,6 +2,7 @@
 fastapi
 uvicorn[standard]
 pydantic
+jsonschema>=4.18
 httpx
 
 # --- Core Data Science ---

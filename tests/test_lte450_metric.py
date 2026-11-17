@@ -1,6 +1,6 @@
 from pathlib import Path
 import pytest
-from cisei_lib.planners.metric_compiler import compile_metric_spec
+from cisei_lib.planners.shared.metric_compiler import compile_metric_spec
 
 SPEC = Path(__file__).resolve().parents[1] / "examples/metrics/lte450_link_margin.toml"
 

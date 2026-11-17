@@ -1,0 +1,8 @@
+version = 1
+result = "metric"
+
+[parameters]
+threshold = 125.0
+
+[expressions]
+metric = "count_above(segment_scores, params.threshold)"

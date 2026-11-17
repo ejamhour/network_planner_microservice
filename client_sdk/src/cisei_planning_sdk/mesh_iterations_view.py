@@ -55,6 +55,19 @@ class MeshSolutionView(MeshIterationsView):
         data = NetworkView(result).result
         self.snapshots = [{key: data.get(key, []) for key in
                            ('rpl_nodes', 'planned_nodes', 'planned_edges')}]
+        alternate_pairs = {
+            frozenset((node['node_id'], parent))
+            for node in data['planned_nodes']
+            for parent in node.get('alternate_parents', ())
+        }
+        self.snapshots[0]['alternate_edges'] = [
+            {key: edge[key] for key in ('src', 'dst', 'metric')}
+            for edge in data.get('metric_edges', [])
+            if frozenset((edge['src'], edge['dst'])) in alternate_pairs
+        ]
+        self.snapshots[0]['path_scores'] = data.get('path_scores', {})
+        if 'path_origins' in data:
+            self.snapshots[0]['path_origins'] = data['path_origins']
         self.iteration = 0
         report = result.get('mesh_network', {})
         self.roots = copy.deepcopy(report.get('fixed_interfaces',
@@ -87,7 +100,7 @@ const data=__DATA__, $=s=>document.querySelector(s), ns='http://www.w3.org/2000/
 if(data.final){document.title='Mesh solution network';$('h2').textContent='Mesh solution network';$('#iteration').closest('label').hidden=true;$('svg').setAttribute('aria-label','Mesh solution network')}
 if(data.study){document.title='Mesh connection study';$('h2').textContent='Proposed path to connected parent';$('footer').textContent='Square blue: connected reference parent · Diamond purple: proposed repeater · Circle teal: terminal. Arrows point toward the connected parent, whose upstream route belongs to the existing network. Red link: cost above the acceptance threshold. R = accumulated rank; m = segment cost. Projected coordinates; north is up.'}
 const svg=$('svg'),scene=$('#scene'), roots=new Set(data.roots),repeaters=new Set(data.repeaters);
-let current=data.initial,nodes,planned,edges,selected='',z=1,tx=0,ty=0;
+let current=data.initial,nodes,planned,edges,alternateMetrics,pathScores,pathOrigins,selected='',z=1,tx=0,ty=0;
 const all=data.iterations.flatMap(s=>s.rpl_nodes),xs=all.map(n=>n.x),ys=all.map(n=>n.y);
 // Stable bounds across iterations; avoid including the coordinate origin.
 const bounds=all.length?[Math.min(...xs),Math.max(...xs),Math.min(...ys),Math.max(...ys)]:[0,1,0,1];
@@ -103,13 +116,23 @@ function rank(id){return formatScore(planned.get(id)?.rank)}
 function role(n){return roots.has(n.node_id)?'access':repeaters.has(n.site_id)?'repeater':'equipment'}
 function key(a,b){return JSON.stringify([a,b].sort())}
 function path(id){let out=[],seen=new Set();while(id&&nodes.has(id)&&!seen.has(id)){seen.add(id);out.push(id);id=planned.get(id)?.parent}return out}
-function metric(a,b){return formatScore(edges.find(e=>key(e.src,e.dst)===key(a,b))?.metric)}
+function edgeMetric(a,b){return edges.find(e=>key(e.src,e.dst)===key(a,b))?.metric}
+function metric(a,b){return formatScore(edgeMetric(a,b))}
 function describe(id){const p=path(id),n=nodes.get(id),kind=role(n);
 let text=name(id)+'\n'+({access:'Original backbone access',repeater:'Added repeater',equipment:'Equipment leaf'}[kind]);
 if(!planned.has(id))return text+'\nNot connected in this iteration.';
 text+='\nAccumulated rank: '+rank(id)+(data.study?'\n\nPath toward connected parent:\n':'\n\nPath toward backbone:\n')+p.map(name).join(' → ');
 text+='\n'+Math.max(0,p.length-1)+' hops';
 for(let i=0;i<p.length-1;i++)text+='\n\n'+name(p[i])+' → '+name(p[i+1])+'\nLink metric: '+metric(p[i],p[i+1])+'\nRanks: '+rank(p[i])+' → '+rank(p[i+1]);
+if(data.final&&!data.study){
+ text+='\n\nPreferred path metric: '+formatScore(pathScores.get(id));
+ const describeAlternates=child=>(planned.get(child)?.alternate_parents||[]).map(parent=>
+   name(child)+' → '+name(parent)+'\nLink metric: '+formatScore(alternateMetrics.get(key(child,parent))));
+ const alternatives=describeAlternates(id);
+ if(alternatives.length)text+='\n\nAlternate parents for the selected radio:\n'+alternatives.join('\n\n');
+ const upstream=p.slice(1).flatMap(describeAlternates);
+ if(upstream.length)text+='\n\nAlternate parents for upstream radios:\n'+upstream.join('\n\n');
+}
 return text;
 }
 function make(tag,attrs,parent=scene){const e=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);parent.append(e);return e}
@@ -129,12 +152,20 @@ for(const n of nodes.values()){const[x,y]=xy(n),k=role(n),served=planned.has(n.n
 const color=k==='access'?'#245caf':k==='repeater'?'#7c3aed':served?'#16857d':'#c14236';
 const attrs={fill:served?color:'white',stroke:color,'stroke-width':2,opacity:active?1:.25,class:'node','data-node-id':n.node_id,'data-role':k};
 const marker=k==='access'?make('rect',{...attrs,x:x-7,y:y-7,width:14,height:14}):k==='repeater'?make('polygon',{...attrs,points:`${x},${y-9} ${x+9},${y} ${x},${y+9} ${x-9},${y}`}):make('circle',{...attrs,cx:x,cy:y,r:6});
-marker.onclick=()=>select(n.node_id);make('title',{},marker).textContent=describe(n.node_id);
+if(!pathOrigins||pathOrigins.has(n.node_id)){marker.onclick=()=>select(n.node_id);make('title',{},marker).textContent=describe(n.node_id)}
 if($('#labels').checked){const t=make('text',{x:x+11,y:y-10,class:'label',fill:color,opacity:active?1:.4});t.textContent=name(n.node_id)+' · R='+rank(n.node_id)}
 }}
 function load(index){current=index;const r=data.iterations[index];nodes=new Map(r.rpl_nodes.map(n=>[n.node_id,n]));planned=new Map(r.planned_nodes.map(n=>[n.node_id,n]));edges=r.planned_edges;
+alternateMetrics=new Map((r.alternate_edges||[]).map(e=>[key(e.src,e.dst),e.metric]));
+pathScores=new Map(Object.entries(r.path_scores||{}));
+pathOrigins=r.path_origins?new Set(r.path_origins):null;
+if(pathOrigins){
+ const used=new Set();
+ for(const id of pathOrigins){const route=path(id);for(let i=1;i<route.length;i++)used.add(key(route[i-1],route[i]))}
+ edges=edges.filter(e=>used.has(key(e.src,e.dst)));
+}
 $('#node').replaceChildren();const option=document.createElement('option');option.value='';option.textContent='All paths';$('#node').append(option);
-for(const n of nodes.values()){const o=document.createElement('option');o.value=n.node_id;o.textContent=name(n.node_id);$('#node').append(o)}
+for(const n of nodes.values()){if(pathOrigins&&!pathOrigins.has(n.node_id))continue;const o=document.createElement('option');o.value=n.node_id;o.textContent=name(n.node_id);$('#node').append(o)}
 const prev=index?new Set(data.iterations[index-1].rpl_nodes.map(n=>n.node_id)):new Set();
 const added=r.rpl_nodes.filter(n=>!prev.has(n.node_id)&&repeaters.has(n.site_id)).map(n=>n.site_id);
 const prevServed=index?new Set(data.iterations[index-1].planned_nodes.map(n=>n.node_id)):new Set();

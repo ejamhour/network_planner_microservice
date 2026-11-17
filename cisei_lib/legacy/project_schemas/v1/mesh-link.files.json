@@ -1,0 +1,254 @@
+{
+  "scenario.toml": {
+    "description": "Defines the RF equipment, metrics, and network endpoints. The source is floating and the destination is connected. Both endpoints use the same technology and frequency.",
+    "status": "required",
+    "schema_pointer": "#/$defs/scenario",
+    "required_section_groups": [
+      {
+        "any_of": ["instances", "sites"],
+        "description": "Declare a node CSV in [instances] or provide embedded [[sites]]. When sites are embedded, the node CSV is not read."
+      }
+    ],
+    "sections": {
+      "scenario": {
+        "status": "conditional",
+        "description": "Required when coordinates are supplied only as projected x and y.",
+        "fields": {
+          "working_crs": {
+            "status": "conditional",
+            "type": "string",
+            "description": "Projected CRS for x and y in node and pole inputs.",
+            "example": "EPSG:31982"
+          }
+        }
+      },
+      "instances": {
+        "status": "conditional",
+        "description": "Defines the node CSV when sites are not embedded.",
+        "schema_pointer": "#/$defs/csvSource",
+        "fields": {
+          "source": {"status": "required", "description": "Project-relative node CSV filename."},
+          "format": {"status": "optional", "default": "csv"},
+          "profile_column": {"status": "optional", "default": "device_profile"}
+        }
+      },
+      "sites": {
+        "status": "conditional",
+        "description": "Embedded site records. Supply these or declare [instances].",
+        "schema_pointer": "#/$defs/scenario/properties/sites"
+      },
+      "antennas": {
+        "status": "conditional",
+        "description": "Antenna profiles referenced by the RF interfaces.",
+        "schema_pointer": "#/$defs/scenario/properties/antennas"
+      },
+      "interfaces": {
+        "status": "conditional",
+        "description": "Interface profiles used by device profiles. Each profile defines technology, frequency, transmit power, and antenna reference.",
+        "schema_pointer": "#/$defs/scenario/properties/interfaces"
+      },
+      "devices": {
+        "status": "conditional",
+        "description": "Device profiles referenced by node and pole rows. Each profile lists its interfaces.",
+        "schema_pointer": "#/$defs/scenario/properties/devices"
+      },
+      "metrics": {
+        "status": "conditional",
+        "description": "Metric configuration by technology. The link study requires a metric for the endpoints' technology.",
+        "schema_pointer": "#/$defs/scenario/properties/metrics"
+      },
+      "net": {
+        "status": "optional",
+        "description": "Connectivity rules and explicit candidate edges for the scenario."
+      },
+      "overrides": {
+        "status": "optional",
+        "description": "Per-interface enabled overrides keyed by concrete interface ID under [overrides.interfaces]."
+      },
+      "mesh": {
+        "status": "optional",
+        "description": "Mesh link search defaults. Operation arguments take precedence.",
+        "schema_pointer": "#/properties/operation"
+      },
+      "mesh.poles": {
+        "status": "optional",
+        "description": "Declares a separate repeater pole inventory.",
+        "schema_pointer": "#/$defs/csvSource",
+        "fields": {
+          "source": {"status": "required", "description": "Project-relative pole CSV filename."},
+          "format": {"status": "optional", "default": "csv"},
+          "profile_column": {"status": "optional", "default": "device_profile"}
+        }
+      },
+      "attachments": {
+        "status": "optional",
+        "description": "Declares an attached-equipment inventory for bundle validation.",
+        "fields": {
+          "source": {"status": "required", "description": "Project-relative attached equipment CSV filename."},
+          "format": {"status": "optional", "default": "csv"}
+        }
+      }
+    }
+  },
+  "nodes.csv": {
+    "source": "instances.source",
+    "required_when": "The scenario declares instances and has no embedded sites.",
+    "columns": {
+      "device_profile": {
+        "status": "required",
+        "description": "Required profile reference. The column name can be changed with instances.profile_column.",
+        "name_from": "instances.profile_column"
+      },
+      "site_id": {
+        "status": "optional",
+        "description": "Stable site identifier. Aliases are position_id, id, and name.",
+        "aliases": [
+          "position_id",
+          "id",
+          "name"
+        ]
+      },
+      "lat": {
+        "status": "conditional",
+        "description": "Latitude in degrees. Use with lon, or use x and y in scenario.working_crs."
+      },
+      "lon": {
+        "status": "conditional",
+        "description": "Longitude in degrees."
+      },
+      "x": {
+        "status": "conditional",
+        "description": "Projected x coordinate."
+      },
+      "y": {
+        "status": "conditional",
+        "description": "Projected y coordinate."
+      },
+      "connected": {
+        "status": "optional",
+        "description": "Whether the device already has network connectivity."
+      },
+      "can_route": {
+        "status": "optional",
+        "description": "Whether the device can route traffic."
+      },
+      "rank": {
+        "status": "optional",
+        "description": "Initial path rank."
+      },
+      "kind": {
+        "status": "optional",
+        "description": "Site category."
+      },
+      "candidate": {
+        "status": "optional",
+        "description": "Whether the site is potential infrastructure."
+      },
+      "mount_height_m": {
+        "status": "optional",
+        "description": "Mounting height in metres. Aliases are ant_h and antenna_height_m.",
+        "aliases": [
+          "ant_h",
+          "antenna_height_m"
+        ]
+      }
+    },
+    "status": "conditional",
+    "required_column_groups": [
+      {
+        "any_of": [
+          [
+            "lat",
+            "lon"
+          ],
+          [
+            "x",
+            "y"
+          ]
+        ],
+        "description": "Provide at least one complete coordinate pair for each row. Projected coordinates use scenario.working_crs."
+      }
+    ]
+  },
+  "poles.csv": {
+    "source": "mesh.poles.source",
+    "required_when": "The scenario declares a separate pole inventory.",
+    "columns": {
+      "pole_id": {
+        "status": "required",
+        "description": "Required unique pole identifier, distinct from existing site IDs."
+      },
+      "device_profile": {
+        "status": "required",
+        "description": "Required device profile reference. The column name can be changed with mesh.poles.profile_column.",
+        "name_from": "mesh.poles.profile_column"
+      },
+      "lat": {
+        "status": "conditional",
+        "description": "Latitude in degrees. Use with lon, or use x and y in scenario.working_crs."
+      },
+      "lon": {
+        "status": "conditional",
+        "description": "Longitude in degrees."
+      },
+      "x": {
+        "status": "conditional",
+        "description": "Projected x coordinate."
+      },
+      "y": {
+        "status": "conditional",
+        "description": "Projected y coordinate."
+      },
+      "mount_height_m": {
+        "status": "optional",
+        "description": "Optional mounting height in metres.",
+        "aliases": [
+          "ant_h",
+          "antenna_height_m"
+        ]
+      }
+    },
+    "forbidden_columns": [
+      "site_id",
+      "connected",
+      "candidate",
+      "rank"
+    ],
+    "status": "conditional",
+    "required_column_groups": [
+      {
+        "any_of": [
+          [
+            "lat",
+            "lon"
+          ],
+          [
+            "x",
+            "y"
+          ]
+        ],
+        "description": "Provide at least one complete coordinate pair for each row. Projected coordinates use scenario.working_crs."
+      }
+    ]
+  },
+  "attached_equipment.csv": {
+    "source": "attachments.source",
+    "required_when": "The scenario declares attachments.source.",
+    "description": "Descriptive inventory for installed-network workflows. The RF path search does not consume it.",
+    "columns": {
+      "equipment_id": {
+        "status": "required",
+        "description": "Required identifier, unique within the equipment type."
+      },
+      "equipment_type": {
+        "status": "required",
+        "description": "Required equipment category."
+      },
+      "device_id": {
+        "status": "required",
+        "description": "Required concrete scenario device ID."
+      }
+    },
+    "status": "conditional"
+  }
+}

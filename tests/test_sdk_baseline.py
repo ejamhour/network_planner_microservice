@@ -6,7 +6,7 @@ import pytest
 
 from cisei_planning_sdk import BaselineProject
 from cisei_planning_sdk.rssi_model import ExpressionModel, is_number
-from cisei_lib.planners.metric_compiler import compile_metric_spec
+from cisei_lib.planners.shared.metric_compiler import compile_metric_spec
 
 
 ROOT = Path(__file__).resolve().parents[1]

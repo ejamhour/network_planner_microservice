@@ -16,6 +16,7 @@ from starlette.background import BackgroundTask
 from app.version import __version__
 from app.routes_sdk import router as sdk_router
 from app.routes_examples import router as examples_router
+from app.routes_project_schemas import discovery_router
 
 # Configuration
 MAX_IDLE_SECONDS = int(os.getenv("PLANNING_MAX_IDLE_SECONDS", "3600"))
@@ -164,37 +165,39 @@ async def _close_proxy(response, client):
 hub_app = FastAPI(title="Network Planning Hub", version=__version__, lifespan=lifespan)
 hub_app.include_router(sdk_router)
 hub_app.include_router(examples_router)
+hub_app.include_router(discovery_router)
 hub_app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 
 @hub_app.post("/register")
-async def register_user(user_id: str):
-    """
-    Creates user or respawns worker if user exists.
-    If the user exists, the old process is killed to allow a clean state.
-    """
-    if user_id in user_registry:
-        # Kill existing worker to force a "respawn" on next request
+async def register_user(user_id: str | None = None):
+    """Create a new session. The optional user ID is a label."""
+    session_id = secrets.token_hex(16)
+    token = secrets.token_urlsafe(32)
+    user_registry[session_id] = {
+        "label": user_id,
+        "token": token,
+        "port": None,
+        "process": None,
+        "last_active": time.time(),
+    }
+    return {"user_id": session_id, "token": token, "status": "ready_for_provisioning"}
+
+
+@hub_app.post("/{user_id}/session/reset")
+async def reset_session(user_id: str, x_token: str = Header(...)):
+    """Reset the worker for an authenticated session."""
+    async with STARTUP_LOCK:
+        await verify_token(user_id, x_token)
         await stop_worker(user_id)
-        token = user_registry[user_id]["token"]
-    else:
-        token = secrets.token_urlsafe(32)
-        user_registry[user_id] = {
-            "token": token, 
-            "port": None, 
-            "process": None, 
-            "last_active": time.time()
-        }
-    
-    return {"user_id": user_id, "token": token, "status": "ready_for_provisioning"}
+        user_registry[user_id]["last_active"] = time.time()
+    return {"status": "ready_for_provisioning"}
 
 
 @hub_app.api_route("/{user_id}/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"])
 async def route_request(user_id: str, path: str, request: Request):
-    # Manual Authentication and Debugging
     token = request.headers.get("X-Token")
     
     if not token:
-        print(f"DEBUG: Missing X-Token for {user_id}. Headers: {dict(request.headers)}")
         raise HTTPException(status_code=401, detail="X-Token header missing")
     
     if user_id not in user_registry:

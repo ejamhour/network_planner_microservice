@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CISEI mesh-link project bundle v1",
+  "description": "Parsed scenario TOML, optional CSV tables, and arguments for a two-endpoint mesh study.",
+  "type": "object",
+  "required": ["scenario", "operation"],
+  "additionalProperties": false,
+  "properties": {
+    "scenario": {"$ref": "#/$defs/scenario"},
+    "tables": {
+      "type": "object",
+      "description": "CSV tables keyed by the project-relative source filename declared in TOML.",
+      "additionalProperties": {"$ref": "#/$defs/table"}
+    },
+    "operation": {
+      "type": "object",
+      "required": ["src_site", "dst_site"],
+      "additionalProperties": false,
+      "properties": {
+        "src_site": {"type": "string", "minLength": 1, "description": "Floating source site or enabled RF interface ID."},
+        "dst_site": {"type": "string", "minLength": 1, "description": "Fixed destination site or enabled RF interface ID."},
+        "pole_sites": {"type": ["array", "null"], "items": {"type": "string"}, "uniqueItems": true},
+        "geo_base_url": {"type": ["string", "null"]},
+        "max_repeaters": {"type": "integer", "minimum": 0, "maximum": 20, "default": 5},
+        "max_candidates": {"type": "integer", "minimum": 1, "maximum": 50, "default": 5},
+        "segment_threshold": {"type": "number", "minimum": 1, "default": 2},
+        "search_heuristic": {"enum": ["sector_band", "dual_cone"], "default": "sector_band"},
+        "search_midpoint": {"type": "boolean", "default": true},
+        "assume_symmetric_features": {"type": "boolean", "default": false}
+      }
+    }
+  },
+  "$defs": {
+    "csvSource": {
+      "type": "object",
+      "required": ["source"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "format": {"type": "string", "pattern": "^[cC][sS][vV]$", "default": "csv"},
+        "profile_column": {"type": "string", "minLength": 1, "default": "device_profile"}
+      }
+    },
+    "table": {
+      "type": "object",
+      "required": ["headers", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "headers": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "rows": {
+          "type": "array",
+          "items": {"type": "object", "additionalProperties": {"type": ["string", "null"]}}
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "anyOf": [
+        {"required": ["instances"]},
+        {"required": ["sites"], "properties": {"sites": {"minItems": 1}}}
+      ],
+      "properties": {
+        "scenario": {"type": "object", "properties": {"working_crs": {"type": "string", "examples": ["EPSG:31982"]}}},
+        "antennas": {"type": "object", "additionalProperties": {"type": "object"}},
+        "interfaces": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["tech", "freq_mhz", "tx_power_dbm", "antenna_id"],
+            "properties": {
+              "tech": {"type": "string"},
+              "freq_mhz": {"type": "number", "exclusiveMinimum": 0, "description": "Frequency in MHz."},
+              "tx_power_dbm": {"type": "number", "description": "Transmit power in dBm."},
+              "antenna_id": {"type": "string"},
+              "enabled": {"type": "boolean", "default": true},
+              "can_relay": {"type": "boolean", "default": false},
+              "medium": {"type": "string", "default": "rf"}
+            }
+          }
+        },
+        "devices": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["interfaces"],
+            "properties": {
+              "interfaces": {"type": "array", "items": {"type": "string"}},
+              "connected": {"type": "boolean", "default": false},
+              "can_route": {"type": "boolean", "default": false},
+              "mount_height_m": {"type": "number", "description": "Mounting height in metres."},
+              "rank": {"type": "number"}
+            }
+          }
+        },
+        "metrics": {"type": "object"},
+        "net": {"type": "object"},
+        "sites": {"type": "array", "items": {"type": "object", "required": ["site_id"]}},
+        "instances": {"$ref": "#/$defs/csvSource"},
+        "attachments": {"$ref": "#/$defs/csvSource"},
+        "overrides": {"type": "object"},
+        "mesh": {"type": "object", "properties": {"poles": {"$ref": "#/$defs/csvSource"}}}
+      }
+    }
+  }
+}

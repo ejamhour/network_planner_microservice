@@ -1,0 +1,218 @@
+# Scenario TOML reference v1
+#
+# A hypothetical hybrid Graph deployment. Copy this file as scenario.toml
+# alongside scenario.reference.nodes.csv to use the active settings.
+# Commented blocks show alternatives and optional settings.
+
+# Proposed companion-file table for project upload. Keep all input paths
+# here, relative to the directory containing scenario.toml. Each declared
+# file must exist. The service decides which roles the selected operation
+# requires. The SDK uses this list to upload the original files.
+#
+# [files]
+# nodes = "scenario.reference.nodes.csv"  # Omit when sites are embedded.
+# antenna_placements = "antenna_placements.toml"  # Optional installation overrides.
+# poles = "poles.csv"  # Candidate infrastructure for Mesh operations.
+# attached_equipment = "attached_equipment.csv"  # Optional installed-network inventory.
+#
+# With this layout, file paths move out of [instances], [mesh.poles],
+# [antenna_placements], and [attachments]. Parsing options such as
+# profile_column stay in their respective sections. Current loaders still
+# use the existing source declarations, so the proposed block is commented
+# out and the active example uses [instances].source below.
+
+# Optional build diagnostics configuration. Warnings do not prevent compilation.
+# If both coordinate pairs are supplied, preserve them and report differences
+# above this geodesic distance. Missing coordinate pairs are calculated at build.
+# [validation]
+# coordinate_warning_tolerance_m = 1.0  # Metres; finite and nonnegative.
+
+[scenario]
+# Required when a site supplies projected x and y without lat and lon.
+# Use a CRS appropriate for the project. This example uses SIRGAS 2000 / UTM 22S.
+working_crs = "EPSG:31982"
+
+# Antenna models with directional gain patterns can come from the global
+# antenna catalog bundled with the planning service or from a user's local
+# workspace. Store local models under the workspace's antennas/ directory
+# and load the library into the scenario with session.upload_configuration().
+#
+# The interface's antenna_id selects a profile under [antennas]. That
+# profile's model_id selects a model from the global or uploaded catalog.
+# For example, a profile using a built-in model could be written as:
+# [antennas.modeled_radio]
+# model_id = "pctel_boa9028"
+#
+# For simple scenarios, define a constant-gain antenna directly in TOML.
+# Omit model_id to use fixed gain_dbi. Supply the installation's mounting
+# height separately via mount_height_m on the device, CSV row, or placement.
+[antennas.lte_sector]
+kind = "sector"
+model_id = "commscope_rv_65s_fvb"
+azimuth_deg = 90.0
+beamwidth_deg = 65.0
+
+[antennas.lte_terminal]
+model_id = "pctel_boa9028"
+
+[antennas.wisun_omni]
+kind = "omni"
+gain_dbi = 3.0
+
+# Interface profiles require tech, freq_mhz, tx_power_dbm, and antenna_id.
+# Interfaces are enabled by default.
+[interfaces.lte_access]
+tech = "lte"
+freq_mhz = 915.0
+tx_power_dbm = 43.0
+antenna_id = "lte_sector"
+can_relay = false
+
+# LTE client interface, shared by the LTE-only device and dual-radio router.
+[interfaces.lte_terminal]
+tech = "lte"
+freq_mhz = 915.0
+tx_power_dbm = 20.0
+antenna_id = "lte_terminal"
+can_relay = false
+
+[interfaces.wisun_radio]
+tech = "wisun"
+freq_mhz = 915.0
+tx_power_dbm = 23.0
+antenna_id = "wisun_omni"
+can_relay = false
+
+# Each CSV row names one device profile. interfaces is required.
+# The CSV can override connectivity, routing, rank, and mounting height.
+[devices.lte_access]
+connected = true
+can_route = true
+rank = 0.0
+interfaces = ["lte_access"]
+
+[devices.lte_client]
+connected = false
+can_route = false
+interfaces = ["lte_terminal"]
+
+# The LTE interface is still a client. Device-level routing and the
+# internal connectivity rule allow traffic between its two radios.
+[devices.dual_radio_router]
+connected = false
+can_route = true
+interfaces = ["lte_terminal", "wisun_radio"]
+
+[devices.wisun_remote]
+connected = false
+can_route = false
+interfaces = ["wisun_radio"]
+
+# Each [metrics.<tech>] entry selects the RF edge metric for interfaces
+# whose tech matches the table name. It turns link features into an edge
+# cost. The solver uses edge costs to calculate path ranks.
+#
+# Built-in metrics live in the planning service's metric catalog. Use a
+# short name in spec, as in the two active entries below.
+#
+# To define a metric directly in this file, set spec to the full metric
+# definition as a multiline TOML string, or use formula for an inline
+# formula supported by the metric compiler.
+#
+# To keep a custom metric in a separate file, put its TOML definition in
+# the workspace's metrics/ directory. After opening the project, call
+# session.upload_configuration(metrics={"lte": "custom_lte.toml"}).
+# The SDK reads the file and sends its contents to the service. A short
+# name in spec resolves against the service catalog. It does not load a
+# workspace file. Upload before building candidates and computing metrics.
+[metrics.lte]
+spec = "lte_tower_node"
+
+[metrics.wisun]
+spec = "default"
+
+[instances]
+# Supply this section for CSV-backed sites. source is required when the SDK
+# reads it and is relative to this file. If [[sites]] is nonempty, the SDK uses
+# the embedded sites and does not read this CSV.
+source = "scenario.reference.nodes.csv"
+# Optional. The supported format is CSV. Defaults are shown here.
+# format = "csv"
+# profile_column = "device_profile"
+
+# Candidate rules connect existing interfaces. The LTE access offers links
+# to the two LTE clients, and the two Wi-SUN radios can link to each other.
+[[net.connectivity]]
+kind = "rf"
+tech = "lte"
+source = "connected"
+destination = "unconnected"
+limit = 3000.0
+
+[[net.connectivity]]
+kind = "rf"
+tech = "wisun"
+source = "any"
+destination = "any"
+limit = 3000.0
+
+# Connect the two interfaces on the routing-capable dual-radio device.
+[[net.connectivity]]
+kind = "internal"
+metric = 0.0
+
+# Optional explicit candidate link. Both ends are concrete interface IDs.
+# Declaring an edge here makes it available to the planner. To see which
+# links are selected, inspect planned_edges in the exported result.
+# [[net.candidate_edges]]
+# src = "lte_access:d0:i0"
+# dst = "lte_client:d0:i0"
+
+# Optional back-to-back cable between two independent devices. Define
+# b2b_lte and b2b_wisun as separate rows with distinct site_id values and
+# shared coordinates, as shown in nodes.csv.md. Equal coordinates alone
+# do not create a link. The automatic internal rule above connects
+# interfaces within one routing-capable device.
+# [[net.candidate_edges]]
+# src = "b2b_lte:d0:i0"
+# dst = "b2b_wisun:d0:i0"
+# kind = "internal"
+# metric = 0.0
+# connection_type = "back_to_back"
+
+# Optional per-interface override. The ID refers to a concrete interface
+# after site expansion. enabled is the supported override field.
+# [overrides.interfaces."lte_access:d0:i0"]
+# enabled = false
+
+# Optional installation overrides. Explicit source takes precedence over
+# the conventional adjacent file antenna_placements.toml, which the SDK
+# also discovers when this section is omitted. The referenced file uses
+# [placements."<interface_id>"] tables with optional antenna_id, mount_height_m,
+# orientation, beamwidth, and side-pole shadow settings.
+# [antenna_placements]
+# source = "antenna_placements.toml"
+
+# Alternative to [instances]. Declare a site, its devices, and its interfaces.
+# Provide lat and lon, or x and y with a working CRS. Repeat the block for
+# every site needed in the candidate graph.
+# [[sites]]
+# site_id = "lte_access"
+# lat = -25.43
+# lon = -49.34
+#
+# [[sites.devices]]
+# device_id = "lte_access:d0"
+# connected = true
+# can_route = true
+# rank = 0.0
+# mount_height_m = 20.0
+#
+# [[sites.interfaces]]
+# interface_id = "lte_access:d0:i0"
+# device_id = "lte_access:d0"
+# tech = "lte"
+# freq_mhz = 915.0
+# tx_power_dbm = 43.0
+# antenna_id = "lte_sector"
+# can_relay = false

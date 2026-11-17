@@ -1,0 +1,10 @@
+# Optional installation overrides, indexed by interface ID.
+# Empty: preserve every existing default. No antenna orientation is assumed.
+[placements]
+
+# Example only; uncomment after obtaining installation data:
+# [placements."AGU-S-GE-003:d0:i0"]
+# antenna_id = "ge_radio_1"
+# mount_height_m = 7.0
+# azimuth_deg = 125.0
+# downtilt_deg = 0.0

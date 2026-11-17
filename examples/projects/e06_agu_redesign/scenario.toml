@@ -1,0 +1,129 @@
+[scenario]
+working_crs = "EPSG:31982"
+
+[antennas.ge_radio_1]
+kind = "omni"
+gain_dbi = 8.15
+height_m = 7.0
+description = "Antena OMNI original; ganho informado, sem diagrama direcional disponível"
+original_type = "OMNI"
+
+[antennas.ge_radio_2]
+kind = "omni"
+gain_dbi = 14.0
+height_m = 7.0
+description = "Antena YAGI original; ganho informado, sem diagrama direcional disponível"
+original_type = "YAGI"
+
+[antennas.ge_radio_3]
+kind = "omni"
+gain_dbi = 2.5
+height_m = 7.0
+description = "Antena OMNI original; ganho informado, sem diagrama direcional disponível"
+original_type = "OMNI"
+
+[interfaces.ge_radio_1]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_1"
+can_relay = true
+
+[interfaces.ge_radio_2]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_2"
+can_relay = true
+
+[interfaces.ge_radio_3]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_3"
+can_relay = true
+
+[interfaces.ge_radio_1_leaf]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_1"
+can_relay = false
+
+[interfaces.ge_radio_2_leaf]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_2"
+can_relay = false
+
+[interfaces.ge_radio_3_leaf]
+tech = "ge_mesh"
+freq_mhz = 900.0
+tx_power_dbm = 30.0
+antenna_id = "ge_radio_3"
+can_relay = false
+
+[devices.ge_radio_1]
+mount_height_m = 7.0
+interfaces = ["ge_radio_1"]
+can_route = true
+connected = false
+
+[devices.ge_radio_2]
+interfaces = ["ge_radio_2"]
+can_route = true
+connected = false
+
+[devices.ge_radio_3]
+interfaces = ["ge_radio_3"]
+can_route = true
+connected = false
+
+[devices.ge_radio_1_leaf]
+interfaces = ["ge_radio_1_leaf"]
+can_route = false
+connected = false
+
+[devices.ge_radio_2_leaf]
+interfaces = ["ge_radio_2_leaf"]
+can_route = false
+connected = false
+
+[devices.ge_radio_3_leaf]
+interfaces = ["ge_radio_3_leaf"]
+can_route = false
+connected = false
+
+[metrics.ge_mesh]
+spec = "# E06 GE: trained E08 RSSI prediction with nonlinear additive link cost.\n# Cost 1 at ideal RSSI and 3 at acceptable RSSI.\n# Below acceptable RSSI, add one hop at the acceptable cost.\nversion = 1\nresult = \"metric\"\n\n[expressions]\npredicted_rssi_dbm = \"0.0 + (1.0) * (tx.pw) + (1.0) * (tx.ant_gain) + (1.0) * (rx.ant_gain) + (1.114337839919779) * (-features.fspl) + (1.0) * (-features.delta_diffra) + (3.8599562365669438) * (-log10(1.0 + features.vegetation.boundary)) + (3.5389950747179117) * (-log10(1.0 + features.vegetation.fresnel)) + (2.3297748731723593) * (-log10(1.0 + features.vegetation.core)) + (1.940764307389644) * (-log10(1.0 + features.buildings.boundary)) + (1.1953311899967727) * (-log10(1.0 + features.buildings.fresnel)) + (1.0581500710246432) * (-log10(1.0 + features.buildings.core))\"\nnormal_cost = \"1.0 + 2.0 * (max(0.0, params.ideal_rssi_dbm - predicted_rssi_dbm) / (params.ideal_rssi_dbm - params.acceptable_rssi_dbm)) ** 2\"\nweak_cost = \"3.0 + 3.0 + 2.0 * ((params.acceptable_rssi_dbm - predicted_rssi_dbm) / (params.ideal_rssi_dbm - params.acceptable_rssi_dbm)) ** 2\"\nmetric = \"normal_cost if predicted_rssi_dbm >= params.acceptable_rssi_dbm else weak_cost\"\n\n[parameters]\nideal_rssi_dbm = -65.0\nacceptable_rssi_dbm = -80.0\n"
+
+[instances]
+source = "nodes.csv"
+format = "csv"
+profile_column = "device_profile"
+
+[net]
+connectivity = []
+
+[attachments]
+source = "attached_equipment.csv"
+format = "csv"
+
+[mesh]
+assume_symmetric_features = true
+max_repeaters = 2
+max_candidates = 5
+segment_threshold = 3.0
+search_heuristic = "sector_band"
+search_midpoint = true
+
+[mesh.poles]
+source = "poles.csv"
+format = "csv"
+profile_column = "device_profile"
+
+[mesh.network]
+parent_candidates = 2
+corridor_m = 1500.0
+final_degree = 3

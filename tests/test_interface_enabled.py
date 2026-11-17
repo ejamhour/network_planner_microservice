@@ -2,7 +2,7 @@
 import pytest
 
 from cisei_lib.planners import PlanningScenario
-from cisei_lib.planners.planner_classes import RadioInterface, RadioInterfacePattern
+from cisei_lib.planners.shared.planner_classes import RadioInterface, RadioInterfacePattern
 from cisei_planning_sdk.local_io import load_scenario_bundle, save_scenario
 
 
@@ -28,6 +28,32 @@ def write_bundle(tmp_path, config):
         encoding="utf-8",
     )
     return path
+
+
+def test_fixed_and_per_row_profiles_share_instance_expansion(config):
+    rows = [
+        {"site_id": "A", "device_profile": "router", "x": 670000, "y": 7180000},
+        {"device_profile": "router", "x": 671000, "y": 7180000, "mount_height_m": 8},
+    ]
+    options = {
+        "defaults": {"mount_height_m": 5, "can_route": True},
+        "overrides_by_id": {"site_1": {"mount_height_m": 12}},
+    }
+    fixed = PlanningScenario.from_config_dict(config)
+    mixed = PlanningScenario.from_config_dict(config)
+    fixed.add_site_records_from_profile(rows, device_profile="router", **options)
+    mixed.add_node_instances(rows, **options)
+
+    assert fixed.to_config_dict() == mixed.to_config_dict()
+    assert list(fixed.site_nodes) == ["A", "site_1"]
+    assert fixed.site_nodes["A"].devices[0].mount_height_m == 5
+    assert fixed.site_nodes["site_1"].devices[0].mount_height_m == 12
+
+    # The explicit profile continues to control construction for every row.
+    conflicting = dict(rows[0], device_profile="unknown")
+    fixed.add_site_records_from_profile([conflicting], device_profile="router", update=True)
+    with pytest.raises(ValueError, match="Unknown device profile: unknown"):
+        mixed.add_node_instances([conflicting], update=True)
 
 
 @pytest.mark.parametrize("enabled", [True, False, None])
@@ -191,7 +217,7 @@ def active_scenario(tmp_path, config):
 
 def test_disabled_interfaces_excluded_from_rf_internal_and_cell(active_scenario):
     from cisei_lib.planners import GraphPlanner
-    from cisei_lib.planners.cell_planner import CellPlanner
+    from cisei_lib.planners.cell.cell_planner import CellPlanner
     graph = GraphPlanner(active_scenario)
     assert {node.node_id for node in graph.rpl_nodes} == {"A:d0:i0", "B:d0:i0"}
     assert len(graph.build_candidate_edges_from_rules()) == 1
@@ -199,6 +225,30 @@ def test_disabled_interfaces_excluded_from_rf_internal_and_cell(active_scenario)
     cell = CellPlanner(graph, primary_tech="wisun")
     assert cell.build_primary_candidates(sector_aware=False) == [("A:d0:i0", "B:d0:i0")]
     assert set(graph.candidate_graph().nodes) == {"A:d0:i0", "B:d0:i0"}
+
+
+@pytest.mark.parametrize("model_id, reported_gain", [(None, 3.0), ("pctel_boa9028", None)])
+def test_antenna_reports_use_installed_height_and_only_report_constant_gain(
+    active_scenario, model_id, reported_gain
+):
+    from cisei_lib.planners import CellPlanner, GraphPlanner
+    from cisei_lib.planners.shared.planner_reports import config_table
+
+    config = active_scenario.to_config_dict()
+    config["antennas"]["omni"].update(height_m=7.0, model_id=model_id)
+    config["sites"][0]["interfaces"][0]["mount_height_m"] = 18.0
+    graph = GraphPlanner(PlanningScenario.from_config_dict(config))
+    cell = CellPlanner(graph, primary_tech="wisun")
+    assert "height_m" not in graph.antenna_catalog["omni"].to_dict()
+
+    sector = cell.sector_candidate_table().iloc[0]
+    assert sector["antenna_height_m"] == 18.0
+    assert sector["antenna_model_id"] == model_id
+    assert sector["antenna_gain_dbi"] == reported_gain
+
+    interface = config_table(graph).iloc[0]
+    assert interface["antenna_model_id"] == model_id
+    assert interface["antenna_gain_dbi"] == reported_gain
 
 
 def test_disabled_edges_rejected_in_all_entry_points(active_scenario):
@@ -223,7 +273,7 @@ def test_disabled_edges_rejected_in_all_entry_points(active_scenario):
 def test_only_enabled_links_request_features_and_enter_solution(active_scenario):
     import asyncio
     from cisei_lib.planners import GraphPlanner
-    from cisei_lib.planners.planning_solution import PlanningSolution
+    from cisei_lib.planners.shared.planning_solution import PlanningSolution
 
     class Geo:
         calls = 0
@@ -276,7 +326,7 @@ def test_activation_change_invalidates_and_can_be_reenabled(active_scenario):
 def test_root_only_and_all_disabled_do_not_need_features(active_scenario):
     import asyncio
     from cisei_lib.planners import GraphPlanner
-    from cisei_lib.planners.planning_solution import PlanningSolution
+    from cisei_lib.planners.shared.planning_solution import PlanningSolution
     active_scenario.site_nodes["B"].interfaces[0].enabled = False
     graph = GraphPlanner(active_scenario)
     assert graph.build_candidate_edges_from_rules() == []
@@ -296,7 +346,7 @@ def test_root_only_and_all_disabled_do_not_need_features(active_scenario):
 
 def test_disconnected_active_target_remains_unserved(active_scenario):
     from cisei_lib.planners import GraphPlanner
-    from cisei_lib.planners.planning_solution import PlanningSolution
+    from cisei_lib.planners.shared.planning_solution import PlanningSolution
     graph = GraphPlanner(active_scenario)
     graph.set_candidate_edges([])
     graph.run_rpl()
@@ -306,7 +356,7 @@ def test_disconnected_active_target_remains_unserved(active_scenario):
 
 def test_cell_refreshes_after_interface_activation_changes(active_scenario):
     from cisei_lib.planners import GraphPlanner
-    from cisei_lib.planners.cell_planner import CellPlanner
+    from cisei_lib.planners.cell.cell_planner import CellPlanner
     cell = CellPlanner(GraphPlanner(active_scenario), primary_tech="wisun")
     assert len(cell.build_primary_candidates(sector_aware=False)) == 1
     active_scenario.site_nodes["B"].interfaces[0].enabled = False

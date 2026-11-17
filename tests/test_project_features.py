@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from app.feature_cache import FeatureCache, CachedGeo
 from app.routes_planning import router
 from app.session import UserRuntime
-from cisei_planning_sdk import PlanningClient, PlanningProject, init_workspace
+from cisei_planning_sdk import PlanningClient, PlanningProject, ScenarioSession, init_workspace
 
 
 @pytest.mark.parametrize("batch_size", [None, 1])
@@ -38,6 +38,7 @@ def test_project_reuses_persisted_features_after_worker_restart(tmp_path, batch_
         app.state.runtime = runtime
         app.include_router(router)
         with TestClient(app) as api:
+            cache_reads = []
             sdk = PlanningClient(
                 "http://test", workspace=tmp_path, auto_register=False,
             )
@@ -45,6 +46,8 @@ def test_project_reuses_persisted_features_after_worker_restart(tmp_path, batch_
                 payload = api.request(method, path, **kwargs).json()
                 if payload["status"] != "OK":
                     raise RuntimeError(payload["data"])
+                if method == "get" and path.endswith("/features/cache"):
+                    cache_reads.append(payload["data"])
                 return payload
             sdk._request = request
             scenario = sdk.open_project(project)
@@ -54,6 +57,11 @@ def test_project_reuses_persisted_features_after_worker_restart(tmp_path, batch_
             metrics = scenario.compute_metrics(batch_size=batch_size)
             assert metrics["metrics"][0]["metric"] == 3.0
             assert project.features_path.exists()
+            assert cache_reads
+            if fail_on_geo:
+                assert all(data is None for data in cache_reads)
+            else:
+                assert any(data and data["entries"] for data in cache_reads)
             assert scenario.export_feature_cache()["entries"]
             scenario.solve()
             assert scenario.save_result() == project.result_path
@@ -85,6 +93,8 @@ def test_feature_cache_keys_and_atomic_validation():
         geo.cache = restored
         await geo.get_features(**args)
         assert len(calls) == 1
+        cursor = restored.revision
+        assert restored.export_since(cursor=cursor) == (None, cursor, False)
         for change in ({"freq_mhz": 916}, {"tx_ha": 11}, {"rx_ha": 6},
                        {"tx": (2, 2)}, {"tx": (3, 4), "rx": (1, 2)}, {"resolution": 5}):
             await geo.get_features(**(args | change))
@@ -92,12 +102,50 @@ def test_feature_cache_keys_and_atomic_validation():
         geo.pool_options["base_url"] = "http://other-geo"
         await geo.get_features(**args)
         assert len(calls) == 8
+        delta, revision, partial = restored.export_since(cursor=cursor)
+        assert partial and revision == restored.revision
+        assert delta["entries"] == restored.export()["entries"][1:]
+        replacement = FeatureCache.from_document(restored.export())
+        full, _, partial = replacement.export_since(cursor=revision)
+        assert not partial and full == restored.export()
         bad = restored.export()
         bad["entries"][0]["request"]["freq_mhz"] = float("nan")
         with pytest.raises(ValueError):
             FeatureCache.from_document(bad)
         assert len(restored.records) == 8
     asyncio.run(exercise())
+
+
+def test_cache_cursor_advances_only_after_local_save(tmp_path, monkeypatch):
+    project = PlanningProject(tmp_path)
+    original = {"format": "cisei-feature-cache", "version": 1, "entries": [{"first": True}]}
+    save = project.save_features
+    save(original)
+    requests = []
+
+    def request(method, path, *, params):
+        requests.append(params["after"])
+        return {"data": {**original, "entries": [{"second": True}]},
+                "revision": "generation:2", "partial": True}
+
+    session = ScenarioSession(type("Client", (), {"_request": staticmethod(request)})(), "test", "graph", "test")
+    session.project = project
+    session._saved_feature_revision = "generation:1"
+    session._saved_feature_file = session._feature_file_state(project.features_path)
+
+    def fail_write(self, document):
+        raise OSError("temporary write failed")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(PlanningProject, "save_features", fail_write)
+        with pytest.raises(OSError, match="temporary write failed"):
+            session.save_feature_cache()
+
+    assert project.load_features() == original
+    session.save_feature_cache()
+    assert requests == ["generation:1", "generation:1"]
+    assert session._saved_feature_revision == "generation:2"
+    assert project.load_features()["entries"] == [{"first": True}, {"second": True}]
 
 
 def test_project_alternate_files_and_atomic_write(tmp_path):

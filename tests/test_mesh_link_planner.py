@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from app.routes_planning import router
 from app.session import UserRuntime
 from cisei_lib.planners import PlanningScenario
-from cisei_lib.planners.mesh_link_planner import MeshLinkPlanner
+from cisei_lib.planners.mesh.mesh_link_planner import MeshLinkPlanner
 from cisei_planning_sdk import load_scenario_bundle, PlanningClient, PlanningProject
 from cisei_planning_sdk.local_io import load_poles_bundle
 

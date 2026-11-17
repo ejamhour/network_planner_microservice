@@ -1,0 +1,104 @@
+{
+  "scenario": {
+    "scenario": {
+      "working_crs": "EPSG:31982"
+    },
+    "antennas": {
+      "mesh_omni": {
+        "kind": "omni",
+        "height_m": 7.0,
+        "gain_dbi": 3.0
+      }
+    },
+    "interfaces": {
+      "mesh_radio": {
+        "tech": "mesh",
+        "freq_mhz": 900.0,
+        "tx_power_dbm": 30.0,
+        "antenna_id": "mesh_omni",
+        "can_relay": true
+      }
+    },
+    "devices": {
+      "mesh_node": {
+        "connected": false,
+        "can_route": true,
+        "interfaces": [
+          "mesh_radio"
+        ]
+      }
+    },
+    "metrics": {
+      "mesh": {
+        "spec": "default"
+      }
+    },
+    "instances": {
+      "source": "nodes.csv",
+      "format": "csv",
+      "profile_column": "device_profile"
+    },
+    "mesh": {
+      "poles": {
+        "source": "poles.csv",
+        "format": "csv",
+        "profile_column": "device_profile"
+      }
+    }
+  },
+  "tables": {
+    "nodes.csv": {
+      "headers": [
+        "site_id",
+        "device_profile",
+        "lat",
+        "lon",
+        "mount_height_m",
+        "connected",
+        "can_route"
+      ],
+      "rows": [
+        {
+          "site_id": "copel",
+          "device_profile": "mesh_node",
+          "lat": "-25.43273083515008",
+          "lon": "-49.339207159685344",
+          "mount_height_m": "7.0",
+          "connected": "False",
+          "can_route": "False"
+        },
+        {
+          "site_id": "guaira",
+          "device_profile": "mesh_node",
+          "lat": "-25.42777449459199",
+          "lon": "-49.2655361005508",
+          "mount_height_m": "7.0",
+          "connected": "True",
+          "can_route": "True"
+        }
+      ]
+    },
+    "poles.csv": {
+      "headers": [
+        "pole_id",
+        "device_profile",
+        "lat",
+        "lon",
+        "mount_height_m"
+      ],
+      "rows": [
+        {
+          "pole_id": "tenis",
+          "device_profile": "mesh_node",
+          "lat": "-25.425356577135183",
+          "lon": "-49.29212222420152",
+          "mount_height_m": "7.0"
+        }
+      ]
+    }
+  },
+  "operation": {
+    "src_site": "copel:d0:i0",
+    "dst_site": "guaira:d0:i0"
+  }
+}

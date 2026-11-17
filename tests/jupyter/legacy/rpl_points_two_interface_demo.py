@@ -7,8 +7,8 @@ import pandas as pd
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from cisei_lib.planners.graph_planner import GraphPlanner
-import cisei_lib.planners.planner_reports as reports
+from cisei_lib.planners.graph.graph_planner import GraphPlanner
+import cisei_lib.planners.shared.planner_reports as reports
 
 
 CONFIG_PATH = REPO_ROOT / "tests/jupyter/rpl_points_two_interface.toml"

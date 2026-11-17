@@ -9,7 +9,7 @@ import pytest
 from app.routes_planning import router
 from app.session import UserRuntime
 from cisei_lib.planners import MeshPlanner, PlanningScenario
-from cisei_lib.planners.graph_planner import GraphPlanner
+from cisei_lib.planners.graph.graph_planner import GraphPlanner
 from cisei_planning_sdk import PlanningClient, PlanningProject
 from cisei_planning_sdk.local_io import load_scenario_bundle, save_scenario
 
@@ -153,6 +153,100 @@ def test_final_pass_removes_repeater_unused_by_any_required_path():
     planner.build_candidate_edges()
     assert set(planner.graph.nodes) == {'root', 'other', 'a'}
     assert len(geo.calls) == calls
+
+
+def test_parent_set_exports_preferred_path_and_conservative_rank():
+    scenario, _ = inputs([('root', 0, True, 'relay', 0), ('other', 400, True, 'relay', 0),
+                          ('a', 100, False, 'relay', None), ('b', 120, False, 'leaf', None)], [])
+    planner = GraphPlanner(scenario)
+    edges = {(f'{a}:d0:i0', f'{b}:d0:i0'): cost for a, b, cost in
+             [('root', 'a', 1), ('other', 'a', 4), ('a', 'b', 1), ('root', 'b', 3)]}
+    planner.set_candidate_edges(edges)
+    planner.run_rpl(edges, parent_set_size=2)
+    result = planner.to_result_dict()
+    nodes = {row['site_id']: row for row in result['planned_nodes']}
+    assert nodes['a']['parent'] == 'root:d0:i0'
+    assert nodes['a']['alternate_parents'] == ['other:d0:i0']
+    assert nodes['a']['rank'] == 1
+    assert nodes['a']['advertised_rank'] == 4
+    assert nodes['b']['parent'] == 'root:d0:i0'
+    assert nodes['b']['alternate_parents'] == ['a:d0:i0']
+    assert nodes['b']['rank'] == 3
+    assert nodes['b']['advertised_rank'] == 5
+    assert len(result['planned_edges']) == 2
+    planner.run_rpl(edges)
+    assert next(row for row in planner.to_result_dict()['planned_nodes']
+                if row['site_id'] == 'b')['parent'] == 'a:d0:i0'
+
+
+def test_path_metric_sums_segments_and_exposes_shared_load_by_application():
+    scenario, _ = inputs([('root', 0, True, 'relay', 0), ('a', 100, False, 'relay', None),
+                          ('b', 120, False, 'leaf', None)], [])
+    planner = GraphPlanner(scenario)
+    edges = {('root:d0:i0', 'a:d0:i0'): 2, ('a:d0:i0', 'b:d0:i0'): 3}
+    planner.set_candidate_edges(edges)
+    planner.run_rpl(edges)
+    equipment = [dict(device_id='a:d0', equipment_type='DA', traffic_units='2'),
+                 dict(device_id='b:d0', equipment_type='AMI', traffic_units='5')]
+    rows = {row['device_id']: row for row in planner.score_paths(equipment)}
+    assert rows['a:d0']['score'] == 2
+    assert rows['b:d0']['score'] == 5
+    assert rows['b:d0']['segments'] == [
+        dict(tech='mesh', segment_metric=3, load=[dict(app='AMI', carga=5)]),
+        dict(tech='mesh', segment_metric=2, load=[dict(app='AMI', carga=5), dict(app='DA', carga=2)]),
+    ]
+    spec = """version = 1
+result = "metric"
+[expressions]
+metric = 'max(segment_values(segments, "segment_metric"))'
+"""
+    assert planner.score_paths(equipment, metric_spec=spec)[1]['score'] == 3
+    weighted = {row['device_id']: row['score']
+                for row in planner.score_paths(equipment, metric_spec='load_weighted_path')}
+    assert weighted == {'a:d0': 14, 'b:d0': 29}
+    bottleneck = {row['device_id']: row['score'] for row in planner.score_paths(
+        equipment, metric_spec='max_load_weighted_path', include_all_interfaces=True)}
+    assert bottleneck == {'root:d0': 0, 'a:d0': 14, 'b:d0': 15}
+    assert planner.network_metric(weighted.values()) == 21.5
+    assert planner.network_metric(weighted.values(), metric_spec="""
+version = 1
+result = "metric"
+[expressions]
+metric = "max(path_scores)"
+""") == 29
+    with pytest.raises(ValueError, match="at least one path score"):
+        planner.network_metric([])
+
+
+def test_saved_parent_optimization_uses_both_roots_and_counts_shared_link_once():
+    scenario, _ = inputs([('root', 0, True, 'relay', 0), ('other', 400, True, 'relay', 20),
+                          ('a', 100, False, 'relay', None), ('b', 120, False, 'leaf', None)], [])
+    planner = GraphPlanner(scenario)
+    edges = {(f'{a}:d0:i0', f'{b}:d0:i0'): cost for a, b, cost in
+             [('root', 'a', 3), ('other', 'a', 1), ('a', 'b', 1), ('other', 'b', 2)]}
+    planner.set_candidate_edges(edges)
+    planner.run_rpl(edges, parent_set_size=2)
+    saved = planner.to_result_dict()
+    equipment = [dict(device_id=f'{node}:d0', equipment_type='DA', traffic_units=30) for node in ('a', 'b')]
+
+    for path_metric, network_metric, expected in (
+        ('hop_count_path', 'max_path_network', (2, 1)),
+        ('max_load_weighted_path', 'congested_links_network', (1, 0)),
+    ):
+        run = GraphPlanner.optimize_saved_parents(saved, equipment,
+                                                path_metric=path_metric, network_metric=network_metric)
+        assert (run['baseline']['network_score'], run['optimized']['network_score']) == expected
+        assert set(run['optimized']['paths']) == {'a:d0:i0', 'b:d0:i0'}
+        assert set(run['result']['path_scores']) == {'a:d0:i0', 'b:d0:i0'}
+        assert all(path['nodes'][-1] in {'root:d0:i0', 'other:d0:i0'}
+                   for path in run['optimized']['paths'].values())
+        original = {row['node_id']: row for row in saved['planned_nodes']}
+        optimized = {row['node_id']: row for row in run['result']['planned_nodes']}
+        assert run['changes']
+        for node, row in original.items():
+            assert optimized[node]['advertised_rank'] == row['advertised_rank']
+            assert {optimized[node]['parent'], *optimized[node]['alternate_parents']} == {
+                row['parent'], *row['alternate_parents']}
 
 
 def test_failed_terminal_is_retried_after_new_relay_becomes_available():
@@ -299,11 +393,38 @@ def test_expansion_resumes_saved_round_after_reopening_project(tmp_path):
         assert final['phase'] == 'repeaters_added'
         assert final['fixed_interfaces'] == ['root:d0:i0']
         assert final['selected_repeaters'] == ['p']
-        assert final['iterations'][:2] == first['iterations']
+        from cisei_planning_sdk.mesh_artifacts import load_mesh_artifact
+        assert final['iterations'][0] == first['iterations'][0]
+        assert load_mesh_artifact(project, final['iterations'][1]) == first['iterations'][1]['result']
+        attempt = final['steps'][0]['attempts'][0]
+        assert 'mesh_candidates' not in attempt['result']
+        assert 'mesh_candidates' in load_mesh_artifact(project, attempt)
+        assert '/0000/studies/' in attempt['artifact']
         assert len(final['steps']) == 2
         session.build_candidate_edges()
         assert any(method == 'post' and path.endswith('/expansions') and status == 202
                    for method, path, status in methods)
+        cheap = {**options, 'max_rounds': 3, 'max_repeaters': 0}
+        stalled = session.add_repeaters(**cheap, resume=False)['mesh_network']
+        assert stalled['expansion_status'] == 'stalled'
+        assert set(stalled['expansion_tried']) == {'a:d0:i0', 'b:d0:i0'}
+        retry = {**cheap, 'max_repeaters': 1, 'retry_unserved': True}
+        recovered = session.add_repeaters(**retry)['mesh_network']
+        assert recovered['expansion_status'] == 'complete'
+        assert recovered['steps'][:len(stalled['steps'])] == stalled['steps']
+        assert recovered['selected_repeaters'] == ['p']
+        assert session.add_repeaters(**retry)['mesh_network']['steps'] == recovered['steps']
+        calls = len(geo.calls)
+        reopened = sdk.open_project(project, planner='mesh')
+        loaded = reopened.load_mesh_expansion()['mesh_network']
+        assert loaded['steps'] == recovered['steps']
+        assert loaded['selected_repeaters'] == ['p']
+        assert reopened.build_candidate_edges()['candidate_edges']
+        assert len(geo.calls) == calls
+        assert project.load_result()['mesh_network']['steps'] == recovered['steps']
+        reopened.compute_metrics(geo_base_url='http://features:8080', batch_size=2)
+        solution = reopened.solve()
+        assert {'a', 'b'} <= {node['site_id'] for node in solution['planned_nodes']}
 
 
 @pytest.mark.parametrize('solve', [False, True])
@@ -387,8 +508,22 @@ def test_sdk_endpoint_persists_iterations_and_reuses_portable_features(tmp_path,
             session.solve()
             session.remove_unused_repeaters()
             assert len(geo.calls) == cost_calls
+            session.evaluate_paths(metric='default_path')
+            network = session.network_metric()
+            assert network['network_score'] == 1.25
+            assert network['summary']['path_count'] == 4
+            assert network['summary']['worst_path'] == {'node_id': 'a:d0:i0', 'score': 2}
+            assert network['summary']['quantiles'] == {'p50': 1.5, 'p90': 2, 'p95': 2}
             session.save_result(rank_threshold=10, primary_tech='mesh')
             assert 'evaluation' in session.result
+            assert session.project.load_result()['network_evaluation'] == network
+            assert session.project.load_result()['path_scores'] == {
+                'root:d0:i0': 0, 'p:d0:i0': 1, 'a:d0:i0': 2, 'b:d0:i0': 2}
+            session.evaluate_paths(metric='load_weighted_path')
+            session.save_result()
+            assert session.show_mesh_network().snapshots[0]['path_scores']['a:d0:i0'] == 0
+            session.solve()
+            assert 'path_scores' not in session.export_result()
             return session.result
         result = execute()
         assert result['mesh_network']['used_repeaters'] == ['p']

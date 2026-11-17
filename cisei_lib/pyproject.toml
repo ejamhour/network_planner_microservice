@@ -21,7 +21,7 @@ include = ["cisei_lib*"]
 include-package-data = true
 
 [tool.setuptools.package-data]
-"cisei_lib" = ["resources/**/*"]
+"cisei_lib" = ["resources/**/*", "legacy/resources/**/*", "legacy/project_schemas/v1/*.json"]
 
 # ------------------------------------------------------------------
 # Optional extras

@@ -1,0 +1,15 @@
+# E06 GE: trained E08 RSSI prediction with nonlinear additive link cost.
+# Cost 1 at ideal RSSI and 3 at acceptable RSSI.
+# Below acceptable RSSI, add one hop at the acceptable cost.
+version = 1
+result = "metric"
+
+[expressions]
+predicted_rssi_dbm = "0.0 + (1.0) * (tx.pw) + (1.0) * (tx.ant_gain) + (1.0) * (rx.ant_gain) + (1.114337839919779) * (-features.fspl) + (1.0) * (-features.delta_diffra) + (3.8599562365669438) * (-log10(1.0 + features.vegetation.boundary)) + (3.5389950747179117) * (-log10(1.0 + features.vegetation.fresnel)) + (2.3297748731723593) * (-log10(1.0 + features.vegetation.core)) + (1.940764307389644) * (-log10(1.0 + features.buildings.boundary)) + (1.1953311899967727) * (-log10(1.0 + features.buildings.fresnel)) + (1.0581500710246432) * (-log10(1.0 + features.buildings.core))"
+normal_cost = "1.0 + 2.0 * (max(0.0, params.ideal_rssi_dbm - predicted_rssi_dbm) / (params.ideal_rssi_dbm - params.acceptable_rssi_dbm)) ** 2"
+weak_cost = "3.0 + 3.0 + 2.0 * ((params.acceptable_rssi_dbm - predicted_rssi_dbm) / (params.ideal_rssi_dbm - params.acceptable_rssi_dbm)) ** 2"
+metric = "normal_cost if predicted_rssi_dbm >= params.acceptable_rssi_dbm else weak_cost"
+
+[parameters]
+ideal_rssi_dbm = -65.0
+acceptable_rssi_dbm = -80.0

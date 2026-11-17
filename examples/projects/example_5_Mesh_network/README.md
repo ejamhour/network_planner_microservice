@@ -14,4 +14,4 @@ Execute o notebook example_5_Mesh_network.ipynb:
 
 As entradas originais são preservadas. mesh_iterations contém as rodadas, mesh_expanded o cenário ampliado e mesh_solution o projeto final. O TOML de saída tem as instâncias completas e é a definição autoritativa; o CSV acompanha o inventário por site quando possível. Somente os acessos originais são fixos, inclusive na solução final.
 
-A métrica e os limites configurados determinam as propostas. Não há balanceamento por carga ou penalização adicional por saltos nesta versão. Consulte docs/mesh_network_planning.md no código-fonte do serviço.
+A métrica e os limites configurados determinam as propostas. Não há balanceamento por carga ou penalização adicional por saltos nesta versão. Consulte project-contracts/mesh-network.md no código-fonte do serviço.

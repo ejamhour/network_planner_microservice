@@ -12,6 +12,7 @@ from typing import Any, Literal
 from fastapi import APIRouter, Query, Request
 from pydantic import BaseModel, Field
 from app.feature_cache import FeatureCache, CachedGeo
+from cisei_lib.planners.mesh.options import MeshLinkOptions, MeshNetworkOptions
 
 from cisei_lib.planners import (
     CellPlanningSolution,
@@ -20,7 +21,7 @@ from cisei_lib.planners import (
     PlanningScenario,
     PlanningSolution,
 )
-import cisei_lib.planners.planner_reports as reports
+import cisei_lib.planners.shared.planner_reports as reports
 
 
 router = APIRouter(prefix="/planning", tags=["planning"])
@@ -28,39 +29,27 @@ router = APIRouter(prefix="/planning", tags=["planning"])
 PlannerKind = Literal["graph", "cell", "mesh"]
 
 
-class MeshLinkBody(BaseModel):
+class MeshLinkBody(MeshLinkOptions):
     """Single-link pole search using the scenario's equipment profiles."""
     src_site: str
     dst_site: str
     pole_sites: list[str] | None = None
     poles: list[dict[str, Any]] | None = None
     geo_base_url: str | None = None
-    max_repeaters: int = Field(default=5, ge=0, le=20)
-    max_candidates: int = Field(default=5, ge=1, le=50)
-    segment_threshold: float = Field(default=2.0, ge=1, allow_inf_nan=False)
-    search_heuristic: Literal['sector_band', 'dual_cone'] = 'sector_band'
-    search_midpoint: bool = True
-    assume_symmetric_features: bool = False
 
 
-class MeshNetworkBody(BaseModel):
+
+class MeshNetworkBody(MeshNetworkOptions):
     """Progressive network construction with a shared pool of optional poles."""
     poles: list[dict[str, Any]] = Field(default_factory=list)
     geo_base_url: str | None = None
-    parent_candidates: int = Field(default=3, ge=1, le=20)
-    corridor_m: float = Field(default=1500.0, ge=0, allow_inf_nan=False)
-    final_degree: int = Field(default=3, ge=1, le=50)
-    max_repeaters: int = Field(default=5, ge=0, le=20)
-    max_candidates: int = Field(default=5, ge=1, le=50)
-    segment_threshold: float = Field(default=2.0, ge=1, allow_inf_nan=False)
-    search_heuristic: Literal['sector_band', 'dual_cone'] = 'sector_band'
-    search_midpoint: bool = True
-    assume_symmetric_features: bool = False
+
 
 
 class MeshExpansionBody(MeshNetworkBody):
     max_rounds: int = Field(default=1, ge=1)
     checkpoint: dict[str, Any] | None = None
+    retry_unserved: bool = False
     path_source: str | None = None
     path_parent: str | None = None
 
@@ -68,10 +57,11 @@ class MeshExpansionBody(MeshNetworkBody):
 @router.post('/scenarios/{scenario_id}/mesh/path_options')
 def mesh_path_options(request: Request, scenario_id: str, body: MeshExpansionBody):
     try:
-        from cisei_lib.planners.mesh_planner import MeshPlanner
+        from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
         scenario = _stored_scenario(request, scenario_id)
         engine = MeshPlanner(scenario, geo=None, **body.model_dump(exclude={
-            'geo_base_url', 'checkpoint', 'max_rounds', 'path_source', 'path_parent'}))
+            'geo_base_url', 'checkpoint', 'max_rounds', 'path_source', 'path_parent',
+            'retry_unserved'}))
         if not body.path_source:
             return _ok(engine.path_study_inputs(body.checkpoint))
         _, served, parents = engine.path_study_inputs(body.checkpoint, body.path_source)
@@ -84,7 +74,7 @@ def mesh_path_options(request: Request, scenario_id: str, body: MeshExpansionBod
 async def plan_mesh_network(request: Request, scenario_id: str, body: MeshNetworkBody):
     """Construct a mesh without modifying the stored input scenario."""
     try:
-        from cisei_lib.planners.mesh_planner import MeshPlanner
+        from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
         runtime = request.app.state.runtime
         scenario = _stored_scenario(request, scenario_id)
         cache = runtime.feature_caches.setdefault(scenario_id, FeatureCache())
@@ -105,7 +95,7 @@ async def add_mesh_repeaters(request: Request, scenario_id: str, body: MeshNetwo
     """Run only repeater addition; common stages follow explicitly."""
     state = None
     try:
-        from cisei_lib.planners.mesh_planner import MeshPlanner
+        from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
         runtime = request.app.state.runtime
         scenario = _stored_scenario(request, scenario_id)
         previous = runtime.mesh_progress.get(scenario_id)
@@ -173,21 +163,33 @@ async def start_mesh_expansion(request: Request, scenario_id: str, body: MeshExp
             state.update(update, updated=monotonic())
 
         def prepare(geo):
-            from cisei_lib.planners.mesh_planner import MeshPlanner
+            from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
             options = body.model_dump(exclude={'geo_base_url', 'max_rounds', 'checkpoint',
-                                               'path_source', 'path_parent'})
+                                               'path_source', 'path_parent', 'retry_unserved'})
+            scenario_config = scenario.to_json_dict()
+            scenario_fingerprint = hashlib.sha256(json.dumps(
+                scenario_config, sort_keys=True, separators=(',', ':'), allow_nan=False
+            ).encode()).hexdigest()
             fingerprint = hashlib.sha256(json.dumps(
-                [scenario.to_json_dict(), options, geo_url], sort_keys=True,
+                [scenario_config, options, geo_url], sort_keys=True,
                 separators=(',', ':'), allow_nan=False).encode()).hexdigest()
             checkpoint = body.checkpoint
             if body.path_source is not None:
                 return MeshPlanner(scenario, geo=geo, **options), fingerprint
-            if checkpoint is not None and (checkpoint.get('expansion_fingerprint') != fingerprint
-                                           or checkpoint.get('expansion_status') not in {'paused', 'complete', 'stalled'}):
-                raise ValueError('Saved expansion does not match the current inputs; use resume=False to start again')
             engine = MeshPlanner(scenario, geo=geo, **options)
+            engine.expansion_scenario_fingerprint = scenario_fingerprint
+            if body.retry_unserved and checkpoint is None:
+                raise ValueError('retry_unserved requires a saved expansion checkpoint')
             if checkpoint is not None:
+                changed = checkpoint.get('expansion_fingerprint') != fingerprint
+                saved_scenario = checkpoint.get('expansion_scenario_fingerprint')
+                if (checkpoint.get('expansion_status') not in {'paused', 'complete', 'stalled'}
+                        or saved_scenario not in (None, scenario_fingerprint)
+                        or (changed and not body.retry_unserved)):
+                    raise ValueError('Saved expansion does not match the current inputs; use resume=False to start again')
                 engine.restore_expansion(checkpoint)
+                if changed:
+                    engine.tried.clear()
             return engine, fingerprint
 
         async def run():
@@ -256,6 +258,26 @@ async def get_mesh_expansion(request: Request, scenario_id: str, run_id: str):
     return response
 
 
+@router.post('/scenarios/{scenario_id}/mesh/load_expansion')
+def load_mesh_expansion(request: Request, scenario_id: str, report: dict[str, Any]):
+    try:
+        from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
+        runtime = request.app.state.runtime
+        if runtime.mesh_progress.get(scenario_id, {}).get('status') == 'running':
+            raise ValueError('Wait for the current mesh study to finish')
+        engine = MeshPlanner(
+            _stored_scenario(request, scenario_id), geo=None,
+            parent_candidates=report['parent_candidates'], corridor_m=report['corridor_m'],
+            final_degree=report['final_degree'], segment_threshold=report['segment_threshold'],
+            assume_symmetric_features=report.get('assume_symmetric_features', False))
+        result = engine.load_expanded_network(report)
+        _mesh_planners(runtime)[scenario_id] = engine
+        runtime.planning_planners[scenario_id] = engine.graph
+        return _ok(result)
+    except Exception as exc:
+        return _error(exc)
+
+
 @router.post('/scenarios/{scenario_id}/mesh/remove_unused_repeaters')
 def remove_mesh_repeaters(request: Request, scenario_id: str):
     """Remove optional radios unused by required terminal paths, after solve."""
@@ -280,7 +302,7 @@ async def plan_mesh_link(request: Request, scenario_id: str, body: MeshLinkBody)
     proposed equipment in the result. No legacy home directories are accessed.
     """
     try:
-        from cisei_lib.planners.mesh_link_planner import MeshLinkPlanner
+        from cisei_lib.planners.mesh.mesh_link_planner import MeshLinkPlanner
         runtime = request.app.state.runtime
         scenario = _stored_scenario(request, scenario_id)
         cache = runtime.feature_caches.setdefault(scenario_id, FeatureCache())
@@ -380,6 +402,7 @@ class MetricComputeBody(BaseModel):
 class SolveBody(BaseModel):
     """Optional per-edge eligibility limit; omitted preserves existing behavior."""
     max_edge_metric: float | None = Field(default=None, ge=0, allow_inf_nan=False)
+    parent_set_size: int = Field(default=1, ge=1, strict=True)
 
 
 class ResultEvaluateBody(BaseModel):
@@ -471,7 +494,7 @@ def upload_configuration(request: Request, scenario_id: str, body: ScenarioConfi
     try:
         config = _stored_scenario(request, scenario_id).to_config_dict(include_sites=True)
         if body.antenna_library is not None:
-            from cisei_lib.planners.antenna_planner import antenna_models_from_config
+            from cisei_lib.planners.shared.antenna_planner import antenna_models_from_config
             antenna_models_from_config(body.antenna_library)
             models = {item["id"]: item for item in config.get("antenna_library", {}).get("antennas", [])}
             models.update({item["id"]: item for item in body.antenna_library["antennas"]})
@@ -506,17 +529,26 @@ def import_feature_cache(request: Request, scenario_id: str, body: dict[str, Any
         _stored_scenario(request, scenario_id)
         cache = FeatureCache.from_document(body)
         request.app.state.runtime.feature_caches[scenario_id] = cache
-        return _ok({"entries": len(cache.records)})
+        return _ok({"entries": len(cache.records), "revision": cache.revision})
     except Exception as exc:
         return _error(exc)
 
 
 @router.get("/scenarios/{scenario_id}/features/cache")
-def export_feature_cache(request: Request, scenario_id: str):
+def export_feature_cache(
+    request: Request,
+    scenario_id: str,
+    if_revision: str | None = None,
+    after: str | None = None,
+):
     try:
         _stored_scenario(request, scenario_id)
-        cache = request.app.state.runtime.feature_caches.get(scenario_id, FeatureCache())
-        return _ok(cache.export())
+        caches = request.app.state.runtime.feature_caches
+        cache = caches.get(scenario_id)
+        if cache is None:
+            cache = caches.setdefault(scenario_id, FeatureCache())
+        document, revision, partial = cache.export_since(cursor=after, if_revision=if_revision)
+        return {**_ok(document), "revision": revision, "partial": partial}
     except Exception as exc:
         return _error(exc)
 
@@ -751,7 +783,8 @@ def solve_network(request: Request, scenario_id: str, body: SolveBody | None = N
         planner = _stored_planner(request, scenario_id)
         if any(edge not in planner.edge_metrics for edge in planner.candidate_edges):
             raise RuntimeError("Metrics are incomplete. Finish all batches before solving.")
-        planner.run_rpl(max_edge_metric=body.max_edge_metric if body else None)
+        options = body or SolveBody()
+        planner.run_rpl(max_edge_metric=options.max_edge_metric, parent_set_size=options.parent_set_size)
         return _solution_response(planner)
     except Exception as exc:
         return _error(exc)
@@ -818,6 +851,71 @@ def evaluate_serialized_result(body: ResultEvaluateBody):
 # Stage 8: Export / Persist -------------------------------------------------
 
 
+class PathScoreBody(BaseModel):
+    metric_spec: str
+    attached_equipment: list[dict[str, Any]] | None = None
+
+
+class NetworkScoreBody(BaseModel):
+    path_metric: str
+    network_metric: str = "default_network"
+    metric_spec: str = "default_network"
+    path_scores: dict[str, float]
+
+
+class SavedParentOptimizationBody(BaseModel):
+    result: dict[str, Any]
+    attached_equipment: list[dict[str, Any]] | None = None
+    path_metric: str
+    network_metric: str
+
+
+@router.post("/results/optimize-parents")
+def optimize_saved_parents(body: SavedParentOptimizationBody):
+    try:
+        return _ok(GraphPlanner.optimize_saved_parents(
+            body.result, body.attached_equipment,
+            path_metric=body.path_metric, network_metric=body.network_metric))
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.post("/results/network-metric")
+def evaluate_network_metric(body: NetworkScoreBody):
+    from statistics import fmean, quantiles
+
+    try:
+        scores = list(body.path_scores.values())
+        network_score = GraphPlanner.network_metric(scores, metric_spec=body.metric_spec)
+        worst = max(sorted(body.path_scores), key=body.path_scores.__getitem__)
+        cuts = quantiles(scores, n=100, method="inclusive") if len(scores) > 1 else [scores[0]] * 99
+        return _ok({
+            "path_metric": body.path_metric,
+            "network_metric": body.network_metric,
+            "path_scores": body.path_scores,
+            "network_score": network_score,
+            "summary": {
+                "path_count": len(scores),
+                "average_score": fmean(scores),
+                "worst_path": {"node_id": worst, "score": body.path_scores[worst]},
+                "quantiles": {f"p{p}": cuts[p - 1] for p in (50, 90, 95)},
+            },
+        })
+    except Exception as exc:
+        return _error(exc)
+
+
+@router.post("/scenarios/{scenario_id}/paths/score")
+def score_paths(request: Request, scenario_id: str, body: PathScoreBody):
+    try:
+        planner = _stored_planner(request, scenario_id)
+        rows = planner.score_paths(body.attached_equipment, metric_spec=body.metric_spec,
+                                   include_all_interfaces=True)
+        return _ok({row["node_id"]: row["score"] for row in rows})
+    except Exception as exc:
+        return _error(exc)
+
+
 @router.get(
     "/scenarios/{scenario_id}/export/result",
     summary="Stage 8 - export planning result",
@@ -874,7 +972,7 @@ async def run_workflow(request: Request, body: WorkflowRunBody):
         if body.planner == 'mesh':
             if body.tune_candidates or body.edge_metrics is not None or body.batch_size is not None:
                 raise ValueError('Mesh workflow requires automatic metrics without tuning or fixed-size batches')
-            from cisei_lib.planners.mesh_planner import MeshPlanner
+            from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
             options = (body.mesh or MeshNetworkBody()).model_dump(exclude={'geo_base_url'})
             engine = MeshPlanner(scenario, geo=None, **options)
             engine.geo = CachedGeo(request.app.state.runtime, FeatureCache(),
@@ -1024,6 +1122,14 @@ def _candidate_response(
             include_features=False,
         )["counts"],
         "candidate_edges": _table_records(reports.edge_table(planner, "candidate")),
+    }
+    payload["diagnostics"] = {
+        "stage": "candidate_generation",
+        "issues": ([] if planner.candidate_edges else [{
+            "code": "no_candidate_links",
+            "severity": "warning",
+            "message": "No candidate links are available after candidate generation. Review interface activation, compatibility, explicit links and connectivity rules.",
+        }]),
     }
     if body.planner == "cell":
         cell = CellPlanner(planner, primary_tech=body.primary_tech)

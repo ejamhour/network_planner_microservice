@@ -1,0 +1,5 @@
+version = 1
+result = "metric"
+
+[expressions]
+metric = "len(segments)"

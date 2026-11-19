@@ -1,13 +1,19 @@
 # Antenna placements per interface
 
-SDK 0.1.63 supports optional installation data alongside the normal device and
-antenna profiles. Each placement addresses one **interface ID**, allowing two
+Installation data accompanies device and antenna profiles. Each placement addresses one **interface ID**, allowing two
 radios on one device to have different antennas, heights and orientations.
 
 ## Project files
 
-Place `antenna_placements.toml` beside `scenario.toml`. The SDK discovers that
-filename automatically. Alternatively, select another project-local file:
+Declare the input file explicitly in scenario.toml:
+
+```toml
+[files]
+antenna_placements = "antenna_placements.toml"
+```
+
+Legacy adjacent-file discovery remains supported by the builder/old SDK. The
+earlier source declaration is also supported; do not declare both forms:
 
 ```toml
 # In scenario.toml
@@ -80,10 +86,9 @@ when it becomes available, particularly for AGU's legacy YAGI antennas.
 
 ## Resolution and persistence
 
-Both the existing SDK loader and the staged server scenario builder apply
-placements after CSV/profile instantiation and enabled-state overrides. The SDK
-still sends its locally resolved scenario through the existing API; the staged
-server builder saves compiled_scenario.json. Raw-file SDK upload remains pending. A shared antenna profile is never edited: orientation overrides produce
+The original SDK loader and server scenario builder apply placements after
+CSV/profile instantiation and enabled-state overrides. SDK v2 uploads raw files;
+the server compiles them into compiled_scenario.json. A shared antenna profile is never edited: orientation overrides produce
 isolated effective catalog entries associated with their interface. Their
 metadata records the interface and base antenna ID. These entries and
 per-interface heights survive canonical scenario export and reload without
@@ -93,8 +98,87 @@ solutions therefore remain portable.
 Derived CSV-based projects copy the source placement file into their own
 folder and track its hash. If a replacement removes a referenced interface,
 preparation fails until the installation mapping is reviewed. This feature
-does not choose antennas, orient them automatically or replace equipment.
+does not run a tuning search or replace equipment merely by applying a file.
 
 AGU's new project includes an empty placement table: its initial RF inputs
 remain unchanged. Installation data and automatic selection will be added
 separately when available.
+
+## Profile-controlled auto-tuning
+
+auto_tune is an optional antenna-profile boolean in scenario.toml, default false.
+It belongs neither to the radiation-model library nor to placement entries.
+Two profiles may select the same model with different policies:
+
+```toml
+[antennas.sector_fixed]
+model_id = "commscope_rv_65s_fvb"
+kind = "sector"
+azimuth_deg = 90.0
+beamwidth_deg = 65.0
+auto_tune = false
+
+[antennas.sector_auto]
+model_id = "commscope_rv_65s_fvb"
+kind = "sector"
+azimuth_deg = 90.0
+beamwidth_deg = 65.0
+auto_tune = true
+```
+
+The device/interface selects antenna_id normally. If a placement supplies
+antenna_id, that profile controls tuning. Placement fields override defaults
+field by field and become the starting configuration. Explicit values do not
+implicitly lock a tunable profile. Fixed profiles remain fixed during tuning.
+The software obeys this policy without asking for repeated confirmation.
+
+Current Cell tuning searches one common azimuth delta for eligible interfaces
+per site; fixed interfaces contribute to coverage but do not rotate. It remains
+a geometric coverage/load-balancing heuristic, not RF optimization. The flag
+does not invent automatic tilt/height/beamwidth/shadow tuning or trigger tuning
+during compilation. Current support is Cell azimuth tuning only. Explicit
+prune_empty is separate equipment removal, not enabled by auto_tune; its default
+remains false. Users can still edit fixed placements explicitly through inputs.
+
+SDK v2 project.cell.tune_sectors() follows Cell candidate generation and applies
+permitted changes by default. apply_rotation=false requests a preview. Preview
+suggestions appear in the tuning report only; they do not change exported
+placements. Applied settings become isolated per-interface profiles used by
+both candidate filtering and directional RF gain. Shared models/profiles and
+the original compiled/input files remain unchanged.
+
+## Generated placement output
+
+Output uses the same [placements."<interface_id>"] syntax as input. It is a
+complete effective snapshot of every antenna-bearing interface, including
+unchanged/disabled interfaces, with orientation/shadow/beamwidth and mounting
+height where known. Unknown values are omitted; explicit zero is preserved.
+antenna_id references the original selected scenario profile, not a generated
+__placement_* ID. Model/default/policy definitions remain in the scenario.
+
+The library exposes effective_placements(scenario) and
+save_placements(scenario, output_path) in cisei_lib.project_io.placements.
+The latter atomically writes TOML to an explicit destination. Pass a planner's
+graph.scenario for its effective configuration. Export contains applied settings,
+not every search candidate or unapplied suggestion.
+
+POST /{user_id}/projects/{project_id}/antenna_placements/export requires session
+and project tokens and current active inputs. It writes the separate server file
+outputs/antenna_placements.toml and returns valid, stage=placement_export, issues,
+input identity, file and TOML content. A synchronized input at that output path
+is protected: the operation returns placement_output_is_input instead of
+overwriting it. Storage failures remain HTTP errors.
+
+SDK v2 project.export_placements() requests server output.
+project.save_placements(path=None) also saves it locally, defaulting to the same
+outputs/antenna_placements.toml path, and adds local_path to the report. This is
+output IO on Project; Cell tuning remains on project.cell. Input placement files
+and scenario.toml are never implicitly rewritten or promoted.
+
+For another run, explicitly copy/promote the output to an input path, reference
+it in [files].antenna_placements, sync and recompile. The receiving scenario must
+provide the same selected profiles and interface IDs. For Mesh-created equipment,
+carry the generated node/device definitions too: placement export does not add
+missing nodes. Output is not auto-discovered from the outputs directory. Profiles
+that retain auto_tune=true may be adjusted again in later tuning; select a fixed
+profile when the installation must remain fixed. There is no hidden lock.

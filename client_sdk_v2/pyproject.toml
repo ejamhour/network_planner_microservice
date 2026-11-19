@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cisei-planning-sdk-v2"
+dynamic = ["version"]
+description = "File and API client for server-managed planning projects"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.28.0", "tomlkit>=0.12.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "cisei_planning_sdk_v2.version.__version__"}

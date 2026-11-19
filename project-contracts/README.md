@@ -8,7 +8,8 @@ are still needed to cover all planners.
 
 | Reference | Purpose |
 | --- | --- |
-| [Project upload manifest](upload-manifest.md) | Proposed inventory and file roles for staged or uploaded projects |
+| [Project storage and recovery](project-session.md) | Temporary project directories, `.session.json`, creation and authenticated recovery |
+| [Input sync manifest](upload-manifest.md) | Implemented raw-file sync, workspace paths, hashes and update-only behavior |
 | [scenario.reference.toml](scenario.reference.toml) | Annotated scenario sections and field meanings |
 | [nodes.csv](nodes.csv.md) | Node inventory and profile references |
 | [antenna_placements.toml](antenna-placements.toml.md) | Per-interface installation overrides |
@@ -33,6 +34,15 @@ The [TOML reference](scenario.reference.toml) includes the proposed top-level
 project-relative paths. Each declared file must exist, and the service
 determines which roles the selected operation requires. The runnable example
 still uses the current `source` declarations until upload support is available.
+
+## SDK generations
+
+The original client remains under [client_sdk](../client_sdk/) with the
+cisei_planning_sdk import and existing notebook workflows. The independent
+[SDK v2](../client_sdk_v2/README.md), imported as cisei_planning_sdk_v2, implements
+server-managed open_project(), recovery and explicit input sync. Validation,
+compilation and planning wrappers are still being connected there. The Graph
+SDK example below describes the preserved original SDK.
 
 ## Graph planner
 

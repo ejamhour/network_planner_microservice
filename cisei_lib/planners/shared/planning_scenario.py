@@ -1709,12 +1709,15 @@ class PlanningScenario:
             "shadow_azimuth_deg",
             "shadow_width_deg",
             "shadow_loss_db",
+            "auto_tune",
         }
         kwargs = {
             key: config[key]
             for key in known_keys
             if key in config
         }
+        if "auto_tune" in kwargs:
+            kwargs["auto_tune"] = parse_bool(kwargs["auto_tune"])
         kwargs["extra"] = {
             key: value
             for key, value in config.items()

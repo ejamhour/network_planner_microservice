@@ -60,7 +60,7 @@ def input_issue(file, error, *, row=None):
     return ProjectIssue(
         file=file,
         code=getattr(error, "code", code),
-        message=getattr(error, "detail", str(error)),
+        message=getattr(error, "detail", error.strerror if isinstance(error, OSError) and error.strerror else str(error)),
         row=row if row is not None else getattr(error, "row", None),
         field=getattr(error, "field", None),
         line=getattr(error, "line", None),

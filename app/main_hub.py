@@ -16,6 +16,8 @@ from starlette.background import BackgroundTask
 from app.version import __version__
 from app.routes_sdk import router as sdk_router
 from app.routes_examples import router as examples_router
+from app.routes_projects import router as projects_router
+from app.routes_project_results import router as project_results_router
 from app.routes_project_schemas import discovery_router
 
 # Configuration
@@ -166,6 +168,8 @@ hub_app = FastAPI(title="Network Planning Hub", version=__version__, lifespan=li
 hub_app.include_router(sdk_router)
 hub_app.include_router(examples_router)
 hub_app.include_router(discovery_router)
+hub_app.include_router(projects_router)
+hub_app.include_router(project_results_router)
 hub_app.mount("/dist", StaticFiles(directory="dist"), name="dist")
 
 @hub_app.post("/register")

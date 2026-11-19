@@ -204,7 +204,8 @@ class CellPlanner:
         apply: bool = False,
     ):
         """
-        Search a common azimuth rotation for each selected cell site's sectors.
+        Search an azimuth delta for auto_tune-enabled interfaces at each site.
+        Fixed interfaces remain in coverage scoring but do not rotate.
 
         ``site_ids`` is an optional operation filter. It does not define which
         sites are cells; cell sites come from the scenario's connected
@@ -218,7 +219,7 @@ class CellPlanner:
         directly penalized; use ``prune_empty_sectors`` to remove them.
 
         When ``apply=False`` the method only returns a report. When
-        ``apply=True`` it stores the suggested rotation, after which the
+        ``apply=True`` it creates concrete per-interface antenna placements, after which the
         candidate graph should be rebuilt with ``build_primary_candidates``.
         """
         if step_deg <= 0:
@@ -231,14 +232,15 @@ class CellPlanner:
         rows = []
         for site_id in self._selected_site_ids(site_ids):
             sectors = self._cell_sector_nodes(site_id)
-            if len(sectors) < 2:
+            if not sectors or not any(self.graph.antenna_catalog[n.extra['antenna_id']].auto_tune for n in sectors):
                 continue
 
             clients = self._primary_client_nodes()
             if not clients:
                 continue
 
-            current_rotation = self.sector_rotation_by_site.get(site_id, 0.0)
+            previous_rotation = self.sector_rotation_by_site.get(site_id, 0.0)
+            current_rotation = 0.0  # Profiles already contain applied azimuths.
             current = self._rotation_score(
                 sectors,
                 clients,
@@ -262,15 +264,15 @@ class CellPlanner:
                     best = candidate
 
             if apply:
-                self.sector_rotation_by_site[site_id] = best["rotation_deg"]
+                self.apply_sector_rotation({site_id: previous_rotation + best["rotation_deg"]})
 
             rows.append(
                 {
                     "cell_site_id": site_id,
                     "uncovered_weight": uncovered_weight,
                     "imbalance_weight": imbalance_weight,
-                    "current_rotation_deg": current_rotation,
-                    "suggested_rotation_deg": best["rotation_deg"],
+                    "current_rotation_deg": previous_rotation,
+                    "suggested_rotation_deg": (previous_rotation + best["rotation_deg"]) % 360.0,
                     "applied": apply,
                     "score_before": current["score"],
                     "score_after": best["score"],
@@ -383,13 +385,30 @@ class CellPlanner:
         """
         Manually set sector rotation offsets by site id.
 
-        The values are degrees added to every sector antenna azimuth at the
-        site. Rebuild the candidate graph after changing rotations.
+        Values are cumulative deltas from this CellPlanner's starting placements.
+        Only auto_tune-enabled profiles change; candidate filtering, RF gain
+        and export then share effective per-interface antenna placements.
         """
+        from cisei_lib.project_io.placements import effective_placements, apply_placement_document
+        configuration = self.graph.scenario.to_config_dict()
+        effective = effective_placements(self.graph.scenario)['placements']
+        changes, accepted = {}, {}
         for site_id, rotation in rotations_by_site.items():
-            self.sector_rotation_by_site[GraphPlanner._clean_id(site_id)] = (
-                float(rotation) % 360.0
-            )
+            site_id = GraphPlanner._clean_id(site_id)
+            target = float(rotation) % 360.0
+            delta = target - self.sector_rotation_by_site.get(site_id, 0.0)
+            for node in self._cell_sector_nodes(site_id):
+                antenna = self.graph.antenna_catalog[node.extra['antenna_id']]
+                if not antenna.auto_tune or antenna.azimuth_deg is None:
+                    continue
+                fields = dict(effective[node.node_id])
+                fields['azimuth_deg'] = (float(antenna.azimuth_deg) + delta) % 360.0
+                changes[node.node_id] = fields
+                accepted[site_id] = target
+        if changes:
+            apply_placement_document(configuration, {'placements': changes})
+            self.graph = GraphPlanner(PlanningScenario.from_config_dict(configuration))
+            self.sector_rotation_by_site.update(accepted)
 
     def clear_sector_rotations(
         self,
@@ -401,15 +420,10 @@ class CellPlanner:
         With no arguments all rotations are cleared. With ``site_ids``, only
         those sites are reset. Rebuild candidates after clearing.
         """
-        if site_ids is None:
-            self.sector_rotation_by_site.clear()
-            return
-
-        for site_id in site_ids:
-            self.sector_rotation_by_site.pop(
-                GraphPlanner._clean_id(site_id),
-                None,
-            )
+        selected = list(self.sector_rotation_by_site) if site_ids is None else list(site_ids)
+        self.apply_sector_rotation({site_id: 0.0 for site_id in selected})
+        for site_id in selected:
+            self.sector_rotation_by_site.pop(GraphPlanner._clean_id(site_id), None)
 
     # Reports ----------------------------------------------------------------
 
@@ -491,14 +505,14 @@ class CellPlanner:
             manage_geo=manage_geo,
         )
 
-    def run_rpl(self):
+    def run_rpl(self, *, max_edge_metric=None, parent_set_size=1):
         """
         Run RPL over the current metric graph and return the RPL result object.
 
         Call this after candidate edges have metrics. Connected cell interfaces
         become the available backbone targets for the DODAG.
         """
-        return self.graph.run_rpl()
+        return self.graph.run_rpl(max_edge_metric=max_edge_metric, parent_set_size=parent_set_size)
 
     def service_table(self):
         """
@@ -543,21 +557,13 @@ class CellPlanner:
         return delta <= antenna.beamwidth_deg / 2.0
 
     def _effective_azimuth(self, node) -> float | None:
-        """
-        Return the antenna azimuth after applying the site rotation offset.
-
-        The base azimuth lives in the antenna profile. CellPlanner stores
-        rotations separately so sectors can be tuned without rewriting the
-        scenario definition.
-        """
+        """Read the physical profile azimuth; do not apply rotation history twice."""
         antenna_id = node.extra.get("antenna_id")
         antenna = self.graph.antenna_catalog.get(antenna_id)
         if antenna is None or antenna.azimuth_deg is None:
             return None
 
-        site_id = node.extra.get("site_id")
-        rotation = self.sector_rotation_by_site.get(site_id, 0.0)
-        return (float(antenna.azimuth_deg) + rotation) % 360.0
+        return float(antenna.azimuth_deg) % 360.0
 
     def _selected_site_ids(
         self,
@@ -651,7 +657,7 @@ class CellPlanner:
                 azimuths.append(None)
                 continue
 
-            azimuth = (float(antenna.azimuth_deg) + rotation_deg) % 360.0
+            azimuth = (float(antenna.azimuth_deg) + (rotation_deg if antenna.auto_tune else 0.0)) % 360.0
             azimuths.append(azimuth)
 
             for client in clients:

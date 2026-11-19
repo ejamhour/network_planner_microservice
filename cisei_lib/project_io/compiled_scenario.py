@@ -18,7 +18,7 @@ from .diagnostics import ProjectIssue, ProjectReport, ProjectValidationError, in
 from .input_validation import prepare_inputs, _companion_path
 
 
-def build_scenario(folder: str | Path, *, return_report: bool = False) -> Path | dict:
+def build_scenario(folder: str | Path, *, return_report: bool = False, input_identity: dict | None = None) -> Path | dict:
     """Publish complete output; errors block, warnings accompany successful builds.
 
     Return the artifact Path by default for compatibility. With return_report=True,
@@ -26,14 +26,14 @@ def build_scenario(folder: str | Path, *, return_report: bool = False) -> Path |
     Reports are also embedded in compiled_scenario.json under build_report.
     """
     try:
-        return _build_scenario(folder, return_report=return_report)
+        return _build_scenario(folder, return_report=return_report, input_identity=input_identity)
     except ProjectValidationError:
         raise
     except (TOMLKitError, ValueError, TypeError, KeyError, ProjError) as exc:
         raise ProjectValidationError([input_issue("scenario.toml", exc)]) from exc
 
 
-def _build_scenario(folder: str | Path, *, return_report: bool) -> Path | dict:
+def _build_scenario(folder: str | Path, *, return_report: bool, input_identity=None) -> Path | dict:
     prepared = prepare_inputs(folder)
     root, config, files = prepared.root, prepared.config, prepared.files
     attachments, mesh, poles = prepared.attachments, prepared.mesh, prepared.poles
@@ -120,6 +120,8 @@ def _build_scenario(folder: str | Path, *, return_report: bool) -> Path | dict:
     report = ProjectReport("scenario_build", tuple(build_warnings)).to_dict()
     report["compiled_scenario"] = compiled.name
     report["options"] = {"coordinate_warning_tolerance_m": tolerance}
+    if input_identity is not None:
+        report["inputs"] = dict(input_identity)
     expanded["build_report"] = report
     temporary = None
     try:
@@ -149,51 +151,18 @@ def _coordinate_warning(site, working_crs, tolerance, filename, *, field, row=No
 
 
 def _validate_poles(path, settings, config, scenario, tolerance):
-    """Validate pole rows without retaining expanded candidate records."""
-    if str(settings.get("format", "csv")).lower() != "csv":
-        raise ValueError(f"{settings['source']}: pole inventory must use CSV format")
-    profile_column = settings.get("profile_column", "device_profile")
-    if not isinstance(profile_column, str) or not profile_column.strip():
-        raise ValueError(f"{settings['source']}: profile_column must be a nonempty string")
-    required = {"pole_id", profile_column}
-    forbidden = {"site_id", "connected", "candidate", "rank"}
-    inventory = PlanningScenario.from_config_dict(
-        {key: config[key] for key in ("antennas", "interfaces", "devices") if key in config},
-        working_crs=scenario.working_crs,
-    )
-    seen = set()
+    """Validate streamed pole instances using the same reader as Mesh planning."""
+    from .pole_inventory import iter_pole_instances
     warnings = []
-    row_number = None
     try:
-        with path.open(encoding="utf-8-sig", newline="") as stream:
-            reader = csv.DictReader(stream, strict=True)
-            headers = reader.fieldnames or []
-            if len(set(headers)) != len(headers):
-                raise ValueError("duplicate column names")
-            if missing := required - set(headers):
-                raise ValueError(f"missing columns: {', '.join(sorted(missing))}")
-            if invalid := forbidden & set(headers):
-                raise ValueError(f"unsupported columns: {', '.join(sorted(invalid))}")
-            for row in reader:
-                row_number = reader.line_num
-                if None in row or any(value is None for value in row.values()):
-                    raise ValueError("row does not match the CSV header")
-                pole_id = row.pop("pole_id").strip()
-                if not pole_id:
-                    raise ValueError("pole_id is required")
-                if pole_id in scenario.site_nodes or pole_id in seen:
-                    raise ValueError(f"duplicate or conflicting pole ID: {pole_id}")
-                row.update(site_id=pole_id, pole_id=pole_id, connected=False, candidate=True, rank=None)
-                nodes = inventory.add_node_instances([row], profile_column=profile_column)
-                if all(row.get(key, "").strip() for key in ("lat", "lon", "x", "y")):
-                    warning = _coordinate_warning(nodes[0].site, scenario.working_crs, tolerance, settings["source"],
-                                                  field="position", row=row_number)
-                    if warning:
-                        warnings.append(warning)
-                inventory.site_nodes.clear()
-                seen.add(pole_id)
-    except (ValueError, TypeError, KeyError, OSError, csv.Error, ProjError) as exc:
-        raise ProjectValidationError([input_issue(settings["source"], exc, row=row_number), *warnings]) from exc
+        for row, node, supplied_both in iter_pole_instances(path, settings, config, scenario):
+            if supplied_both:
+                warning = _coordinate_warning(node.site, scenario.working_crs, tolerance,
+                                              settings["source"], field="position", row=row)
+                if warning:
+                    warnings.append(warning)
+    except ProjectValidationError as exc:
+        raise ProjectValidationError([*exc.issues, *warnings]) from exc
     return warnings
 
 

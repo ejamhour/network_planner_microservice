@@ -7,7 +7,7 @@ The target config is an expanded scenario dictionary containing concrete
 interfaces under config["sites"] and profiles under config["antennas"].
 Node CSV expansion must happen before placements are applied.
 
-placement_source() locates a file for the existing SDK loading path.
+placement_source() locates a file for the preserved original SDK loading path.
 apply_antenna_placements() reads that file and applies its document.
 The server scenario builder resolves file references itself and calls
 apply_placement_document() with the parsed document.

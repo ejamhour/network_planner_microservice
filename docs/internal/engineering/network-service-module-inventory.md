@@ -2,6 +2,44 @@
 
 Scope is the current working tree. Usage is based on source, route, deployment, test, and notebook references. It does not establish whether another repository imports this library. Proposed paths describe ownership and can be refined before files move.
 
+## Current priority: operation artifact delivery and reopening (2026-11-19)
+
+See the [artifact-delivery audit](sdk-v2-artifact-delivery-audit.md). This gate
+supersedes earlier suggestions of permanent server retention or a reverse sync.
+Each operation must return its artifacts and SDK v2 must save them before reporting
+completion. Explicit close does no downloads and should ultimately delete server
+storage; timeout/disconnection must preserve it. Current implementation is not
+ready for that deletion policy.
+
+- [ ] A1: Define operation-scoped artifact delivery metadata and one project-bound
+  SDK IO receiver, durable local completion and failed/lost-response recovery.
+  Preserve atomic local file writing; do not duplicate artifact logic per planner.
+- [ ] A2: Make build return/save the actual compiled artifact and its report/identity.
+- [ ] A3: Attach incremental raw feature artifacts to feature-producing operation/
+  batch responses, persist locally before cursor advancement, and support server
+  restoration. Include defined partial-failure checkpoints; no close-time fetch.
+- [ ] A4: Define durable ongoing stage checkpoints or explicit replay boundaries
+  for candidate parameters, partial metrics, effective Cell edits/pruned interfaces
+  and Mesh preparation/round state. Final result/placements alone are insufficient.
+- [ ] A5: Return/save the full solved result through solve itself. Current explicit
+  save_result/save_placements helpers are useful but do not make preceding calls
+  automatically durable.
+- [ ] A6: Implement validated server restoration of locally saved generated
+  artifacts/checkpoints, including old/new project identity handling. Input sync
+  deliberately rejects compiled/result uploads and is not the restoration path.
+- [ ] A7: Only after delivery/reopening gates pass, implement explicit close deletion
+  and local recovery-metadata transition. Do not delete on timeout/disconnection.
+- [ ] Revise the project lifecycle contract's obsolete close-retention wording as
+  these changes land; current code still retains files and discards volatile cache.
+
+Audit evidence: source/call-path review and a disposable Python-container API/SDK
+probe with deterministic features. Build/tune/metrics/solve left only source files
+and .session.json locally. Server cache had one raw feature record before close
+and none afterward; compiled/result files remained server-only. Attempting to
+restore a locally copied compiled artifact through fresh-project input sync was
+rejected (422). No API/SDK implementation, notebook or deployment was changed by
+the audit; the previous full regression suite was not rerun for documentation.
+
 ## Runtime dependency map
 
 ```mermaid
@@ -143,12 +181,12 @@ validation scope.
 
 ### Antenna and sector tuning follow-up
 
-- [ ] Use the same effective sector azimuth for Cell candidate filtering and Graph directional RF gain. Cell currently applies the rotation only during filtering. Add a regression case that applies a nonzero rotation and verifies the rebuilt candidates and the orientation used to score the link.
-- [ ] Define how to export and reuse tuned LTE sector orientations. Today Cell holds offsets in memory. Decide which result fields capture the applied orientation and how an explicit export can carry it into a new project before adding more tuning examples.
+- [x] Use concrete per-interface placements for both Cell filtering and Graph directional RF gain. Nonzero rotation, mixed fixed/automatic profiles and subsequent candidate rebuilding are covered by placement output regressions.
+- [x] Define/export effective LTE orientations through the placement contract and save_placements. Separate outputs use original profile IDs and can be explicitly promoted to input. Rotation history is reporting/reset metadata, not hidden RF orientation.
 - [ ] Complete field-level placement precedence verification. Device-profile → CSV row → concrete interface → placement mounting-height precedence is documented and tested, including blank/zero values and unaffected radios. Remaining coverage includes orientation/shadow sources and device/site metadata versus explicit installation fields. Normal compiled loading does not reapply placements. Library gain patterns remain distinct from installation angles.
 - [x] Define the normal placement lifecycle: build from source files, apply placements during compilation, then load saved compiled settings unchanged. Source edits require recompilation and reloading; compiled loading never reapplies placements.
 - [ ] Review legacy reimport of expanded TOML beside placement files during SDK compatibility cleanup. Current partial reapplication can reset omitted orientation/shadow fields to the base profile. This case does not block the normal lifecycle.
-- [ ] Review automatic omni mounting-shadow and directional antenna tuning, including where their adjusted values are applied, reported, and saved. Their integration has not been verified. Ensure accepted adjustments can become explicit inputs to the next project alongside the LTE export work above.
+- [ ] Complete automatic omni mounting-shadow tuning and directional antenna orientation tuning. These methods were never completed; this is unfinished functionality, not just unverified integration. Both must obey the effective selected antenna profile's auto_tune policy (including placement-selected profiles), start from effective placements, leave fixed profiles unchanged, and apply/report/export accepted adjustments through the placement contract. Add regressions for policy, RF use, export and explicit reuse as inputs to the next project. Current implemented automatic support remains Cell sector azimuth tuning only. Confirmed with the user on 2026-11-19.
 Placement processing is supported by the staged scenario builder, while SDK open_project() still invokes the local loader. Track the transition under the consolidated SDK migration checklist below; current module documentation identifies both callers.
 - [x] Correct placement wrapper mutation documentation: lookup occurs before declaration removal, parsing/application after removal. Installation updates are validated before committing, but the declaration can already be removed on failure.
 - [ ] Decide whether placement-wrapper failure should preserve the entire supplied configuration, including its declaration.
@@ -236,12 +274,23 @@ Remaining validation and compatibility decisions:
 - [ ] Review remaining scalar/defensive checks as contracts settle, preserving one policy implementation where possible. Shared capacity/blank/boolean/connectivity rules are done; this is an audit of the remaining rules.
 - [ ] Retire the legacy parsed Mesh Link validator after its consumers migrate. Its published compatibility contract still rejects placement references; do not expand the superseded prototype as the new project's validator.
 
-Server lifecycle and SDK work, deferred pending discussion:
+Server lifecycle and SDK implementation:
 
-- [ ] Review lifecycle decisions in [the SDK plan](sdk-refactoring-plan.md): transfer scope/shared resources, synchronization, identities/revisions, save/close/recovery and connection binding for formerly offline methods. Opening must permit incomplete inputs.
-- [ ] Add raw-file transfer and server staging with separate input-validation and scenario-build operations. Return project/revision identity and stage-specific reports; preserve the last valid revision after failure.
+- [x] Consolidate lifecycle decisions in [the SDK plan](sdk-refactoring-plan.md): workspace-relative structure, [files], explicit update-only sync, separate validation/build/planning, result retrieval/reuse, persistent temporary project identity, explicit close and deferred GC. Folder-local .session.json associates the project; no separate account binding is needed.
+- [x] Implement hub-level POST /projects and POST /projects/{project_id}/resume with a disk-backed ProjectStore, independent of worker/session state. Configurable PLANNING_PROJECT_ROOT defaults to temp/. Private credential hashes remain outside the workspace subtree; generated project IDs and relative folder structure are preserved.
+- [x] Provide creation/recovery and explicit resume/new choice in the separate SDK v2 using standard PlanningClient.open_project() and Project. Save .session.json atomically and retain previous recovery records. Newly added client code was moved out of the legacy package; its client/exports remain preserved.
+- [ ] Add idempotent initial creation/retry for a response lost before the SDK receives its project ID/credential. Local metadata-save failures already expose recovery metadata explicitly without printing credentials.
+- [ ] Connect recovered storage to compiled-scenario/planner restoration after sync/build APIs exist. Current recovery restores identity/storage access only.
+- [ ] Implement explicit project close and deletion. No timeout cleanup or garbage collector was added.
+- [x] Add authenticated raw-file sync: POST /projects/{project_id}/sync accepts a streamed ZIP_STORED archive with exact path/size/SHA-256 manifest. SDK v2 Project.sync selects scenario.toml and [files] references, preserving workspace-relative paths, without deletions or automatic validation/build/planning. Session credentials and active generated artifacts are excluded/protected.
+- [x] Persist input hashes/revisions independently of worker sessions. Identical bytes are not rewritten; identical retries and sync after recovery preserve the input identity. Receipts report added/updated/unchanged files. Omitted inputs remain registered and stored.
+- [ ] Connect input revisions/hashes to planning-result invalidation/reuse once remote compilation/planner operations exist. Sync currently leaves saved outputs/compiled artifacts on disk and reports changed identity; existing planning APIs are not yet attached to remote project storage.
+- [ ] Add explicit HTTP input-validation and scenario-build operations for synchronized workspace projects. Honor workspace-bound paths and complete antenna/metric library file-role integration; preserve the last valid compiled version on failure.
+- [ ] Add interrupted-process recovery for an upload killed during multi-file commit. Detected exceptions already restore replaced files and roll back SQLite metadata; do not claim cross-file crash atomicity.
+- [ ] Consider hash preflight/delta transfer if profiling warrants it. Current sync transfers selected bytes once per call and skips identical server writes; it does not yet avoid network transfer of unchanged content.
 - [ ] Expose/retain preparation reports through HTTP. Keep unexpected server failures separate from input issues; structured Python exceptions are implemented, HTTP delivery is not.
-- [ ] Switch SDK opening to original-file transfer and readable service diagnostics, then remove active local compilation. Review compatibility for public offline helpers and keep tracebacks limited to debug mode.
+- [x] Separate SDK generations: client_sdk_v2/ (cisei_planning_sdk_v2) contains only the new client workflow, with no legacy/backend imports. The original client_sdk/ source remains for notebooks; no local compiler is copied into v2.
+- [ ] Add remaining service-operation wrappers and readable diagnostics to SDK v2. Reuse viewer presentation deliberately without copying planner logic; preserve old SDK workflows separately.
 
 Keep existing expanded JSON scenario routes for SDK/programmatic compatibility
 while migration is reviewed. `PlanningScenario.from_config_dict()` remains the
@@ -380,3 +429,315 @@ behavior changed in this clarification.
 The error/warning and coordinate-resolution changes passed 157 focused container
 tests across warnings, project IO, scenario configuration, interface behavior
 and antenna placements. This is a focused run, not a full deployment baseline.
+
+## Temporary project storage foundation (2026-11-18)
+
+Implemented [storage/recovery contract](../../../project-contracts/project-session.md).
+ProjectStore publishes metadata and an empty workspace/projects/<name> directory
+under temp/<project_id>. Both service entry points expose root project routes;
+the hub handles them before session proxying, so recovery does not depend on an
+old worker/session registry. Server metadata stores a credential hash; the local
+.session.json stores the recovery secret and is excluded from Git along with
+the entire server temp directory.
+
+The SDK uses the existing HTTP transport with explicit unscoped requests for
+project storage. Its existing session-scoped planning calls remain unchanged.
+Opening an empty folder does not read scenario.toml or compile. Failure cases
+preserve previous local metadata and server data; a new project is created only
+when explicitly chosen (or when no saved identity exists).
+
+Regression coverage includes recovery through a fresh client/store after registry
+loss, credentials per project, unsafe paths, missing/corrupt metadata, explicit
+choices, previous recovery records and atomic metadata-write failure. No file
+upload, result persistence integration, planner restoration or deletion endpoint
+is claimed by this foundation. See the consolidated checklist for follow-ups.
+
+Validation for this foundation: 127 focused tests passed in the Python 3.12 dev
+container across project storage/recovery, hub/session compatibility, project IO,
+warning reports and scenario configuration. Two existing Starlette/httpx
+deprecation warnings remain. New source syntax and diff-whitespace checks passed.
+Docker/deployment configuration was not changed.
+
+## Explicit raw-file synchronization (2026-11-18)
+
+Implemented [sync manifest/transport contract](../../../project-contracts/upload-manifest.md).
+The previous unimplemented open/validate/replacement manifest proposal is
+superseded by the update-only sync contract. [files] is used only as an IO
+selection list in the SDK; names may contain paths, arrays or nested named paths.
+Original bytes are archived unchanged and streamed to the authenticated project.
+An explicit companion file list allows malformed TOML to be uploaded for later
+server validation. Local references must remain inside the workspace; shared
+antennas/metrics retain their workspace-relative paths.
+
+The server verifies the whole archive privately before updating workspace files.
+It does not parse planning files. SQLite serializes commits and records hashes,
+revision and scenario entry path outside workspace/. Existing files omitted from
+the request remain untouched. Normal write failures roll back already-applied
+files; hard process termination/recovery remains a separate checklist item.
+
+Tests cover raw binary/line-ending preservation, nested shared resources,
+changed-only writes, identical retries, retained old files/results/compiled data,
+resumed projects, missing local inputs, malformed TOML through explicit selection,
+unsafe paths, credential exclusion, bad hashes and simulated commit failure. A
+real Uvicorn/requests loopback test streams more than 2 MB and resumes/retries.
+A Graph example is copied and synced, then explicitly compiled server-side to
+verify 13 instantiated sites; sync itself creates no compiled artifact.
+
+Sync verification: 146 focused tests passed in the Python 3.12 dev container,
+including project storage/sync, live HTTP streaming, hub compatibility, project
+IO, warnings and scenario configuration. Two existing Starlette/httpx deprecation
+warnings remain. This is not a full-suite/deployment baseline. No Docker or
+production service configuration was changed.
+
+## Independent SDK v2 (2026-11-18)
+
+The user chose to preserve the old SDK and develop a second package. Storage,
+recovery and sync client modules were moved to client_sdk_v2/src/cisei_planning_sdk_v2.
+The new public opening method is open_project(), returning Project with path and
+sync(). Legacy client.py and package exports match their pre-migration source;
+new operations are no longer added there. pytest includes both source roots.
+
+The new installable distribution is cisei-planning-sdk-v2 (initial 0.1.0), with
+requests/tomlkit dependencies and one version source. It does not depend on the
+old SDK, cisei_lib, features SDK, plotting or numerical packages. The old SDK's
+wheel-serving route remains unchanged. A v2 wheel was built without dependencies
+or build isolation and imported from an isolated process with old SDK/backend
+imports blocked. Source tests cover both opening behaviors in the same environment.
+
+### Remote syntax validation (2026-11-18)
+
+- [x] Add authenticated POST /projects/{id}/validate and SDK v2 Project.validate().
+  Reuse validate_inputs with structured success/failure reports; no local parsing,
+  implicit sync, scenario construction or compiled artifact writes.
+- [x] Return input revision/hash and serialize validation with sync commits using
+  the existing SQLite lock. Repeated validation does not advance the revision.
+- [x] Keep operating-system paths out of shared input_issue messages by using
+  OSError.strerror; retain project-relative file/location fields.
+- [x] Connect remote compilation and its build report to SDK v2.
+- [x] Connect saved scenario restoration and one-active-project worker lifecycle.
+- [ ] Connect result retrieval keyed to input identity and operation parameters.
+
+Verification: 171 focused tests passed in the Python 3.12 development container,
+including missing source before sync, invalid TOML feedback, correction/retry,
+local edits without sync, input identity stability and project credentials.
+Two existing Starlette/httpx deprecation warnings remain. Raw upload currently
+accepts alternative scenario paths; validation explicitly reports that only
+project-root scenario.toml is supported. No validation status cache is persisted.
+
+SDK split verification: 168 focused tests passed in the Python 3.12 dev container,
+covering both SDK generations, storage/sync, live HTTP, hub compatibility, project
+IO/warnings, scenario configuration, attachments and antenna placements. Two
+existing Starlette/httpx deprecation warnings remain. The new wheel also passed
+the isolated import check. This is not a full-suite baseline.
+
+### Remote compilation (2026-11-19)
+
+POST /projects/{id}/build and SDK v2 Project.build() reuse the existing compiler.
+project_operations.py now shares the sync lock and input identity handling for
+validation/build. Successful compilation saves inputs identity inside build_report
+atomically with the artifact. Expected errors return reports and preserve prior
+artifacts; warnings permit complete publication. No implicit sync or planning.
+
+Verification: 172 focused tests passed in the Python 3.12 development container.
+After adding warning-publication assertions, all 44 storage/lifecycle tests passed
+again. Coverage includes real Graph compilation (13 sites), correction/retry,
+resume, syntax-vs-construction errors, credentials, unchanged prior artifact and
+coordinate warnings in returned/saved reports. Existing deprecation warnings
+remain. Result invalidation, planner restoration and explicit close are pending.
+
+### One active project per user worker (2026-11-19)
+
+load_project_scenario restores only current compiled artifacts without rereading
+source files or recompiling. SDK v2 activate()/close() reuse the existing user
+session worker proxy and preserve project identities independently of workers.
+Another active project returns active_project_exists (SDK ActiveProjectExists);
+callers prompt for explicit close. Connected SDK open_project also checks the
+active slot. Close releases pools and planning/cache state, preserving files.
+Cleanup failures keep ownership and block reuse pending close retry; background
+mesh jobs return project_busy. Worker planning routes serialize with close and
+reject stale inputs or legacy source mutations for an active saved project.
+
+This supersedes prior TODOs treating close as deletion. Explicit deletion is
+separate and remains pending. Legacy sessions retain old API behavior; they must
+be closed/reset before entering the saved-project lifecycle. Identity is still a
+temporary registration, not permanent account authentication. Abrupt process kill
+cleanup reconciliation, feature-cache disk persistence and result reuse remain
+follow-up work; no Docker/deployment changes were made.
+
+Verification: 179 focused tests passed, including live hub HTTP with a real
+spawned worker, Graph candidates, worker reset and saved-artifact reactivation.
+Lifecycle tests cover second-project conflicts, cleanup/retry, busy jobs and
+stale state. Subsequent cleanup-pending guards were checked in lifecycle tests.
+
+### SDK v2 candidate generation (2026-11-19)
+
+- [x] Add planner-interface build_candidate_edges/get_candidate_edges with compatible original
+  SDK argument names and thin authenticated worker calls. Original SDK sources
+  remain unchanged; both server API generations share prepare_candidate_edges.
+- [x] Add project-scoped build/inspection routes, active/freshness/busy guards and
+  structured expected failure reports. Retain original empty-graph warning.
+- [x] Preserve Cell build options in worker memory so inspection retains sectors.
+  Clear candidate options on close. Candidate generation invokes no features.
+- [x] Add SDK v2 basic mesh repeater wrapper backed by server project files.
+  Mesh candidate generation already reuses a prepared mesh engine, but reports
+  mesh_repeaters_required if expansion has not been run; no Graph fallback.
+- [ ] Migrate advanced Mesh finite-round/checkpoint/progress operations and
+  compatible result/artifact saving after the shared execution stages.
+- [x] Connect core Graph metrics, solver and output persistence/retrieval. Cell/Mesh
+  remaining stages stay pending. Planner
+  selection remains an explicit candidate operation parameter, not client-side
+  inference from TOML. Candidate state remains worker-local.
+
+Controlled coverage includes real Graph and LTE Cell examples, inspection without
+rebuild, Cell sector-table preservation, empty candidate warnings, inactive/stale
+state, unsupported planner options and missing Mesh preparation. Live hub HTTP
+now exercises the public SDK v2 candidate wrappers with a spawned worker.
+
+Verification: 228 focused tests passed in the Python 3.12 development container,
+including SDK/storage/compiler/lifecycle regressions, live HTTP, existing Mesh
+Network/Link suites and features pool ownership. Eight existing Starlette/httpx
+deprecation warnings remain. This is not a full-suite baseline.
+
+### SDK v2 basic Mesh repeater stage (2026-11-19)
+
+project.mesh.add_repeaters() is a thin call to the authenticated project Mesh endpoint.
+Server mesh_inputs reads compiled mesh settings and the uploaded pole CSV, merges
+request overrides, and invokes the same prepare_mesh_repeaters operation as the
+legacy API. pole_inventory.iter_pole_instances is shared by compilation checks
+and execution preparation; no duplicate pole expansion was added to SDK v2.
+Poles stay separate from fixed nodes and compiled JSON. Basic preparation returns
+selected repeaters; final used repeaters follow the later solve stage.
+
+The execution order is now explicit near the top of sdk-refactoring-plan.md:
+shared lifecycle -> planner-specific preparation -> candidates -> metrics -> solve
+-> persistence/retrieval -> compatible viewers and end-to-end notebooks. Advanced
+Mesh checkpoints/progress and specialized legacy workflows are tracked separately.
+
+Verification: 229 focused tests passed in the Python 3.12 development container
+with eight existing deprecation warnings. The new SDK test uses the actual Mesh
+algorithm with deterministic features, selects a pole, generates Mesh candidates,
+and succeeds with local TOML/poles absent after upload. Existing Mesh, pole warning,
+compiler, lifecycle and SDK regression tests pass. No notebook was run.
+
+### Planner interface ownership correction (2026-11-19)
+
+- [x] Remove candidate generation/inspection and add_repeaters from Project.
+  Project now owns storage/files/lifecycle only.
+- [x] Add separate GraphPlanning, CellPlanning and MeshPlanning interface modules
+  under client_sdk_v2/src/cisei_planning_sdk_v2/planners. Expose cached, non-allocating
+  project.graph, project.cell and project.mesh properties.
+- [x] Put add_repeaters only on MeshPlanning. Bind candidate planner selection in
+  each interface; Graph/Mesh do not accept Cell-specific candidate options.
+- [x] Keep common HTTP plumbing internal. Inspection sends planner identity and
+  returns candidate_planner_mismatch instead of silently reading another planner's
+  graph. Mesh preparation alone does not count as candidate generation.
+- [x] Update source tests, live HTTP, README and contracts to namespaced calls;
+  no forwarding aliases remain on Project. Original SDK is preserved.
+
+This corrects ownership described in earlier implementation entries. These SDK
+interfaces are not new planning algorithms and do not allocate independent worker
+states: the active project still has one current candidate graph. Updated the
+migration plan to finish the Graph workflow next, then Cell, Mesh network and
+Mesh link, retaining the partial working planner calls already implemented.
+
+Verification: 230 focused tests passed in the Python 3.12 development container
+with eight existing deprecation warnings. Live HTTP uses namespaced interfaces.
+The v2 wheel was rebuilt and planner imports/ownership checked with legacy SDK
+and backend imports explicitly blocked. No original SDK source was changed.
+
+Pylance source discovery (2026-11-19): added root pyrightconfig.json extraPaths
+for both SDK src directories. Relative .planners import remains correct. JSON
+and module resolution were checked; the editor diagnostic itself was not observed.
+
+### Core Graph execution and result IO (2026-11-19)
+
+- [x] Keep compute/get_metrics, solve/get_solution and get/save_result exclusively
+  on SDK planners/graph.py. Project retains lifecycle only; Cell/Mesh do not
+  inherit Graph methods. SDK artifacts.py handles atomic local output IO.
+- [x] Separate server adapters: lifecycle stays in routes_project_runtime.py;
+  app/project_runtime/{candidates,mesh,graph}.py handle planning HTTP, guards.py
+  owns common checks, graph_operations.py orchestrates existing implementations.
+  routes_project_results.py is hub/worker storage retrieval without activation.
+- [x] Track GraphRunState readiness explicitly. Failed/updated metrics invalidate
+  solution readiness, incomplete batches block solve, candidates reset Graph state.
+- [x] Atomically persist latest result.json through project_io/planning_results.py
+  with project_run input/parameter provenance. Reuse exact retries; invalidate
+  retrieval by changed input identity or requested parameter hash. Close/reset
+  preserves output. Failed publication preserves the previous successful file.
+- [x] Return saved output and atomically save it locally without worker registration.
+- [ ] Complete Cell stages next. Graph evaluation/viewers, durable feature-cache
+  storage, multiple-result history and Mesh advanced stages remain follow-up work.
+
+Focused tests cover supplied costs, feature-backed batching with deterministic
+features, actual Graph solving, changed solver parameters, exact retry reuse,
+readiness invalidation, planner isolation, result retrieval after close/reset,
+unchanged/changed input sync and simulated result-write failure. The live hub
+smoke test now executes metrics/solve/save with a spawned worker and reuses the
+persisted execution after worker reset. No notebook was run.
+
+Graph verification: 234 focused tests passed in the Python 3.12 development
+container (eight existing deprecation warnings). After final router separation,
+20 lifecycle/Graph/live-HTTP/hub tests passed again. Final Graph request models
+were checked separately. SDK v2 wheel built successfully; Graph APIs/artifact IO
+imported from it with original SDK/backend imports blocked. Original SDK source
+remains unchanged; no Docker/deployment changes were made.
+
+### Profile auto-tuning and placement output (2026-11-19)
+
+- [x] Add antenna-profile auto_tune boolean, default false, with shared syntax/
+  construction parsing and round-trip persistence. Placement antenna_id selects
+  policy; explicit placement values remain starting values. No per-entry lock.
+- [x] Apply Cell azimuth changes through existing per-interface placement rules.
+  Fixed profiles remain fixed; filtering and directional RF gain share the same
+  applied orientation. Retain Cell runtime engines and orientation across candidate
+  rebuilds. Preview does not mutate placements; pruning stays explicit/separate.
+- [x] Add placements/export.py effective_placements and atomic save_placements.
+  Export complete current antenna-bearing interface placements, omit unknowns,
+  preserve zero and original profile IDs. Do not export search trial candidates.
+- [x] Add Cell-only tune_sectors adapter and SDK method; Project export/save_placements
+  are output IO. Separate placement_output.py writes outputs/antenna_placements.toml
+  under input identity locking and refuses synchronized-input overwrite.
+- [x] Define profile/output/promotion contracts and annotated TOML comments. SDK
+  downloads server-produced TOML, never performs tuning or local expansion.
+- [x] Complete Cell metrics/solve/result migration. Omni shadow and directional
+  optimization are not enabled by this change; current automatic support is Cell
+  azimuth only. Generic suggestion helpers have no active planner callers found.
+
+Verification: 238 focused tests passed in Python 3.12 with eight existing warnings.
+After preserving applied settings across Cell candidate rebuilds, 21 placement,
+Cell-runtime and scenario compatibility tests passed again. New coverage verifies
+shared-model/different-policy profiles, placement-selected permission, preview,
+RF gain consistency, zero/height/tilt preservation, complete export/reimport, local
+and server source preservation, and output/input path collision protection.
+No notebook or deployment change was made.
+
+### Cell execution and placement-preserving results (2026-11-19)
+
+- [x] Complete Cell compute/get_metrics, solve/get_solution and get/save_result
+  under project.cell. Graph/Cell are sibling NetworkExecution SDK interfaces;
+  repeated HTTP/IO lives once in planners/_execution.py, with kind-bound URLs.
+  Project owns lifecycle/output IO; Mesh has not opted into execution yet.
+- [x] Replace Graph-only runtime execution metadata/helpers with ExecutionState
+  in app/project_runtime/execution.py. execution_routes.py registers the shared
+  stage protocol separately in Graph and Cell namespaces. Cell solver calls its
+  existing engine; common metric code reads its effective graph. No new algorithm.
+- [x] Include planner kind and effective-placement hash in execution identity.
+  Results persist the complete antenna_placements snapshot. Cell enriches output
+  using existing sector and CellPlanningSolution client-service/load reports.
+- [x] Extend saved-result IO to Graph/Cell with result_planner_mismatch protection.
+  Latest result.json remains one successful artifact per project, not a history.
+- [x] Pure tuning previews preserve metrics/solution readiness. Applied tuning and
+  candidate regeneration invalidate readiness. Cell candidate rebuilding retains
+  effective applied placement values; source files remain unchanged.
+- [ ] Remaining Mesh network execution/pruning and dedicated Mesh link workflow.
+  Cell/Graph evaluation and viewers, feature-cache restoration and result history
+  remain separate. Directional/omni auto-tuning are still unfinished as tracked above.
+
+Verification: 240 focused tests passed in the Python 3.12 development container
+with eight existing deprecation warnings. Includes tuned Cell RF metrics, explicit
+costs/incomplete guards, identical solve reuse, changed orientation with unchanged
+edges/costs forcing a new result, placement/result round-trip, wrong-planner
+protection, preview preservation, input invalidation and retrieval without worker
+registration. A real hub/spawned-worker test completes Graph, explicitly closes,
+then completes a tuned Cell project, solves/saves results and placements, and
+retrieves saved output after close. No notebook or deployment changes were made.

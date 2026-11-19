@@ -12,12 +12,14 @@ class UserRuntime:
     Per-worker planning runtime.
 
     The hub creates one worker process per user/session. This object stores the
-    in-memory planning state owned by that worker: prepared scenarios, the
+    in-memory planning state owned by that worker: one active saved project, the
     latest planner execution results, and reusable feature-service client pools.
 
     The pools do not create local RF/GDAL state. They keep HTTP workers and an
     edge-feature cache alive while this planning worker lives, so repeated
     planning runs can avoid recalculating features for unchanged links.
+    Legacy scenario dictionaries remain for compatibility; SDK v2 activation
+    owns the active-project slot and closes its pools before allowing a switch.
     """
 
     def __init__(self):
@@ -25,8 +27,15 @@ class UserRuntime:
         self._next_pool_number = 0
         self._pool_lock = asyncio.Lock()
         self.planning_scenarios = {}
+        self.project_lock = asyncio.Lock()
+        self.active_project = None
+        self.candidate_options = {}
+        self.planning_runs = {}
+        self.active_project_source = None
+        self.project_cleanup_pending = False
         self.planning_planners = {}
         self.mesh_planners = {}
+        self.cell_planners = {}
         self.mesh_progress = {}
         self.feature_caches = {}
         self.geo_pools: dict[tuple[Any, ...], AsyncGeoServicePool] = {}

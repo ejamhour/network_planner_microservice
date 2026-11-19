@@ -23,7 +23,7 @@ NUMERIC = {"freq_mhz", "tx_power_dbm", "gain_dbi", "azimuth_deg", "downtilt_deg"
            "mount_height_m", "lat", "lon", "x", "y", "rank"}
 STRINGS = {"site_id", "device_id", "interface_id", "tech", "antenna_id", "model_id",
            "kind", "medium", "working_crs", "src", "dst", "profile_column", "source"}
-FLAGS = {"connected", "can_route", "can_relay"}
+FLAGS = {"connected", "can_route", "can_relay", "auto_tune"}
 
 
 def scenario_syntax_issues(config):

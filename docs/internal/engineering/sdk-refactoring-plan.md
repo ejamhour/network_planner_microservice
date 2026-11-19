@@ -1,6 +1,98 @@
 # SDK responsibility review and migration plan
 
-Source review: 2026-11-17. This is an internal inventory and proposal, not a new API contract. No runtime changes accompany this document. Current source is authoritative. HTTP upload and SDK migration remain deferred pending lifecycle review.
+Inventory snapshot: 2026-11-17. Execution order updated 2026-11-19. Current source
+is authoritative; project-contracts/project-session.md describes the implemented
+storage, sync, compilation, active-project and candidate APIs.
+
+Latest lifecycle clarification and priority: the user requires operation-returned
+artifacts to be saved locally by SDK v2 before the corresponding call completes.
+No general reverse sync and no close-time downloads. Explicit close should release
+resources and delete server storage once those guarantees exist; timeout or
+disconnection preserves server storage. Current close still retains files and
+clears volatile caches, and the operation artifact lifecycle is incomplete.
+The [artifact-delivery audit](sdk-v2-artifact-delivery-audit.md) records the concrete
+gaps, evidence and fix order. Address those gates before enabling deletion or
+continuing planner migration. Older retention descriptions below are historical
+implementation notes, not the latest requested policy.
+
+## Current SDK ownership and migration sequence (2026-11-19)
+
+Project owns files and lifecycle: sync, validate, build, activate and close.
+GraphPlanning, CellPlanning and MeshPlanning live in separate modules under
+client_sdk_v2/src/cisei_planning_sdk_v2/planners, exposed through project.graph,
+project.cell and project.mesh. Repeater addition belongs only to MeshPlanning.
+Planning methods were removed from Project rather than retained as confusing
+forwarding aliases. The original SDK remains unchanged.
+
+These are thin API interfaces, not new planning algorithms. They reuse existing
+server implementations. Graph is a standalone static planner, not a general
+preparation stage for Cell or Mesh. Reuse of server operations does not imply
+that every planner has the same workflow. Interfaces share one active project
+and one current candidate graph; they are not separate resource-owning sessions.
+
+| Milestone | Scope | Status |
+| --- | --- | --- |
+| 1 | Project lifecycle and one active project per user worker | Implemented |
+| 2 | Separate lifecycle from planner interfaces | Implemented; Graph/Cell/Mesh calls live under their corresponding interfaces |
+| 3 | Core Graph workflow: candidates, metrics, solve, retrieve/save results | Implemented and tested with a real hub/worker; evaluation/viewers remain separate |
+| 4 | Complete Cell workflow, including its antenna tuning and options | Core candidates, tuning, metrics, solve and results connected; evaluation/viewers remain separate |
+| 5 | Complete Mesh network workflow: repeater addition, candidates, metrics, solve, final pruning | Basic repeaters/candidates already connected; checkpoints/progress and remaining stages pending |
+| 6 | Mesh link planning under project.mesh | Dedicated call/result handling pending; not implemented by the network add_repeaters wrapper |
+| 7 | Remaining specialized workflows and compatible viewers | Audit/reuse old SDK presentation; extension, diagnosis, reconfiguration, link replanning and baseline remain tracked below |
+
+Earlier work connected some Cell/Mesh calls before completing Graph. The core
+Graph path is now connected; Cell core execution is now connected using the same ownership rules; remaining Mesh network stages are next.
+Run focused tests per change and complete notebook acceptance
+checks as each workflow becomes ready. e06 will be tested from source through
+Mesh planning later; its existing results do not imply stage-skipping support.
+Shared HTTP plumbing may live in an internal base, but planner-specific methods
+must stay with their planner. File expansion/validation belongs to project_io on
+the server. Do not introduce SDK compiler or planner implementations.
+
+### Code placement for the core Graph path
+
+- SDK planners/{graph,cell}.py own their specific operations. _base.py owns
+  project-bound transport/candidate inspection; _execution.py supplies reusable
+  metric/solve/result HTTP methods to sibling GraphPlanning and CellPlanning. Mesh
+  has not opted into network execution yet; no Cell-to-Graph API delegation exists.
+- SDK artifacts.py owns atomic local JSON saving. Project owns lifecycle only.
+- app/routes_projects.py owns storage/sync/validation/build; routes_project_runtime.py
+  owns activate/close. routes_project_results.py retrieves saved output without
+  needing a worker and is registered in hub and worker.
+- app/project_runtime/candidates.py and mesh.py own their respective HTTP adapters;
+  graph.py owns Graph metric/solution routes. guards.py holds active-project checks.
+- app/project_runtime/execution_routes.py registers namespace-bound stage routes;
+  execution.py orchestrates existing metric and Graph/Cell solver implementations
+  with ExecutionState readiness metadata. graph.py and cell.py own their namespaces;
+  Cell keeps its candidate/tuning behavior and adds existing Cell solution reports.
+  Neither module implements a new planning algorithm.
+- cisei_lib/project_io/planning_results.py owns atomic saved result IO and input/
+  parameter matching. Existing solver and metric implementations remain unchanged.
+
+Saved Graph results extend the existing output format with project_run metadata.
+The latest result survives close/reset; exact retries can reuse it. Reuse does
+not rehydrate solver objects: current solution inspection reads the matched saved
+result. Future evaluation can use the existing serialized-result evaluation API.
+Raw feature-cache disk persistence, result history and checkpoint restoration
+remain explicit follow-up work. Do not imply those are implemented by retrieval.
+
+## SDK generation boundary (2026-11-18)
+
+User decision: preserve the original SDK source and develop an independent second
+SDK rather than mixing old/new opening behavior. client_sdk/ continues to provide
+cisei-planning-sdk / cisei_planning_sdk. client_sdk_v2/ provides
+cisei-planning-sdk-v2 / cisei_planning_sdk_v2, initially version 0.1.0.
+
+The new client uses open_project() for storage/recovery and Project.sync() for
+explicit transfers. New storage/sync source was moved out of the legacy package;
+legacy client.py and exports were restored to their pre-migration versions. The
+new package has requests/tomlkit dependencies only, with no legacy SDK/backend
+imports or inherited compiler. Its version metadata comes from version.py.
+
+The module/method inventory below remains a legacy SDK review snapshot. It guides
+which service capabilities and presentation code to reuse; it is no longer a
+plan to replace the old SDK in place. Existing notebook imports and /sdk/latest
+remain on the preserved SDK. New server-managed operations will be added to v2.
 
 ## Agreed terminology and lifecycle clarification
 
@@ -20,11 +112,9 @@ rereading source inputs or reapplying placements. Source edits require a fresh
 build from source files and reload; legacy expanded-TOML reimport is a separate
 compatibility concern.
 
-The SDK's `load_scenario_bundle`, `load_poles_bundle`, profile expansion,
-interface overrides and placement application are scheduled for removal from
-the active SDK workflow after the server file-transfer path replaces their
-callers. Existing public/offline helpers require a compatibility decision.
-They remain active today so existing project opening continues to work.
+Legacy load_scenario_bundle/load_poles_bundle and local expansion remain in the
+preserved SDK. They are not copied into v2; project interpretation belongs to
+the service. Viewer reuse remains a separate presentation task.
 
 Successful server-local builds now retain a build_report with error/warning
 severity in the compiled artifact; callers may request it using return_report=True.
@@ -34,7 +124,7 @@ on successful requests. Coordinate mismatch warnings do not change supplied data
 
 ## Findings and boundary
 
-The current SDK has 32 Python source modules including its package initializer. Its public surface is broader than the package-root exports: notebooks also import module functions and classes directly. The method inventory below includes those candidates for compatibility review, not a promise to preserve every helper forever.
+The 2026-11-17 SDK snapshot had 32 Python source modules including its package initializer. The storage foundation adds remote_project.py and PlanningClient.open_remote_project(). Its public surface is broader than the package-root exports: notebooks also import module functions and classes directly. The method inventory below includes those candidates for compatibility review, not a promise to preserve every helper forever.
 
 Project compilation remains active in the SDK. `PlanningClient.open_project()` calls `define_scenario()` → `_scenario_json()` → `local_io.load_scenario_bundle()`. That loader expands node CSV rows, applies overrides and placements, and sends an expanded dictionary to `POST /planning/scenarios/define`. Opening also parses and imports the complete local feature cache. The staged server builder exists independently; the SDK does not yet use it.
 
@@ -99,26 +189,17 @@ Confirmed overlap: SDK profile expansion/overrides and server `PlanningScenario`
 | `load_result`, `save_result`, `save_scenario`, project path properties | Generic artifact IO | Retain. Saving a supplied dictionary is distinct from compiling a project. |
 | `load_scenario_bundle`, `load_poles_bundle`, direct `ExpressionModel` APIs | Compatibility decision required | Their offline return values cannot be preserved by silently replacing them with HTTP calls without a connection. |
 
-## Proposed lifecycle for discussion
+## Agreed lifecycle (2026-11-18)
 
-These are behavioral proposals, not implemented endpoint names. Existing APIs are listed in the method appendix where directly called.
+1. Open/create associates a local project folder with isolated server storage, even when inputs are absent. The server issues a project ID and recovery credential, saved locally in .session.json beside scenario.toml. Project identity survives worker/session timeout. Creation/resume are implemented through SDK v2 open_project(); the original SDK open_project remains preserved.
+2. Preserve workspace-relative folder structure. [files] centralizes the transfer list; completing antenna/metric dependency coverage is implementation work, not a new dependency-discovery protocol.
+3. Sync is implemented as SDK v2 Project.sync(): explicit add/update of raw files without deleting server files. It does not trigger validation, compilation or planning. Remove obsolete file references from inputs; prevent implicit discovery from reviving stale files.
+4. validate_inputs checks synchronized files without changing compiled state. build_scenario constructs/replaces the compiled scenario on success. There is no separate activation operation. Loading compiled state never reapplies source files.
+5. Results continue through existing API retrieval and SDK local saving, outside input sync. Persist artifacts server-side and identify input bytes plus effective operation parameters so retries can retrieve an existing result without replanning. Changed planning input bytes invalidate related results; identical sync/validation do not.
+6. Updated 2026-11-19: explicit close releases active project/planner/features resources and preserves storage. One active project per user worker; another requires explicit close. Timeout/disconnection does not delete files. Saved-scenario activation and close are implemented in SDK v2; deletion, result persistence and garbage collection remain separate work.
+7. Saved .session.json metadata requires an explicit resume/new choice. The SDK raises ProjectChoiceRequired rather than calling input(); a UI/agent may ask the user, while scripts supply mode. New identities preserve previous recovery records rather than deleting old storage. Failed recovery never silently creates a new project.
 
-1. Open selects a local folder and creates an isolated server-generated project identity. Upload input files, then validate/build in staging. Activate a scenario only from a successfully saved bundle. Do not make the SDK a second validator or require it to expand TOML references.
-2. Synchronization is explicit initially. Upload a candidate revision, build it, then activate it on success. Planning uses a known revision. Failed builds return issues and retain the last valid revision; they do not silently plan with changed local files.
-3. A plan executes on the active server revision and produces structured artifacts. Polling and cancellation belong to the run lifecycle, separate from file transfer. Derived state must identify its input revision.
-4. Saving downloads selected outputs and reusable cache data atomically. Keep original input files distinct from generated results and proposed placements. Downloading output must not overwrite user inputs without an explicit promotion operation.
-5. Reopening uploads original project inputs plus selected reusable artifacts. Large feature caches and pole files should transfer as files, avoiding SDK expansion into huge Python dictionaries. Server decides reuse validity.
-6. Closing should finish any requested output/cache download before deleting temporary server state. Failed downloads must remain recoverable. Define worker-reset/expiry behavior and whether an interrupted connection can reconnect before implementing deletion.
-7. Turning a result into the next project's inputs is a separate service transformation. Preserve source identity and an explicit rule for accepting planned antenna placements.
-
-Decisions to review before HTTP work:
-
-- How files are selected for upload without recreating the TOML parser in the SDK: whole-folder snapshot with exclusions, explicit transfer list, or server-discovered missing-file exchange. Include workspace-shared antenna/metric resources, baseline paths, and source-project references.
-- Whether synchronization is explicit only or also triggered before planning, and how changes are detected and reported.
-- Project identity versus current authenticated session ID/scenario ID; supported number of open projects; ownership of staged folders when a worker resets.
-- Connection binding for offline project classes (`prepare`, baseline methods, diagnosis) while retaining existing signatures where practical.
-- Save/close behavior, cache export frequency, cursor reset/reimport behavior, cleanup and recovery after failed transfers.
-- Which offline computational helpers remain temporarily compatible, and how users are informed when a formerly offline operation now needs a service.
+Remaining implementation details include manifest/file-role completion, workspace-bound path resolution, transfer retry/idempotency, result invalidation/download semantics, explicit close and migration of legacy wrappers. The directory itself associates the local project and its metadata; no additional user-account binding is required for this temporary-project model.
 
 ## Execution batches and gates
 

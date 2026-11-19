@@ -289,6 +289,7 @@ class AntennaSpec:
     shadow_azimuth_deg: float | None = None
     shadow_width_deg: float | None = None
     shadow_loss_db: float | None = None
+    auto_tune: bool = False
     extra: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
@@ -302,6 +303,7 @@ class AntennaSpec:
             "shadow_azimuth_deg": self.shadow_azimuth_deg,
             "shadow_width_deg": self.shadow_width_deg,
             "shadow_loss_db": self.shadow_loss_db,
+            "auto_tune": self.auto_tune,
         }
         if self.model_id is None or self.gain_dbi != 0.0:
             data["gain_dbi"] = self.gain_dbi

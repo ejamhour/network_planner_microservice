@@ -93,22 +93,29 @@ async def plan_mesh_network(request: Request, scenario_id: str, body: MeshNetwor
 @router.post('/scenarios/{scenario_id}/mesh/add_repeaters')
 async def add_mesh_repeaters(request: Request, scenario_id: str, body: MeshNetworkBody):
     """Run only repeater addition; common stages follow explicitly."""
-    state = None
     try:
-        from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
-        runtime = request.app.state.runtime
-        scenario = _stored_scenario(request, scenario_id)
-        previous = runtime.mesh_progress.get(scenario_id)
-        if previous and previous['status'] == 'running':
-            raise RuntimeError('Repeater addition is already running for this scenario')
-        now = monotonic()
-        state = dict(run_id=request.headers.get('X-Mesh-Run-ID'), status='running',
-                     stage='preparing', started=now, updated=now)
-        runtime.mesh_progress[scenario_id] = state
+        result = await prepare_mesh_repeaters(request.app.state.runtime, scenario_id, body,
+                                             run_id=request.headers.get('X-Mesh-Run-ID'))
+        return _ok(result)
+    except Exception as exc:
+        return _error(exc)
 
-        def progress(update):
-            state.update(update, updated=monotonic())
 
+async def prepare_mesh_repeaters(runtime, scenario_id, body, *, run_id=None):
+    """Shared operation for legacy bodies and server-prepared project inputs."""
+    from cisei_lib.planners.mesh.mesh_planner import MeshPlanner
+    scenario = runtime.planning_scenarios[scenario_id]
+    previous = runtime.mesh_progress.get(scenario_id)
+    if previous and previous['status'] == 'running':
+        raise RuntimeError('Repeater addition is already running for this scenario')
+    now = monotonic()
+    state = dict(run_id=run_id, status='running', stage='preparing', started=now, updated=now)
+    runtime.mesh_progress[scenario_id] = state
+
+    def progress(update):
+        state.update(update, updated=monotonic())
+
+    try:
         geo = CachedGeo(runtime, runtime.feature_caches.setdefault(scenario_id, FeatureCache()),
                         base_url=_geo_base_url(body.geo_base_url), user_prefix='mesh-network',
                         pool_size=2, timeout=120.0)
@@ -116,14 +123,17 @@ async def add_mesh_repeaters(request: Request, scenario_id: str, body: MeshNetwo
         result = await engine.add_repeaters(progress=progress)
         _mesh_planners(runtime)[scenario_id] = engine
         runtime.planning_planners[scenario_id] = engine.graph
+        if hasattr(runtime, 'candidate_options'):
+            runtime.candidate_options.pop(scenario_id, None)
+        if hasattr(runtime, 'planning_runs'):
+            runtime.planning_runs.pop(scenario_id, None)
         progress(dict(status='complete'))
-        return _ok(result)
+        return result
     except Exception as exc:
-        if state is not None:
-            state.update(status='failed', error=str(exc), updated=monotonic())
-        return _error(exc)
+        state.update(status='failed', error=str(exc), updated=monotonic())
+        raise
     finally:
-        if state is not None and state['status'] == 'running':
+        if state['status'] == 'running':
             state.update(status='cancelled', updated=monotonic())
 
 
@@ -635,21 +645,45 @@ def build_candidate_edges(
     body: CandidateEdgeBuildBody,
 ):
     try:
-        scenario = _stored_scenario(request, scenario_id)
-        runtime = request.app.state.runtime
-        if body.planner == 'mesh':
-            engine = _mesh_planners(runtime).get(scenario_id)
-            if engine is None:
-                raise ValueError('Call add_repeaters before building mesh candidates')
-            planner = engine.build_candidate_edges(preserve_existing=body.preserve_existing)
-            runtime.planning_planners[scenario_id] = planner
-            return _candidate_response(planner, body)
-        planner = _build_candidate_edge_planner(scenario, body)
-        runtime.planning_planners[scenario_id] = planner
-        _mesh_planners(runtime).pop(scenario_id, None)
-        return _candidate_response(planner, body)
+        return prepare_candidate_edges(request.app.state.runtime, scenario_id, body)
     except Exception as exc:
         return _error(exc)
+
+
+def prepare_candidate_edges(runtime, scenario_id, body):
+    """Shared runtime operation for legacy and saved-project API adapters.
+
+    Generate candidates using existing planner implementations, then publish
+    the planner. No feature extraction or local-file interpretation occurs.
+    """
+    scenario = runtime.planning_scenarios[scenario_id]
+    if body.planner == 'mesh':
+        engine = _mesh_planners(runtime).get(scenario_id)
+        if engine is None:
+            raise ValueError('Call add_repeaters before building mesh candidates')
+        planner = engine.build_candidate_edges(preserve_existing=body.preserve_existing)
+    elif body.planner == 'cell':
+        cell = getattr(runtime, "cell_planners", {}).get(scenario_id)
+        if cell is None or cell.primary_tech != body.primary_tech:
+            cell = CellPlanner(scenario, primary_tech=body.primary_tech)
+        cell.build_primary_candidates(sector_aware=body.sector_aware, limit_m=body.limit_m, degree=body.degree)
+        planner = cell.graph
+    else:
+        planner = _build_candidate_edge_planner(scenario, body)
+    response = _candidate_response(planner, body)
+    runtime.planning_planners[scenario_id] = planner
+    if hasattr(runtime, "cell_planners"):
+        if body.planner == 'cell':
+            runtime.cell_planners[scenario_id] = cell
+        else:
+            runtime.cell_planners.pop(scenario_id, None)
+    if hasattr(runtime, "candidate_options"):
+        runtime.candidate_options[scenario_id] = body
+    if hasattr(runtime, "planning_runs"):
+        runtime.planning_runs.pop(scenario_id, None)
+    if body.planner != 'mesh':
+        _mesh_planners(runtime).pop(scenario_id, None)
+    return response
 
 
 @router.get(

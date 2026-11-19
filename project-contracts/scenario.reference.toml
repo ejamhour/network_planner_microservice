@@ -49,8 +49,14 @@ working_crs = "EPSG:31982"
 [antennas.lte_sector]
 kind = "sector"
 model_id = "commscope_rv_65s_fvb"
+auto_tune = false # Optional; defaults to false. Keep this profile fixed during automatic tuning.
 azimuth_deg = 90.0
 beamwidth_deg = 65.0
+
+# Another profile may use the same model_id with auto_tune = true. Device/interface
+# or placement antenna_id selects which policy to obey. Placement values are the
+# starting configuration; they do not implicitly lock a tunable profile. Current
+# Cell auto-tuning adjusts azimuth only, not height/downtilt/beamwidth/shadow.
 
 [antennas.lte_terminal]
 model_id = "pctel_boa9028"

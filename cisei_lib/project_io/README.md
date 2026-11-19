@@ -333,3 +333,49 @@ It is recorded in the saved report. Correct source files and rebuild to change
 the compiled scenario; loading an existing artifact neither reevaluates warnings
 nor reapplies placements. Complete coordinate pairs are required in CSV and
 embedded site inputs before construction.
+
+## Temporary project storage
+
+project_store.py now creates/resumes persistent temporary project identities,
+independently of worker sessions. See the
+[storage/recovery contract](../../project-contracts/project-session.md) for the
+hub routes, .session.json and workspace-relative directory layout. This storage
+foundation now supports explicit raw-file uploads through project_sync.py and
+the SDK v2 Project.sync() method. It is separate from the folder-based
+validation/compiler above. project_operations.py exposes the existing syntax
+pass through POST /projects/{id}/validate and SDK v2 Project.validate(), returning
+structured feedback tied to the synchronized input revision/hash. It serializes
+with sync commits. POST /projects/{id}/build and SDK v2 Project.build() call the
+existing compiler under that lock and save input identity in build_report.
+Errors preserve the previous artifact; warnings allow publication.
+load_project_scenario() checks saved build identity under the same lock and
+restores instances without reading source files or recompiling. It returns
+scenario_load feedback for missing, stale or corrupt artifacts. Worker routes
+in app/routes_project_runtime.py own activation and close, allowing one active
+project per user worker. SDK v2 activate()/close() use the existing session proxy.
+Close releases pools and memory while preserving storage. See the storage/recovery
+contract for the APIs, caller prompt condition and cleanup/retry semantics.
+
+## Planning output persistence
+
+planning_results.py saves result.json atomically after a successful Graph solve.
+Its project_run metadata records synchronized input identity, execution options,
+candidate/metric hashes and a parameter_hash. load_planning_result checks input
+identity and an optional parameter hash without constructing scenarios/planners.
+Missing, malformed, outdated and parameter-mismatched files return structured
+result_retrieval reports. Input sync and failed writes preserve prior output.
+
+HTTP adapters are separated by responsibility: routes_project_runtime.py handles
+lifecycle; app/project_runtime/{candidates,mesh,graph}.py handle planning stages;
+routes_project_results.py handles worker-independent retrieval. SDK v2 Graph
+methods live in planners/graph.py; its atomic local output writer is artifacts.py.
+No metric evaluation or solver code is duplicated into the SDK or persistence IO.
+
+Cell now uses the same result IO through its own namespace. load_planning_result
+accepts planner="graph" or "cell" and rejects another planner's latest result.
+Execution metadata includes planner kind and the effective placement hash;
+result.antenna_placements preserves the applied configuration. Cell output also
+contains sector, client-service and load reports. Common server execution adapters
+are in app/project_runtime/execution{,_routes}.py; graph.py and cell.py register
+independent namespaces. SDK Graph/Cell use the sibling NetworkExecution transport
+base in planners/_execution.py. Mesh has not opted into those execution stages.

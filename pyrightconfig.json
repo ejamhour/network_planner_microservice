@@ -1,0 +1,6 @@
+{
+  "extraPaths": [
+    "client_sdk/src",
+    "client_sdk_v2/src"
+  ]
+}
